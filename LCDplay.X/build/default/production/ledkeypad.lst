@@ -1,0 +1,98 @@
+MPASM 5.54                     LEDKEYPAD.ASM   1-20-2014  22:29:04         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 
+                      00002 #include <p18f4620.inc>
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ;  MPASM PIC18F4620 processor include
+                      00005 ; 
+                      00006 ;  (c) Copyright 1999-2013 Microchip Technology, All rights reserved
+                      00007 ;==========================================================================
+                      00008 
+                      01439         LIST
+                      00003 #include <lcd18.inc>
+  0000                00001         extern  InitLCD,WrtLCD,ClrLCD,ClkLCD
+                      00004     list P=18F4620, F=INHX32, C=160, N=80, ST=OFF, MM=OFF, R=DEC
+                      00005 
+                      00006 ;;;;;;Configuration Bits;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                      00007 
+                      00008                 CONFIG OSC=HS, FCMEN=OFF, IESO=OFF
+                      00009                 CONFIG PWRT = OFF, BOREN = SBORDIS, BORV = 3
+                      00010                 CONFIG WDT = OFF, WDTPS = 32768
+                      00011                 CONFIG MCLRE = ON, LPT1OSC = OFF, PBADEN = OFF, CCP2MX = PORTC
+                      00012                 CONFIG STVREN = ON, LVP = OFF, XINST = OFF
+                      00013                 CONFIG DEBUG = OFF
+                      00014                 CONFIG CP0 = OFF, CP1 = OFF, CP2 = OFF, CP3 = OFF
+                      00015                 CONFIG CPB = OFF, CPD = OFF
+                      00016                 CONFIG WRT0 = OFF, WRT1 = OFF, WRT2 = OFF, WRT3 = OFF
+                      00017                 CONFIG WRTB = OFF, WRTC = OFF, WRTD = OFF
+                      00018                 CONFIG EBTR0 = OFF, EBTR1 = OFF, EBTR2 = OFF, EBTR3 = OFF
+                      00019                 CONFIG EBTRB = OFF
+                      00020 
+                      00021 
+                      00022 ;;;;;;Vectors;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                      00023                         org             0x0000
+000000 EF?? F???      00024                         goto    Init
+                      00025                         org             0x08                            ;high priority ISR
+000008 0010           00026                         retfie
+                      00027                         org             0x18                            ;low priority ISR
+000018 0010           00028                         retfie
+                      00029 
+                      00030                 code
+                      00031 
+000000                00032 Init
+                      00033 
+000000 6AF2           00034          clrf      INTCON         ; No interrupts
+000002 6A92           00035          clrf      TRISA          ; All port A is output
+000004 0EF2           00036          movlw     b'11110010'    ; Set required keypad inputs
+000006 6E93           00037          movwf     TRISB
+000008 6A94           00038          clrf      TRISC          ; All port C is output
+00000A 6A95           00039          clrf      TRISD          ; All port D is output
+                      00040 
+00000C 6A89           00041          clrf      LATA
+00000E 6A8A           00042          clrf      LATB
+000010 6A8B           00043          clrf      LATC
+000012 6A8C           00044          clrf      LATD
+                      00045 
+000014 EC?? F???      00046          call      InitLCD    ;Initialize the LCD (code in lcd.asm; imported by lcd.inc)
+                      00047 
+000018 A281           00048 test     btfss          PORTB,1   ;Wait until data is available from the keypad
+00001A EF?? F???      00049          goto           test
+                      00050 
+00001E 3881           00051          swapf          PORTB,W     ;Read PortB<7:4> into W<3:0>
+000020 0B0F           00052          andlw          0x0F
+000022 44E8           00053                  rlncf          WREG, W         ;Program Memory in PIC18 counts up by 2
+000024 EC?? F???      00054          call           KPHexToChar ;Convert keypad value to LCD character (value is still held in W)
+000028 EC?? F???      00055          call           WrtLCD      ;Write the value in W to LCD
+                      00056 
+00002C B281           00057          btfsc          PORTB,1     ;Wait until key is released
+00002E EF?? F???      00058          goto           $-2
+000032 EF?? F???      00059          goto           test
+                      00060 
+000036                00061 KPHexToChar
+000036 26F9           00062           addwf     PCL,f
+000038 0C31 0C32 0C33 00063           dt        "123A456B789C*0#D"
+       0C41 0C34 0C35 
+MPASM 5.54                     LEDKEYPAD.ASM   1-20-2014  22:29:04         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+       0C36 0C42 0C37 
+       0C38 0C39 0C43 
+       0C2A 0C30 0C23 
+       0C44 
+                      00064 
+                      00065           END
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+

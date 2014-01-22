@@ -1,0 +1,787 @@
+MPASM 5.54                          MAIN.ASM   1-21-2014  21:27:02         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001       list p=16f877                 ; list directive to define processor
+                      00002       #include <p16f877.inc>        ; processor specific variable definitions
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ;  MPASM PIC16F877 processor include
+                      00005 ; 
+                      00006 ;  (c) Copyright 1999-2013 Microchip Technology, All rights reserved
+                      00007 ;==========================================================================
+                      00008 
+                      00540         LIST
+2007   3F72           00003       __CONFIG _CP_OFF & _WDT_OFF & _BODEN_ON & _PWRTE_ON & _HS_OSC & _WRT_ENABLE_ON & _CPD_OFF & _LVP_O
+                            FF
+                      00004 
+                      00005 
+                      00006         cblock  0x70
+  00000070            00007                 COUNTH
+  00000071            00008                 COUNTM
+  00000072            00009                 COUNTL
+  00000073            00010                 Table_Counter
+  00000074            00011                 lcd_tmp
+  00000075            00012                 lcd_d1
+  00000076            00013                 lcd_d2
+  00000077            00014                 com
+  00000078            00015                 dat
+                      00016         endc
+                      00017 
+                      00018         ;Declare constants for pin assignments (LCD on PORTD)
+                      00019                 #define RS      PORTD,2
+                      00020                 #define E       PORTD,3
+                      00021 
+                      00022          ORG       0x0000     ;RESET vector must always be at 0x00
+0000   2???           00023          goto      init       ;Just jump to the main code section.
+                      00024 
+                      00025 
+                      00026 ;***************************************
+                      00027 ; Delay: ~160us macro
+                      00028 ;***************************************
+                      00029 LCD_DELAY macro
+                      00030         movlw   0xFF
+                      00031         movwf   lcd_d1
+                      00032         decfsz  lcd_d1,f
+                      00033         goto    $-1
+                      00034         endm
+                      00035 
+                      00036 
+                      00037 ;***************************************
+                      00038 ; Display macro
+                      00039 ;***************************************
+                      00040 Display macro   Message
+                      00041                 local   loop_
+                      00042                 local   end_
+                      00043                 clrf    Table_Counter
+MPASM 5.54                          MAIN.ASM   1-21-2014  21:27:02         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00044                 clrw
+                      00045 loop_   movf    Table_Counter,W
+                      00046                 call    Message
+                      00047                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
+                      00048                 btfsc   STATUS,Z
+                      00049                         goto    end_
+                      00050                 call    WR_DATA
+                      00051                 incf    Table_Counter,F
+                      00052                 goto    loop_
+                      00053 end_
+                      00054                 endm
+                      00055 
+                      00056 ;***************************************
+                      00057 ; Initialize LCD
+                      00058 ;***************************************
+0001                  00059 init
+0001   018B           00060          clrf      INTCON         ; No interrupts
+                      00061 
+0002   1683           00062          bsf       STATUS,RP0     ; select bank 1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0003   0185           00063          clrf      TRISA          ; All port A is output
+0004   30F2           00064          movlw     b'11110010'    ; Set required keypad inputs
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0005   0086           00065          movwf     TRISB
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0006   0187           00066          clrf      TRISC          ; All port C is output
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0007   0188           00067          clrf      TRISD          ; All port D is output
+                      00068 
+0008   1283           00069          bcf       STATUS,RP0     ; select bank 0
+0009   0185           00070          clrf      PORTA
+000A   0186           00071          clrf      PORTB
+000B   0187           00072          clrf      PORTC
+000C   0188           00073          clrf      PORTD
+                      00074 
+000D   2???           00075          call      InitLCD        ;Initialize the LCD (code in lcd.asm; imported by lcd.inc)
+                      00076 
+                      00077 ;***************************************
+                      00078 ; Main code
+                      00079 ;***************************************
+                      00080 Main    Display         Welcome_Msg
+  0000                    M                 local   loop_
+  0000                    M                 local   end_
+000E   01F3               M                 clrf    Table_Counter
+000F   0103               M                 clrw
+0010   0873               M loop_   movf    Table_Counter,W
+0011   2???               M                 call    Welcome_Msg
+0012   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
+0013   1903               M                 btfsc   STATUS,Z
+0014   2???               M                         goto    end_
+0015   2???               M                 call    WR_DATA
+0016   0AF3               M                 incf    Table_Counter,F
+0017   2???               M                 goto    loop_
+MPASM 5.54                          MAIN.ASM   1-21-2014  21:27:02         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0018                      M end_
+                      00081 
+0018                  00082 SwtichLine
+0018   2???           00083                 call            Switch_Lines
+                      00084                 Display         Welcome_Msg
+  0000                    M                 local   loop_
+  0000                    M                 local   end_
+0019   01F3               M                 clrf    Table_Counter
+001A   0103               M                 clrw
+001B   0873               M loop_   movf    Table_Counter,W
+001C   2???               M                 call    Welcome_Msg
+001D   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
+001E   1903               M                 btfsc   STATUS,Z
+001F   2???               M                         goto    end_
+0020   2???               M                 call    WR_DATA
+0021   0AF3               M                 incf    Table_Counter,F
+0022   2???               M                 goto    loop_
+0023                      M end_
+                      00085 
+0023                  00086 ChangeToQuestionMark
+0023   30CB           00087                 movlw           b'11001011'
+0024   2???           00088                 call            WR_INS
+0025   303F           00089                 movlw           "?"
+0026   2???           00090                 call            WR_DATA
+                      00091 
+0027                  00092 ShiftDisplayLeft
+0027   2???           00093                 call            Clear_Display
+                      00094 
+                      00095                 Display         Alphabet
+  0000                    M                 local   loop_
+  0000                    M                 local   end_
+0028   01F3               M                 clrf    Table_Counter
+0029   0103               M                 clrw
+002A   0873               M loop_   movf    Table_Counter,W
+002B   2???               M                 call    Alphabet
+002C   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
+002D   1903               M                 btfsc   STATUS,Z
+002E   2???               M                         goto    end_
+002F   2???               M                 call    WR_DATA
+0030   0AF3               M                 incf    Table_Counter,F
+0031   2???               M                 goto    loop_
+0032                      M end_
+                      00096 
+0032   3018           00097 Left    movlw           b'00011000'             ;Move to the left
+0033   2???           00098                 call            WR_INS
+0034   2???           00099                 call            HalfS
+0035   2???           00100                 goto            Left                    ;repeat operation
+                      00101 
+0036   2???           00102                 goto    $
+                      00103 
+                      00104 
+                      00105 ;***************************************
+                      00106 ; Look up table
+MPASM 5.54                          MAIN.ASM   1-21-2014  21:27:02         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00107 ;***************************************
+                      00108 
+0037                  00109 Welcome_Msg
+0037   0782           00110                 addwf   PCL,F
+0038   3420 3420 3420 00111                 dt              "          ", 0
+       3420 3420 3420 
+       3420 3420 3420 
+       3420 3400 
+                      00112 
+0043                  00113 Alphabet
+0043   0782           00114                 addwf   PCL,F
+0044   3420 3420 3420 00115                 dt              "               WENYI YOU DA BEST!",0
+       3420 3420 3420 
+       3420 3420 3420 
+       3420 3420 3420 
+       3420 3420 3420 
+       3457 3445 344E 
+       3459 3449 3420 
+       3459 344F 3455 
+       3420 3444 3441 
+       3420 3442 3445 
+       3453 3454 3421 
+       3400 
+                      00116 
+                      00117 ;***************************************
+                      00118 ; LCD control
+                      00119 ;***************************************
+0066                  00120 Switch_Lines
+0066   30C0           00121                 movlw   B'11000000'
+0067   2???           00122                 call    WR_INS
+0068   0008           00123                 return
+                      00124 
+0069                  00125 Clear_Display
+0069   3001           00126                 movlw   B'00000001'
+006A   2???           00127                 call    WR_INS
+006B   0008           00128                 return
+                      00129 
+                      00130 ;***************************************
+                      00131 ; Delay 0.5s
+                      00132 ;***************************************
+006C                  00133 HalfS
+  0000                00134         local   HalfS_0
+006C   3088           00135       movlw 0x88
+006D   00F0           00136       movwf COUNTH
+006E   30BD           00137       movlw 0xBD
+006F   00F1           00138       movwf COUNTM
+0070   3003           00139       movlw 0x03
+0071   00F2           00140       movwf COUNTL
+                      00141 
+0072                  00142 HalfS_0
+0072   0BF0           00143       decfsz COUNTH, f
+0073   2???           00144       goto   $+2
+0074   0BF1           00145       decfsz COUNTM, f
+MPASM 5.54                          MAIN.ASM   1-21-2014  21:27:02         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0075   2???           00146       goto   $+2
+0076   0BF2           00147       decfsz COUNTL, f
+0077   2???           00148       goto   HalfS_0
+                      00149 
+0078   2???           00150       goto $+1
+0079   0000           00151       nop
+007A   0000           00152       nop
+007B   0008           00153                 return
+                      00154 
+                      00155 
+                      00156 ;******* LCD-related subroutines *******
+                      00157 
+                      00158 
+                      00159     ;***********************************
+007C                  00160 InitLCD
+007C   1283           00161         bcf STATUS,RP0
+007D   1588           00162         bsf E     ;E default high
+                      00163 
+                      00164         ;Wait for LCD POR to finish (~15ms)
+007E   2???           00165         call lcdLongDelay
+007F   2???           00166         call lcdLongDelay
+0080   2???           00167         call lcdLongDelay
+                      00168 
+                      00169         ;Ensure 8-bit mode first (no way to immediately guarantee 4-bit mode)
+                      00170         ; -> Send b'0011' 3 times
+0081   3033           00171         movlw   b'00110011'
+0082   2???           00172         call    WR_INS
+0083   2???           00173         call lcdLongDelay
+0084   2???           00174         call lcdLongDelay
+0085   3032           00175         movlw   b'00110010'
+0086   2???           00176         call    WR_INS
+0087   2???           00177         call lcdLongDelay
+0088   2???           00178         call lcdLongDelay
+                      00179 
+                      00180         ; 4 bits, 2 lines, 5x7 dots
+0089   3028           00181         movlw   b'00101000'
+008A   2???           00182         call    WR_INS
+008B   2???           00183         call lcdLongDelay
+008C   2???           00184         call lcdLongDelay
+                      00185 
+                      00186         ; display on/off
+008D   300C           00187         movlw   b'00001100'
+008E   2???           00188         call    WR_INS
+008F   2???           00189         call lcdLongDelay
+0090   2???           00190         call lcdLongDelay
+                      00191 
+                      00192         ; Entry mode
+0091   3006           00193         movlw   b'00000110'
+0092   2???           00194         call    WR_INS
+0093   2???           00195         call lcdLongDelay
+0094   2???           00196         call lcdLongDelay
+                      00197 
+                      00198         ; Clear ram
+MPASM 5.54                          MAIN.ASM   1-21-2014  21:27:02         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0095   3001           00199         movlw   b'00000001'
+0096   2???           00200         call    WR_INS
+0097   2???           00201         call lcdLongDelay
+0098   2???           00202         call lcdLongDelay
+0099   0008           00203         return
+                      00204     ;************************************
+                      00205 
+                      00206     ;ClrLCD: Clear the LCD display
+009A                  00207 ClrLCD
+009A   3001           00208         movlw   B'00000001'
+009B   2???           00209         call    WR_INS
+009C   0008           00210     return
+                      00211 
+                      00212     ;****************************************
+                      00213     ; Write command to LCD - Input : W , output : -
+                      00214     ;****************************************
+009D                  00215 WR_INS
+009D   1108           00216         bcf             RS                              ;clear RS
+009E   00F7           00217         movwf   com                             ;W --> com
+009F   39F0           00218         andlw   0xF0                    ;mask 4 bits MSB w = X0
+00A0   0088           00219         movwf   PORTD                   ;Send 4 bits MSB
+00A1   1588           00220         bsf             E                               ;
+00A2   2???           00221         call    lcdLongDelay    ;__    __
+00A3   1188           00222         bcf             E                               ;  |__|
+00A4   0E77           00223         swapf   com,w
+00A5   39F0           00224         andlw   0xF0                    ;1111 0010
+00A6   0088           00225         movwf   PORTD                   ;send 4 bits LSB
+00A7   1588           00226         bsf             E                               ;
+00A8   2???           00227         call    lcdLongDelay    ;__    __
+00A9   1188           00228         bcf             E                               ;  |__|
+00AA   2???           00229         call    lcdLongDelay
+00AB   0008           00230         return
+                      00231 
+                      00232     ;****************************************
+                      00233     ; Write data to LCD - Input : W , output : -
+                      00234     ;****************************************
+00AC                  00235 WR_DATA
+00AC   1508           00236         bsf             RS
+00AD   00F8           00237         movwf   dat
+00AE   0878           00238         movf    dat,w
+00AF   39F0           00239         andlw   0xF0
+00B0   3E04           00240         addlw   4
+00B1   0088           00241         movwf   PORTD
+00B2   1588           00242         bsf             E                               ;
+00B3   2???           00243         call    lcdLongDelay    ;__    __
+00B4   1188           00244         bcf             E                               ;  |__|
+00B5   0E78           00245         swapf   dat,w
+00B6   39F0           00246         andlw   0xF0
+00B7   3E04           00247         addlw   4
+00B8   0088           00248         movwf   PORTD
+00B9   1588           00249         bsf             E                               ;
+00BA   2???           00250         call    lcdLongDelay    ;__    __
+00BB   1188           00251         bcf             E                               ;  |__|
+MPASM 5.54                          MAIN.ASM   1-21-2014  21:27:02         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00BC   0008           00252         return
+                      00253 
+00BD                  00254 lcdLongDelay
+00BD   3014           00255     movlw d'20'
+00BE   00F6           00256     movwf lcd_d2
+00BF                  00257 LLD_LOOP
+                      00258     LCD_DELAY
+00BF   30FF               M         movlw   0xFF
+00C0   00F5               M         movwf   lcd_d1
+00C1   0BF5               M         decfsz  lcd_d1,f
+00C2   2???               M         goto    $-1
+00C3   0BF6           00259     decfsz lcd_d2,f
+00C4   2???           00260     goto LLD_LOOP
+00C5   0008           00261     return
+                      00262 
+                      00263 
+3F72                  00264         END
+MPASM 5.54                          MAIN.ASM   1-21-2014  21:27:02         PAGE  8
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+Alphabet                          00000043
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+C                                 00000000
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1                             00000015
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2                             0000001B
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CKE                               00000006
+CKP                               00000004
+COUNTH                            00000070
+COUNTL                            00000072
+COUNTM                            00000071
+CREN                              00000004
+MPASM 5.54                          MAIN.ASM   1-21-2014  21:27:02         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CSRC                              00000007
+ChangeToQuestionMark              00000023
+Clear_Display                     00000069
+ClrLCD                            0000009A
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+D_A                               00000005
+D_NOT_A                           00000005
+Display                           
+E                                 PORTD,3
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+GO_NOT_DONE                       00000002
+HalfS                             0000006C
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+InitLCD                           0000007C
+LCD_DELAY                         
+LLD_LOOP                          000000BF
+Left                              00000032
+Main                              0000000E
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+MPASM 5.54                          MAIN.ASM   1-21-2014  21:27:02         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+R                                 00000002
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+RA4                               00000004
+RA5                               00000005
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+MPASM 5.54                          MAIN.ASM   1-21-2014  21:27:02         PAGE 11
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RBIF                              00000000
+RC0                               00000000
+RC1                               00000001
+RC2                               00000002
+RC3                               00000003
+RC4                               00000004
+RC5                               00000005
+RC6                               00000006
+RC7                               00000007
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+RD0                               00000000
+RD1                               00000001
+RD2                               00000002
+RD3                               00000003
+RD4                               00000004
+RD5                               00000005
+RD6                               00000006
+RD7                               00000007
+RE0                               00000000
+RE1                               00000001
+RE2                               00000002
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RS                                PORTD,2
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+R_NOT_W                           00000002
+R_W                               00000002
+S                                 00000003
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+MPASM 5.54                          MAIN.ASM   1-21-2014  21:27:02         PAGE 12
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+ShiftDisplayLeft                  00000027
+Switch_Lines                      00000066
+SwtichLine                        00000018
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1                              0000000E
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISA5                            00000005
+TRISB                             00000086
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+MPASM 5.54                          MAIN.ASM   1-21-2014  21:27:02         PAGE 13
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+TRISC                             00000087
+TRISC0                            00000000
+TRISC1                            00000001
+TRISC2                            00000002
+TRISC3                            00000003
+TRISC4                            00000004
+TRISC5                            00000005
+TRISC6                            00000006
+TRISC7                            00000007
+TRISD                             00000088
+TRISD0                            00000000
+TRISD1                            00000001
+TRISD2                            00000002
+TRISD3                            00000003
+TRISD4                            00000004
+TRISD5                            00000005
+TRISD6                            00000006
+TRISD7                            00000007
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+Table_Counter                     00000073
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+WR_DATA                           000000AC
+WR_INS                            0000009D
+Welcome_Msg                       00000037
+Z                                 00000002
+_.org_0_0036                      00000036
+_.org_0_0073                      00000073
+_.org_0_0075                      00000075
+_.org_0_0078                      00000078
+_.org_0_00C2                      000000C2
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+MPASM 5.54                          MAIN.ASM   1-21-2014  21:27:02         PAGE 14
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_BOREN_OFF                        00003FBF
+_BOREN_ON                         00003FFF
+_CONFIG                           00002007
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00000FCF
+_CP_HALF                          00001FDF
+_CP_OFF                           00003FFF
+_CP_UPPER_256                     00002FEF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_DEVID1                           00002006
+_FOSC_EXTRC                       00003FFF
+_FOSC_HS                          00003FFE
+_FOSC_LP                          00003FFC
+_FOSC_XT                          00003FFD
+_HS_OSC                           00003FFE
+_IDLOC0                           00002000
+_IDLOC1                           00002001
+_IDLOC2                           00002002
+_IDLOC3                           00002003
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDTE_OFF                         00003FFB
+_WDTE_ON                          00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_ENABLE_OFF                   00003DFF
+_WRT_ENABLE_ON                    00003FFF
+_WRT_OFF                          00003DFF
+_WRT_ON                           00003FFF
+_XT_OSC                           00003FFD
+__16F877                          00000001
+com                               00000077
+dat                               00000078
+init                              00000001
+lcdLongDelay                      000000BD
+lcd_d1                            00000075
+lcd_d2                            00000076
+lcd_tmp                           00000074
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :     4 reported,     0 suppressed
+
+

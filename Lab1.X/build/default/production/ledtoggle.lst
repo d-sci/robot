@@ -1,0 +1,181 @@
+MPASM 5.54                     LEDTOGGLE.ASM   1-19-2014  21:52:50         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 
+                      00002         list P=PIC16F877, F=INHX8M, C=160, N=80, ST=OFF, MM=OFF, R=DEC
+                      00003         include "P16F877.INC"
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ;  MPASM PIC16F877 processor include
+                      00005 ; 
+                      00006 ;  (c) Copyright 1999-2013 Microchip Technology, All rights reserved
+                      00007 ;==========================================================================
+                      00008 
+                      00540         LIST
+2007   3F32           00004         __config ( _CP_OFF & _WDT_OFF & _BODEN_OFF & _PWRTE_ON & _HS_OSC & _WRT_ENABLE_ON & _LVP_OFF & _DEBUG_OFF & _CPD_OFF )
+                      00005         errorlevel -302         ;ignore error when storing to bank1
+                      00006 
+                      00007 
+                      00008         org 0x0000
+0000   2???           00009         goto    Mainline
+                      00010 
+                      00011 
+                      00012         org 0x0004
+0004   00A0           00013         movwf   temp_w
+0005   0803           00014         movf    STATUS,w
+0006   00A1           00015         movwf   temp_status
+                      00016 
+0007   188B           00017         btfsc   INTCON,INTF
+0008   2???           00018         call    ISR_Lit
+0009   108B           00019         bcf     INTCON,INTF
+                      00020 
+Message[305]: Using default destination of 1 (file).
+000A   08A1           00021         movf    temp_status
+000B   0083           00022         movwf   STATUS
+000C   0EA0           00023         swapf   temp_w,f
+000D   0E20           00024         swapf   temp_w,w
+000E   0009           00025         retfie
+                      00026 
+                      00027 
+                      00028         cblock 0x20
+  00000020            00029         temp_w
+  00000021            00030         temp_status
+                      00031 
+                      00032         endc
+                      00033 
+                      00034 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                      00035 
+000F                  00036 Mainline
+                      00037 
+000F   2???           00038         call init
+0010   2???           00039         call ISR_init
+0011   2???           00040         call ADinit
+                      00041 
+Warning[203]: Found opcode in column 1. (goto)
+0012   2???           00042 goto    $
+                      00043 
+                      00044 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                      00045 
+0013                  00046 ADinit                                  ;digital input initiation
+0013   1683           00047         bsf     STATUS,RP0      ;bank1
+0014   3007           00048         movlw   0x07
+0015   009F           00049         movwf   ADCON1          ;set to digital input
+0016   1283           00050         bcf     STATUS,RP0      ;bank0
+0017   0008           00051         return
+                      00052 
+                      00053 
+                      00054 
+0018                  00055 init                                    ;select port function
+0018   1683           00056         bsf             STATUS,RP0      ;bank1
+0019   0188           00057         clrf    TRISD           ;set ALL to inputs
+001A   0185           00058         clrf    TRISA
+001B   3001           00059         movlw   b'00000001'
+001C   0086           00060         movwf   TRISB
+001D   0187           00061         clrf    TRISC
+001E   3001           00062         movlw   b'00000001'
+001F   0089           00063         movwf   TRISE
+MPASM 5.54                     LEDTOGGLE.ASM   1-19-2014  21:52:50         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00064 
+0020   1283           00065         bcf             STATUS,RP0      ;bank0
+0021   0185           00066         clrf    PORTA           ;clear all ports
+0022   0186           00067         clrf    PORTB
+0023   0187           00068         clrf    PORTC
+0024   0188           00069         clrf    PORTD
+0025   0189           00070         clrf    PORTE
+                      00071 
+0026   0008           00072         return
+                      00073 
+                      00074 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                      00075 
+                      00076 
+                      00077 
+0027                  00078 ISR_init
+                      00079 
+0027   1283           00080         bcf     STATUS,RP0
+0028   108B           00081         bcf     INTCON,INTF
+0029   178B           00082         bsf     INTCON,GIE
+002A   160B           00083         bsf             INTCON,INTE
+                      00084 
+002B   0008           00085         return
+                      00086 
+                      00087 
+                      00088 
+002C                  00089 ISR_Lit
+                      00090 
+002C   2???           00091         call clear_LED
+002D   1809           00092         btfsc PORTE,0           ;if PORTE 0 selected
+002E   2???           00093         goto _Show1                     ;goto pattern 1
+002F   2???           00094         call Pattern_ZERO       ;else display pattern 0
+0030   0008           00095         return
+                      00096 
+0031                  00097 _Show1
+0031   2???           00098         call Pattern_ONE        ;display pattern 1
+                      00099 
+Warning[203]: Found opcode in column 1. (return)
+0032   0008           00100 return
+                      00101 
+                      00102 
+                      00103 
+                      00104 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                      00105 
+                      00106 
+                      00107 
+                      00108 
+0033                  00109 Pattern_ONE
+                      00110 
+0033   3024           00111         movlw b'00100100'
+0034   0086           00112         movwf PORTB
+0035   307C           00113         movlw b'01111100'
+0036   0087           00114         movwf PORTC
+0037   1508           00115         bsf PORTD,2
+                      00116 
+Warning[203]: Found opcode in column 1. (return)
+0038   0008           00117 return
+                      00118 
+                      00119 
+                      00120 
+0039                  00121 Pattern_ZERO
+                      00122 
+0039   307C           00123         movlw b'01111100'
+003A   0086           00124         movwf PORTB
+003B   3044           00125         movlw b'01000100'
+003C   0087           00126         movwf PORTC
+003D   307C           00127         movlw b'01111100'
+003E   0088           00128         movwf PORTD
+                      00129 
+Warning[203]: Found opcode in column 1. (return)
+003F   0008           00130 return
+                      00131 
+                      00132 
+0040                  00133 clear_LED
+                      00134 
+MPASM 5.54                     LEDTOGGLE.ASM   1-19-2014  21:52:50         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0040   0186           00135         clrf PORTB
+0041   0187           00136         clrf PORTC
+0042   0188           00137         clrf PORTD
+                      00138 
+Warning[203]: Found opcode in column 1. (return)
+0043   0008           00139 return
+                      00140 
+Warning[205]: Found directive in column 1. (END)
+3F32                  00141 END
+
+Errors   :     0
+Warnings :     6 reported,     0 suppressed
+Messages :     1 reported,     6 suppressed
+
+
