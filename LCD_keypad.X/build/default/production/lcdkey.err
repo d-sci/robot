@@ -1,0 +1,6 @@
+Warning[207] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\LCD_KEYPAD.X\LCDKEY.ASM 21 : Found label after column 1. (RS)
+Warning[207] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\LCD_KEYPAD.X\LCDKEY.ASM 22 : Found label after column 1. (E)
+Message[302] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\LCD_KEYPAD.X\LCDKEY.ASM 46 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\LCD_KEYPAD.X\LCDKEY.ASM 48 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\LCD_KEYPAD.X\LCDKEY.ASM 49 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\LCD_KEYPAD.X\LCDKEY.ASM 50 : Register in operand not in bank 0.  Ensure that bank bits are correct.

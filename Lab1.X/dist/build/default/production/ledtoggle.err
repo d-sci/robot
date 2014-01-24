@@ -1,7 +1,0 @@
-Message[305] C:\USERS\THINKPAD\DESKTOP\ROBOT\LAB1.X\LEDTOGGLE.ASM 21 : Using default destination of 1 (file).
-Warning[203] C:\USERS\THINKPAD\DESKTOP\ROBOT\LAB1.X\LEDTOGGLE.ASM 42 : Found opcode in column 1. (goto)
-Warning[203] C:\USERS\THINKPAD\DESKTOP\ROBOT\LAB1.X\LEDTOGGLE.ASM 100 : Found opcode in column 1. (return)
-Warning[203] C:\USERS\THINKPAD\DESKTOP\ROBOT\LAB1.X\LEDTOGGLE.ASM 117 : Found opcode in column 1. (return)
-Warning[203] C:\USERS\THINKPAD\DESKTOP\ROBOT\LAB1.X\LEDTOGGLE.ASM 130 : Found opcode in column 1. (return)
-Warning[203] C:\USERS\THINKPAD\DESKTOP\ROBOT\LAB1.X\LEDTOGGLE.ASM 139 : Found opcode in column 1. (return)
-Warning[205] C:\USERS\THINKPAD\DESKTOP\ROBOT\LAB1.X\LEDTOGGLE.ASM 141 : Found directive in column 1. (END)

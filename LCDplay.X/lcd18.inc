@@ -1,1 +1,0 @@
-	extern	InitLCD,WrtLCD,ClrLCD,ClkLCD

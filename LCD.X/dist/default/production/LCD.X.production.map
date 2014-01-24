@@ -1,0 +1,90 @@
+MPLINK 5.00, LINKER
+Linker Map File - Created Thu Jan 23 20:51:09 2014
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000180
+                   .cinit    romdata   0x0000c0    program   0x000004
+.config_2007_BUILD/DEFAULT/PRODUCTION/LCDMESS       code   0x002007    program   0x000002
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x0000c1      
+                            0x002007    0x002007      
+            195 out of 8454 program addresses used, program memory utilization is 2%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                 Alphabet   0x000046    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+     ChangeToQuestionMark   0x000023    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+            Clear_Display   0x000063    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                   ClrLCD   0x000094    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                    HalfS   0x000066    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                  InitLCD   0x000076    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                 LLD_LOOP   0x0000b9    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                     Left   0x000032    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                     Main   0x00000e    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+         ShiftDisplayLeft   0x000027    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+             Switch_Lines   0x000060    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+               SwtichLine   0x000018    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                  WR_DATA   0x0000a6    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                   WR_INS   0x000097    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+              Welcome_Msg   0x000037    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+             _.org_0_0036   0x000036    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+             _.org_0_006D   0x00006d    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+             _.org_0_006F   0x00006f    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+             _.org_0_0072   0x000072    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+             _.org_0_00BC   0x0000bc    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                _0HalfS_0   0x00006c    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                   _1end_   0x000018    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                  _1loop_   0x000010    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                   _2end_   0x000023    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                  _2loop_   0x00001b    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                   _3end_   0x000032    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                  _3loop_   0x00002a    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                     init   0x000001    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+             lcdLongDelay   0x0000b7    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                     init   0x000001    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                     Main   0x00000e    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                  _1loop_   0x000010    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                   _1end_   0x000018    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+               SwtichLine   0x000018    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                  _2loop_   0x00001b    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+     ChangeToQuestionMark   0x000023    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                   _2end_   0x000023    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+         ShiftDisplayLeft   0x000027    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                  _3loop_   0x00002a    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                   _3end_   0x000032    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                     Left   0x000032    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+             _.org_0_0036   0x000036    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+              Welcome_Msg   0x000037    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                 Alphabet   0x000046    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+             Switch_Lines   0x000060    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+            Clear_Display   0x000063    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                    HalfS   0x000066    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                _0HalfS_0   0x00006c    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+             _.org_0_006D   0x00006d    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+             _.org_0_006F   0x00006f    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+             _.org_0_0072   0x000072    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                  InitLCD   0x000076    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                   ClrLCD   0x000094    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                   WR_INS   0x000097    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                  WR_DATA   0x0000a6    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+             lcdLongDelay   0x0000b7    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+                 LLD_LOOP   0x0000b9    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+             _.org_0_00BC   0x0000bc    program     static C:\Users\Doge\Documents\GitHub\robot\LCD.X\lcdmessage.asm
+
+

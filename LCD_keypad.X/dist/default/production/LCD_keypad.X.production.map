@@ -1,0 +1,62 @@
+MPLINK 5.00, LINKER
+Linker Map File - Created Thu Jan 23 20:49:40 2014
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x0000de
+                   .cinit    romdata   0x00006f    program   0x000004
+.config_2007_BUILD/DEFAULT/PRODUCTION/LCDKEY.       code   0x002007    program   0x000002
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000070      
+                            0x002007    0x002007      
+            114 out of 8454 program addresses used, program memory utilization is 1%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                   ClkLCD   0x000056    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+                   ClrLCD   0x000051    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+                  InitLCD   0x000028    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+              KPHexToChar   0x000017    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+                 LLD_LOOP   0x000068    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+                   MovMSB   0x000061    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+                   WrtLCD   0x00004a    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+             _.org_0_000F   0x00000f    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+             _.org_0_0015   0x000015    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+             _.org_0_0059   0x000059    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+             _.org_0_005E   0x00005e    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+             _.org_0_006B   0x00006b    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+                     init   0x000001    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+             lcdLongDelay   0x000066    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+                     test   0x00000e    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                     init   0x000001    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+                     test   0x00000e    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+             _.org_0_000F   0x00000f    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+             _.org_0_0015   0x000015    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+              KPHexToChar   0x000017    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+                  InitLCD   0x000028    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+                   WrtLCD   0x00004a    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+                   ClrLCD   0x000051    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+                   ClkLCD   0x000056    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+             _.org_0_0059   0x000059    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+             _.org_0_005E   0x00005e    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+                   MovMSB   0x000061    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+             lcdLongDelay   0x000066    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+                 LLD_LOOP   0x000068    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+             _.org_0_006B   0x00006b    program     static C:\Users\Doge\Documents\GitHub\robot\LCD_keypad.X\lcdkey.asm
+
+
