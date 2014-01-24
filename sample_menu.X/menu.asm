@@ -3,7 +3,9 @@
       __CONFIG _CP_OFF & _WDT_OFF & _BODEN_ON & _PWRTE_ON & _HS_OSC & _WRT_ENABLE_ON & _CPD_OFF & _LVP_OFF
 
 
-; variables
+;***************************************
+; VARIABLES
+;***************************************
     cblock	0x70
         msgtemp
 		Table_Counter
@@ -15,7 +17,14 @@
 
 
 ;***************************************
-; Delay: ~160us macro
+; DEFINITIONS
+;***************************************
+    #define	RS 	PORTD,2
+	#define	E 	PORTD,3
+
+
+;***************************************
+; MACROS
 ;***************************************
 LCD_DELAY macro
 	movlw   0xFF
@@ -23,9 +32,7 @@ LCD_DELAY macro
 	decfsz  lcd_d1,f
 	goto    $-1
 	endm
-;***************************************
-; Display macro
-;***************************************
+
 Display macro	Message
 		local	loop_
 		local 	end_
@@ -42,14 +49,14 @@ loop_	movf	Table_Counter,W
 end_
 		endm
 
-        #define	RS 	PORTD,2
-		#define	E 	PORTD,3
 
 
+;***************************************
 ; MAIN CODE
+;***************************************
 
-    ORG       0x0000     ;RESET vector must always be at 0x00
-         goto      init       ;Just jump to the main code section.
+    ORG       0x0000             ;RESET vector must always be at 0x00
+         goto      init          ;Just jump to the main code section.
 
 init
          clrf      INTCON         ; No interrupts
@@ -67,7 +74,7 @@ init
          clrf      PORTC
          clrf      PORTD
 
-         call      InitLCD    ;Initialize the LCD (code in lcd.asm; imported by lcd.inc)
+         call      InitLCD    ;Initialize the LCD 
          Display    Welcome_Msg
 
 test     btfss		PORTB,1     ;Wait until data is available from the keypad
@@ -81,8 +88,9 @@ test     btfss		PORTB,1     ;Wait until data is available from the keypad
          goto		$-1
          goto     test
 
+
 ;***************************************
-; Look up table
+; LOOK UP TABLE (MESSAGES)
 ;***************************************
 Welcome_Msg
 		addwf	PCL,F
@@ -103,7 +111,9 @@ Message_D
 
 
 
-;Write Message selector (written by us!!!!)***************
+;***************************************
+; MESSAGE SELECTOR ROUTINE (written by me)
+;***************************************
 writemessage
     movwf   msgtemp             ; save value of W in msgtemp
 
@@ -149,7 +159,10 @@ default
 
 
 
- ;***********************************
+;***************************************
+; DISPLAY ROUTINES (copied from sample code)
+;***************************************
+
 InitLCD
 	bcf STATUS,RP0
 	bsf E     ;E default high
@@ -194,18 +207,14 @@ InitLCD
 	call lcdLongDelay
 	call lcdLongDelay
 	return
-    ;************************************
+ 
 
-
-; CLEAR DISPLAY
 Clear_Display
 		movlw	B'00000001'
 		call	WR_INS
 		return
 
- ;****************************************
-    ; Write command to LCD - Input : W , output : -
-    ;****************************************
+
 WR_INS
 	bcf		RS				;clear RS
 	movwf	com				;W --> com
@@ -223,9 +232,7 @@ WR_INS
 	call	lcdLongDelay
 	return
 
- ;****************************************
-    ; Write data to LCD - Input : W , output : -
-    ;****************************************
+
 WR_DATA
 	bsf		RS
 	movwf	dat
