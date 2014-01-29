@@ -1,11 +1,11 @@
 MPLINK 5.00, LINKER
-Linker Map File - Created Wed Jan 29 17:01:09 2014
+Linker Map File - Created Wed Jan 29 17:45:23 2014
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
                 ---------  ---------  ---------  ---------  ---------
-                   .org_0       code   0x000000    program   0x0004c6
-                   .cinit    romdata   0x000263    program   0x000004
+                   .org_0       code   0x000000    program   0x00052a
+                   .cinit    romdata   0x000295    program   0x000004
 .config_2007_BUILD/DEFAULT/PRODUCTION/INTERFA       code   0x002007    program   0x000002
 
 
@@ -13,43 +13,49 @@ Linker Map File - Created Wed Jan 29 17:01:09 2014
                               Program Memory Usage 
                                Start         End      
                            ---------   ---------      
-                            0x000000    0x000264      
+                            0x000000    0x000296      
                             0x002007    0x002007      
-            614 out of 8454 program addresses used, program memory utilization is 7%
+            664 out of 8454 program addresses used, program memory utilization is 7%
 
 
 
                               Symbols - Sorted by Name
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
+                 ADD3HUNS   0x000229    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                 ADD3ONES   0x00022f    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                 ADD3TENS   0x00022c    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                  BCDADD3   0x00020e    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                CARRYONES   0x000232    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                CARRYTENS   0x000235    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                   Candles   0x0000ea    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-            Clear_Display   0x000224    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+            Clear_Display   0x000256    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                 Defective   0x0000f4    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                   End_Msg   0x00008c    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                Flick_fail   0x0000d4    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                    HalfS   0x000253    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                  InitLCD   0x000206    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                    HalfS   0x000285    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                  InitLCD   0x000238    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                  LED_fail   0x0000c8    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                 LLD_LOOP   0x00024c    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                 LLD_LOOP   0x00027e    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                      None   0x0000b1    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                        Of   0x0000e4    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                      Pass   0x0000c0    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                   Seconds   0x0000a7    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
               Standby_Msg   0x000077    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                 Start_Msg   0x000080    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-             Switch_Lines   0x000227    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+             Switch_Lines   0x000259    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                  Time_Msg   0x000096    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                  WR_DATA   0x000239    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                   WR_INS   0x00022a    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                  WR_DATA   0x00026b    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                   WR_INS   0x00025c    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
              _.org_0_0019   0x000019    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
              _.org_0_0020   0x000020    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
              _.org_0_0070   0x000070    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
              _.org_0_0075   0x000075    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-             _.org_0_024F   0x00024f    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-             _.org_0_025A   0x00025a    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-             _.org_0_025C   0x00025c    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-             _.org_0_025F   0x00025f    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                _0HalfS_0   0x000259    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+             _.org_0_0281   0x000281    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+             _.org_0_028C   0x00028c    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+             _.org_0_028E   0x00028e    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+             _.org_0_0291   0x000291    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                _0HalfS_0   0x00028b    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                    _1end_   0x000018    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                   _1loop_   0x000010    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                   _20end_   0x00006f    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
@@ -64,17 +70,17 @@ Linker Map File - Created Wed Jan 29 17:01:09 2014
                  _34loop_   0x00018f    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                   _35end_   0x0001a7    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                  _35loop_   0x00019f    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                  _36end_   0x0001b4    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                 _36loop_   0x0001ac    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                  _37end_   0x0001ce    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                 _37loop_   0x0001c6    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                  _38end_   0x0001dd    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                 _38loop_   0x0001d5    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                  _39end_   0x0001ec    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                 _39loop_   0x0001e4    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                  _40end_   0x0001fb    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                 _40loop_   0x0001f3    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-               big_number   0x0001fd    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                  _39end_   0x0001c0    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                 _39loop_   0x0001b8    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                  _40end_   0x0001da    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                 _40loop_   0x0001d2    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                  _41end_   0x0001e9    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                 _41loop_   0x0001e1    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                  _42end_   0x0001f8    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                 _42loop_   0x0001f0    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                  _43end_   0x000207    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                 _43loop_   0x0001ff    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+               big_number   0x000209    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                   check_1   0x000100    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                   check_2   0x00010b    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                   check_3   0x000117    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
@@ -84,20 +90,20 @@ Linker Map File - Created Wed Jan 29 17:01:09 2014
                   check_7   0x000147    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                   check_8   0x000153    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                   check_9   0x00015f    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                check_LED   0x0001de    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-              check_flick   0x0001ed    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-               check_none   0x0001c1    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-               check_pass   0x0001cf    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-            check_standby   0x0001ba    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-              check_start   0x0001b5    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                check_LED   0x0001ea    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+              check_flick   0x0001f9    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+               check_none   0x0001cd    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+               check_pass   0x0001db    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+            check_standby   0x0001c6    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+              check_start   0x0001c1    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
             check_summary   0x00016b    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                check_time   0x000198    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-              default_key   0x0001bf    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-           default_status   0x0001fc    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-           display_status   0x0001c0    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+              default_key   0x0001cb    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+           default_status   0x000208    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+           display_status   0x0001cc    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
               information   0x0000ff    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                      init   0x000001    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-             lcdLongDelay   0x00024a    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+             lcdLongDelay   0x00027c    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                      poll   0x00006f    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                     start   0x000022    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                   waiting   0x000018    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
@@ -109,8 +115,8 @@ Linker Map File - Created Wed Jan 29 17:01:09 2014
                 ---------  ---------  ---------  --------- ---------                
                      init   0x000001    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                   _1loop_   0x000010    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                   _1end_   0x000018    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                   waiting   0x000018    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                   _1end_   0x000018    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
              _.org_0_0019   0x000019    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
              _.org_0_0020   0x000020    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                     start   0x000022    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
@@ -153,38 +159,44 @@ Linker Map File - Created Wed Jan 29 17:01:09 2014
                check_time   0x000198    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                  _35loop_   0x00019f    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
                   _35end_   0x0001a7    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                 _36loop_   0x0001ac    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                  _36end_   0x0001b4    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-              check_start   0x0001b5    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-            check_standby   0x0001ba    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-              default_key   0x0001bf    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-           display_status   0x0001c0    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-               check_none   0x0001c1    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                 _37loop_   0x0001c6    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                  _37end_   0x0001ce    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-               check_pass   0x0001cf    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                 _38loop_   0x0001d5    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                  _38end_   0x0001dd    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                check_LED   0x0001de    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                 _39loop_   0x0001e4    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                  _39end_   0x0001ec    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-              check_flick   0x0001ed    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                 _40loop_   0x0001f3    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                  _40end_   0x0001fb    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-           default_status   0x0001fc    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-               big_number   0x0001fd    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                  InitLCD   0x000206    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-            Clear_Display   0x000224    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-             Switch_Lines   0x000227    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                   WR_INS   0x00022a    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                  WR_DATA   0x000239    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-             lcdLongDelay   0x00024a    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                 LLD_LOOP   0x00024c    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-             _.org_0_024F   0x00024f    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                    HalfS   0x000253    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-                _0HalfS_0   0x000259    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-             _.org_0_025A   0x00025a    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-             _.org_0_025C   0x00025c    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
-             _.org_0_025F   0x00025f    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                 _39loop_   0x0001b8    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                  _39end_   0x0001c0    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+              check_start   0x0001c1    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+            check_standby   0x0001c6    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+              default_key   0x0001cb    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+           display_status   0x0001cc    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+               check_none   0x0001cd    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                 _40loop_   0x0001d2    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                  _40end_   0x0001da    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+               check_pass   0x0001db    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                 _41loop_   0x0001e1    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                  _41end_   0x0001e9    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                check_LED   0x0001ea    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                 _42loop_   0x0001f0    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                  _42end_   0x0001f8    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+              check_flick   0x0001f9    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                 _43loop_   0x0001ff    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                  _43end_   0x000207    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+           default_status   0x000208    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+               big_number   0x000209    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                  BCDADD3   0x00020e    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                 ADD3HUNS   0x000229    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                 ADD3TENS   0x00022c    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                 ADD3ONES   0x00022f    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                CARRYONES   0x000232    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                CARRYTENS   0x000235    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                  InitLCD   0x000238    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+            Clear_Display   0x000256    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+             Switch_Lines   0x000259    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                   WR_INS   0x00025c    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                  WR_DATA   0x00026b    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+             lcdLongDelay   0x00027c    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                 LLD_LOOP   0x00027e    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+             _.org_0_0281   0x000281    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                    HalfS   0x000285    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+                _0HalfS_0   0x00028b    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+             _.org_0_028C   0x00028c    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+             _.org_0_028E   0x00028e    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
+             _.org_0_0291   0x000291    program     static C:\Users\Doge\Documents\GitHub\robot\user_interface.X\interface.asm
 
 

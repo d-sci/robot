@@ -1,4 +1,4 @@
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE  1
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -47,102 +47,106 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
   00000033            00031         status9
   00000034            00032         num_dis
   00000035            00033         num_tot
-                      00034         endc
-                      00035 
-                      00036 
-                      00037 ;***************************************
-                      00038 ; DEFINITIONS
-                      00039 ;***************************************
-                      00040     #define     RS      PORTD,2
-                      00041         #define E       PORTD,3
-                      00042 
-                      00043 
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE  2
+  00000036            00034         huns
+  00000037            00035         tens
+  00000038            00036         ones
+  00000039            00037         count
+                      00038         endc
+                      00039 
+                      00040 
+                      00041 ;***************************************
+                      00042 ; DEFINITIONS
+                      00043 ;***************************************
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00044 ;***************************************
-                      00045 ; MACROS
-                      00046 ;***************************************
-                      00047 LCD_DELAY macro
-                      00048         movlw   0xFF
-                      00049         movwf   lcd_d1
-                      00050         decfsz  lcd_d1,f
-                      00051         goto    $-1
-                      00052         endm
-                      00053 
-                      00054 Display macro   Message
-                      00055                 local   loop_
-                      00056                 local   end_
-                      00057                 clrf    Table_Counter
-                      00058                 clrw
-                      00059 loop_   movf    Table_Counter,W
-                      00060                 call    Message
-                      00061                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
-                      00062                 btfsc   STATUS,Z
-                      00063                 goto    end_
-                      00064                 call    WR_DATA
-                      00065                 incf    Table_Counter,F
-                      00066                 goto    loop_
-                      00067 end_
-                      00068                 endm
-                      00069 
-                      00070 movlf   macro   l, f
-                      00071         movlw   l
-                      00072         movwf   f
-                      00073         endm
-                      00074 
-                      00075 writenum    macro   number
-                      00076             movlw    number
-                      00077             addlw   B'00110000'
-                      00078             movwf   dat
-                      00079             call WR_DATA
-                      00080             endm
-                      00081 
-                      00082 writenum_reg    macro   reg
-                      00083             movfw    reg
-                      00084             addlw   B'00110000'
-                      00085             movwf   dat
-                      00086             call WR_DATA
-                      00087             endm
-                      00088 
-                      00089 ;***************************************
-                      00090 ; MAIN CODE
-                      00091 ;***************************************
+                      00044     #define     RS      PORTD,2
+                      00045         #define E       PORTD,3
+                      00046 
+                      00047 
+                      00048 ;***************************************
+                      00049 ; MACROS
+                      00050 ;***************************************
+                      00051 LCD_DELAY macro
+                      00052         movlw   0xFF
+                      00053         movwf   lcd_d1
+                      00054         decfsz  lcd_d1,f
+                      00055         goto    $-1
+                      00056         endm
+                      00057 
+                      00058 Display macro   Message
+                      00059                 local   loop_
+                      00060                 local   end_
+                      00061                 clrf    Table_Counter
+                      00062                 clrw
+                      00063 loop_   movf    Table_Counter,W
+                      00064                 call    Message
+                      00065                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
+                      00066                 btfsc   STATUS,Z
+                      00067                 goto    end_
+                      00068                 call    WR_DATA
+                      00069                 incf    Table_Counter,F
+                      00070                 goto    loop_
+                      00071 end_
+                      00072                 endm
+                      00073 
+                      00074 movlf   macro   l, f
+                      00075         movlw   l
+                      00076         movwf   f
+                      00077         endm
+                      00078 
+                      00079 writenum    macro   number
+                      00080             movlw    number
+                      00081             addlw   B'00110000'
+                      00082             movwf   dat
+                      00083             call WR_DATA
+                      00084             endm
+                      00085 
+                      00086 writenum_reg    macro   reg
+                      00087             movfw    reg
+                      00088             addlw   B'00110000'
+                      00089             movwf   dat
+                      00090             call WR_DATA
+                      00091             endm
                       00092 
-                      00093     ORG       0x0000             ;RESET vector must always be at 0x00
-0000   2???           00094          goto      init          ;Just jump to the main code section.
-                      00095 
-0001                  00096 init
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE  3
+                      00093 ;***************************************
+                      00094 ; MAIN CODE
+                      00095 ;***************************************
+                      00096 
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0001   018B           00097          clrf      INTCON         ; No interrupts
-                      00098 
-0002   1683           00099          bsf       STATUS,RP0     ; select bank 1
+                      00097     ORG       0x0000             ;RESET vector must always be at 0x00
+0000   2???           00098          goto      init          ;Just jump to the main code section.
+                      00099 
+0001                  00100 init
+0001   018B           00101          clrf      INTCON         ; No interrupts
+                      00102 
+0002   1683           00103          bsf       STATUS,RP0     ; select bank 1
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0003   0185           00100          clrf      TRISA          ; All port A is output
-0004   30F2           00101          movlw     b'11110010'    ; Set required keypad inputs
+0003   0185           00104          clrf      TRISA          ; All port A is output
+0004   30F2           00105          movlw     b'11110010'    ; Set required keypad inputs
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0005   0086           00102          movwf     TRISB
+0005   0086           00106          movwf     TRISB
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0006   0187           00103          clrf      TRISC          ; All port C is output
+0006   0187           00107          clrf      TRISC          ; All port C is output
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0007   0188           00104          clrf      TRISD          ; All port D is output
-                      00105 
-0008   1283           00106          bcf       STATUS,RP0     ; select bank 0
-0009   0185           00107          clrf      PORTA
-000A   0186           00108          clrf      PORTB
-000B   0187           00109          clrf      PORTC
-000C   0188           00110          clrf      PORTD
-                      00111 
-000D   2???           00112          call      InitLCD    ;Initialize the LCD
-                      00113          Display   Standby_Msg
+0007   0188           00108          clrf      TRISD          ; All port D is output
+                      00109 
+0008   1283           00110          bcf       STATUS,RP0     ; select bank 0
+0009   0185           00111          clrf      PORTA
+000A   0186           00112          clrf      PORTB
+000B   0187           00113          clrf      PORTC
+000C   0188           00114          clrf      PORTD
+                      00115 
+000D   2???           00116          call      InitLCD    ;Initialize the LCD
+                      00117          Display   Standby_Msg
   0000                    M                 local   loop_
   0000                    M                 local   end_
 000E   01A2               M                 clrf    Table_Counter
@@ -156,32 +160,32 @@ Message[302]: Register in operand not in bank 0.  Ensure that bank bits are corr
 0016   0AA2               M                 incf    Table_Counter,F
 0017   2???               M                 goto    loop_
 0018                      M end_
-                      00114 
-0018   1C86           00115 waiting  btfss          PORTB,1     ;Wait until data is available from the keypad
-0019   2???           00116          goto           $-1
-                      00117 
-001A   0E06           00118          swapf          PORTB,W     ;Read PortB<7:4> into W<3:0>
-001B   390F           00119          andlw          0x0F
-001C   3A03           00120          xorlw      0x3         ;will be all zeros if its "START:
-001D   1903           00121          btfsc      STATUS,Z    ;and Z will be high, so skip if not high
-001E   2???           00122          goto       start
-                      00123 
-001F   1886           00124          btfsc          PORTB,1     ;Wait until key is released
-0020   2???           00125          goto           $-1
-0021   2???           00126          goto       waiting
+                      00118 
+0018   1C86           00119 waiting  btfss          PORTB,1     ;Wait until data is available from the keypad
+0019   2???           00120          goto           $-1
+                      00121 
+001A   0E06           00122          swapf          PORTB,W     ;Read PortB<7:4> into W<3:0>
+001B   390F           00123          andlw          0x0F
+001C   3A03           00124          xorlw      0x3         ;will be all zeros if its "START:
+001D   1903           00125          btfsc      STATUS,Z    ;and Z will be high, so skip if not high
+001E   2???           00126          goto       start
                       00127 
-                      00128 ;--------------------------------------
-                      00129 ;       ACTUAL OPERATION (im just adding values manually now)
-                      00130 
-0022                  00131 start
-0022   2???           00132         call        Clear_Display
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE  4
+001F   1886           00128          btfsc          PORTB,1     ;Wait until key is released
+0020   2???           00129          goto           $-1
+0021   2???           00130          goto       waiting
+                      00131 
+                      00132 ;--------------------------------------
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE  4
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00133         Display     Start_Msg
+                      00133 ;       ACTUAL OPERATION (im just adding values manually now)
+                      00134 
+0022                  00135 start
+0022   2???           00136         call        Clear_Display
+                      00137         Display     Start_Msg
   0000                    M                 local   loop_
   0000                    M                 local   end_
 0023   01A2               M                 clrf    Table_Counter
@@ -195,92 +199,92 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 002B   0AA2               M                 incf    Table_Counter,F
 002C   2???               M                 goto    loop_
 002D                      M end_
-                      00134 
-                      00135 ; just shitting around
-002D   2???           00136         call    HalfS
-002E   2???           00137         call Clear_Display
-                      00138         writenum    0x5
+                      00138 
+                      00139 ; just shitting around
+002D   2???           00140         call    HalfS
+002E   2???           00141         call Clear_Display
+                      00142         writenum    0x5
 002F   3005               M             movlw    0x5
 0030   3E30               M             addlw   B'00110000'
 0031   00A4               M             movwf   dat
 0032   2???               M             call WR_DATA
-0033   2???           00139         call    HalfS
-0034   2???           00140         call Clear_Display
-                      00141         writenum    0x4
+0033   2???           00143         call    HalfS
+0034   2???           00144         call Clear_Display
+                      00145         writenum    0x4
 0035   3004               M             movlw    0x4
 0036   3E30               M             addlw   B'00110000'
 0037   00A4               M             movwf   dat
 0038   2???               M             call WR_DATA
-0039   2???           00142         call    HalfS
-003A   2???           00143         call Clear_Display
-                      00144         writenum    0x3
+0039   2???           00146         call    HalfS
+003A   2???           00147         call Clear_Display
+                      00148         writenum    0x3
 003B   3003               M             movlw    0x3
 003C   3E30               M             addlw   B'00110000'
 003D   00A4               M             movwf   dat
 003E   2???               M             call WR_DATA
-003F   2???           00145         call    HalfS
-0040   2???           00146         call Clear_Display
-                      00147         writenum    0x2
+003F   2???           00149         call    HalfS
+0040   2???           00150         call Clear_Display
+                      00151         writenum    0x2
 0041   3002               M             movlw    0x2
 0042   3E30               M             addlw   B'00110000'
 0043   00A4               M             movwf   dat
 0044   2???               M             call WR_DATA
-0045   2???           00148         call    HalfS
-0046   2???           00149         call Clear_Display
-                      00150         writenum    0x1
+0045   2???           00152         call    HalfS
+0046   2???           00153         call Clear_Display
+                      00154         writenum    0x1
 0047   3001               M             movlw    0x1
 0048   3E30               M             addlw   B'00110000'
-0049   00A4               M             movwf   dat
-004A   2???               M             call WR_DATA
-004B   2???           00151         call    HalfS
-                      00152 
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE  5
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE  5
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00153 ; Putting values in manually. This will be done automatically in main program
-                      00154          movlf     D'47', op_time
+0049   00A4               M             movwf   dat
+004A   2???               M             call WR_DATA
+004B   2???           00155         call    HalfS
+                      00156 
+                      00157 ; Putting values in manually. This will be done automatically in main program
+                      00158          movlf     D'47', op_time
 004C   302F               M         movlw   D'47'
 004D   00AA               M         movwf   op_time
-                      00155          movlf     B'00', status1
+                      00159          movlf     B'00', status1
 004E   3000               M         movlw   B'00'
 004F   00AB               M         movwf   status1
-                      00156          movlf     B'01', status2
+                      00160          movlf     B'01', status2
 0050   3001               M         movlw   B'01'
 0051   00AC               M         movwf   status2
-                      00157          movlf     B'10', status3
+                      00161          movlf     B'10', status3
 0052   3002               M         movlw   B'10'
 0053   00AD               M         movwf   status3
-                      00158          movlf     B'11', status4
+                      00162          movlf     B'11', status4
 0054   3003               M         movlw   B'11'
 0055   00AE               M         movwf   status4
-                      00159          movlf     B'01', status5
+                      00163          movlf     B'01', status5
 0056   3001               M         movlw   B'01'
 0057   00AF               M         movwf   status5
-                      00160          movlf     B'01', status6
+                      00164          movlf     B'01', status6
 0058   3001               M         movlw   B'01'
 0059   00B0               M         movwf   status6
-                      00161          movlf     B'01', status7
+                      00165          movlf     B'01', status7
 005A   3001               M         movlw   B'01'
 005B   00B1               M         movwf   status7
-                      00162          movlf     B'01', status8
+                      00166          movlf     B'01', status8
 005C   3001               M         movlw   B'01'
 005D   00B2               M         movwf   status8
-                      00163          movlf     B'00', status9
+                      00167          movlf     B'00', status9
 005E   3000               M         movlw   B'00'
 005F   00B3               M         movwf   status9
-                      00164          movlf     D'2', num_dis
+                      00168          movlf     D'2', num_dis
 0060   3002               M         movlw   D'2'
 0061   00B4               M         movwf   num_dis
-                      00165          movlf     D'7', num_tot
+                      00169          movlf     D'7', num_tot
 0062   3007               M         movlw   D'7'
 0063   00B5               M         movwf   num_tot
-                      00166 
-                      00167 
-0064   2???           00168         call        Clear_Display
-                      00169         Display    End_Msg
+                      00170 
+                      00171 
+0064   2???           00172         call        Clear_Display
+                      00173         Display    End_Msg
   0000                    M                 local   loop_
   0000                    M                 local   end_
 0065   01A2               M                 clrf    Table_Counter
@@ -289,284 +293,284 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0068   2???               M                 call    End_Msg
 0069   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
 006A   1903               M                 btfsc   STATUS,Z
-006B   2???               M                 goto    end_
-006C   2???               M                 call    WR_DATA
-006D   0AA2               M                 incf    Table_Counter,F
-006E   2???               M                 goto    loop_
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE  6
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE  6
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
+006B   2???               M                 goto    end_
+006C   2???               M                 call    WR_DATA
+006D   0AA2               M                 incf    Table_Counter,F
+006E   2???               M                 goto    loop_
 006F                      M end_
-                      00170 ;-----------------------------------------------------------------------
-                      00171 
-                      00172 ; Data display interface
-                      00173 
-006F   1C86           00174 poll     btfss          PORTB,1     ;Wait until data is available from the keypad
-0070   2???           00175          goto           $-1
-                      00176 
-0071   0E06           00177          swapf          PORTB,W     ;Read PortB<7:4> into W<3:0>
-0072   390F           00178          andlw          0x0F
-0073   2???           00179          call       information
+                      00174 ;-----------------------------------------------------------------------
+                      00175 
+                      00176 ; Data display interface
+                      00177 
+006F   1C86           00178 poll     btfss          PORTB,1     ;Wait until data is available from the keypad
+0070   2???           00179          goto           $-1
                       00180 
-0074   1886           00181          btfsc          PORTB,1     ;Wait until key is released
-0075   2???           00182          goto           $-1
-0076   2???           00183          goto       poll
+0071   0E06           00181          swapf          PORTB,W     ;Read PortB<7:4> into W<3:0>
+0072   390F           00182          andlw          0x0F
+0073   2???           00183          call       information
                       00184 
-                      00185 ;-------------------------------------------------------------------------
-                      00186 
-                      00187 ;***************************************
-                      00188 ; LOOK UP TABLE (MESSAGES)
-                      00189 ;***************************************
-0077                  00190 Standby_Msg
-0077   0782           00191                 addwf   PCL,F
-0078   3453 3454 3441 00192                 dt              "STANDBY", 0
+0074   1886           00185          btfsc          PORTB,1     ;Wait until key is released
+0075   2???           00186          goto           $-1
+0076   2???           00187          goto       poll
+                      00188 
+                      00189 ;-------------------------------------------------------------------------
+                      00190 
+                      00191 ;***************************************
+                      00192 ; LOOK UP TABLE (MESSAGES)
+                      00193 ;***************************************
+0077                  00194 Standby_Msg
+0077   0782           00195                 addwf   PCL,F
+0078   3453 3454 3441 00196                 dt              "STANDBY", 0
        344E 3444 3442 
        3459 3400 
-0080                  00193 Start_Msg
-0080   0782           00194         addwf   PCL,F
-0081   3449 346E 3473 00195         dt      "Inspecting",0
+0080                  00197 Start_Msg
+0080   0782           00198         addwf   PCL,F
+0081   3449 346E 3473 00199         dt      "Inspecting",0
        3470 3465 3463 
        3474 3469 346E 
        3467 3400 
-008C                  00196 End_Msg
-008C   0782           00197         addwf   PCL,F
-008D   3443 346F 346D 00198         dt      "Complete",0
+008C                  00200 End_Msg
+008C   0782           00201         addwf   PCL,F
+008D   3443 346F 346D 00202         dt      "Complete",0
        3470 346C 3465 
        3474 3465 3400 
-0096                  00199 Time_Msg
-0096   0782           00200                 addwf   PCL,F
-0097   344F 3470 3465 00201                 dt              "Operation time:",0
+0096                  00203 Time_Msg
+0096   0782           00204                 addwf   PCL,F
+0097   344F 3470 3465 00205                 dt              "Operation time:",0
        3472 3461 3474 
        3469 346F 346E 
        3420 3474 3469 
        346D 3465 343A 
        3400 
-00A7                  00202 Seconds
-00A7   0782           00203         addwf   PCL,F
-00A8   3420 3473 3465 00204         dt      " seconds", 0
+00A7                  00206 Seconds
+00A7   0782           00207         addwf   PCL,F
+00A8   3420 3473 3465 00208         dt      " seconds", 0
        3463 346F 346E 
-       3464 3473 3400 
-00B1                  00205 None
-00B1   0782           00206         addwf   PCL,F
-00B2   343A 3420 346E 00207         dt      ": not present",0
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE  7
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE  7
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
+       3464 3473 3400 
+00B1                  00209 None
+00B1   0782           00210         addwf   PCL,F
+00B2   343A 3420 346E 00211         dt      ": not present",0
        346F 3474 3420 
        3470 3472 3465 
        3473 3465 346E 
        3474 3400 
-00C0                  00208 Pass
-00C0   0782           00209                 addwf   PCL,F
-00C1   343A 3420 3470 00210                 dt              ": pass",0
+00C0                  00212 Pass
+00C0   0782           00213                 addwf   PCL,F
+00C1   343A 3420 3470 00214                 dt              ": pass",0
        3461 3473 3473 
        3400 
-00C8                  00211 LED_fail
-00C8   0782           00212                 addwf   PCL,F
-00C9   343A 3420 344C 00213                 dt              ": LED fail",0
+00C8                  00215 LED_fail
+00C8   0782           00216                 addwf   PCL,F
+00C9   343A 3420 344C 00217                 dt              ": LED fail",0
        3445 3444 3420 
        3466 3461 3469 
        346C 3400 
-00D4                  00214 Flick_fail
-00D4   0782           00215                 addwf   PCL,F
-00D5   343A 3420 3466 00216                 dt              ": flicker fail",0
+00D4                  00218 Flick_fail
+00D4   0782           00219                 addwf   PCL,F
+00D5   343A 3420 3466 00220                 dt              ": flicker fail",0
        346C 3469 3463 
        346B 3465 3472 
        3420 3466 3461 
        3469 346C 3400 
-00E4                  00217 Of
-00E4   0782           00218         addwf   PCL,F
-00E5   3420 346F 3466 00219         dt      " of ",0
+00E4                  00221 Of
+00E4   0782           00222         addwf   PCL,F
+00E5   3420 346F 3466 00223         dt      " of ",0
        3420 3400 
-00EA                  00220 Candles
-00EA   0782           00221         addwf   PCL,F
-00EB   3420 3463 3461 00222         dt      " candles",0
+00EA                  00224 Candles
+00EA   0782           00225         addwf   PCL,F
+00EB   3420 3463 3461 00226         dt      " candles",0
        346E 3464 346C 
        3465 3473 3400 
-00F4                  00223 Defective
-00F4   0782           00224         addwf   PCL,F
-00F5   3464 3465 3466 00225         dt      "defective",0
+00F4                  00227 Defective
+00F4   0782           00228         addwf   PCL,F
+00F5   3464 3465 3466 00229         dt      "defective",0
        3465 3463 3474 
        3469 3476 3465 
        3400 
-                      00226 
-                      00227 
-                      00228 ;***************************************
-                      00229 ; KEY SELECTOR ROUTINE (written by me)
-                      00230 ;***************************************
-00FF                  00231 information
-00FF   00A0           00232     movwf   keytemp             ; save value of W in msgtemp
-                      00233 
-0100                  00234 check_1
-0100   3A00           00235     xorlw   0x0         ;will be all zeros if its 1
-0101   1D03           00236     btfss   STATUS,Z    ;and Z will be high, so skip 
-0102   2???           00237     goto check_2
-0103   2???           00238     call Clear_Display
-                      00239     writenum 0x1
-0104   3001               M             movlw    0x1
-0105   3E30               M             addlw   B'00110000'
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE  8
+                      00230 
+                      00231 
+                      00232 ;***************************************
+                      00233 ; KEY SELECTOR ROUTINE (written by me)
+                      00234 ;***************************************
+00FF                  00235 information
+00FF   00A0           00236     movwf   keytemp             ; save value of W in msgtemp
+                      00237 
+0100                  00238 check_1
+0100   3A00           00239     xorlw   0x0         ;will be all zeros if its 1
+0101   1D03           00240     btfss   STATUS,Z    ;and Z will be high, so skip 
+0102   2???           00241     goto check_2
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE  8
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
+0103   2???           00242     call Clear_Display
+                      00243     writenum 0x1
+0104   3001               M             movlw    0x1
+0105   3E30               M             addlw   B'00110000'
 0106   00A4               M             movwf   dat
 0107   2???               M             call WR_DATA
-0108   082B           00240     movf status1, W
-0109   2???           00241     call display_status
-010A   0008           00242     return
-                      00243 
-010B                  00244 check_2
-010B   0820           00245     movf    keytemp, W
-010C   3A01           00246     xorlw   0x1         
-010D   1D03           00247     btfss   STATUS,Z    
-010E   2???           00248     goto check_3
-010F   2???           00249     call Clear_Display
-                      00250     writenum 0x2
+0108   082B           00244     movf status1, W
+0109   2???           00245     call display_status
+010A   0008           00246     return
+                      00247 
+010B                  00248 check_2
+010B   0820           00249     movf    keytemp, W
+010C   3A01           00250     xorlw   0x1         
+010D   1D03           00251     btfss   STATUS,Z    
+010E   2???           00252     goto check_3
+010F   2???           00253     call Clear_Display
+                      00254     writenum 0x2
 0110   3002               M             movlw    0x2
 0111   3E30               M             addlw   B'00110000'
 0112   00A4               M             movwf   dat
 0113   2???               M             call WR_DATA
-0114   082C           00251     movf status2, W
-0115   2???           00252     call display_status
-0116   0008           00253     return
-                      00254 
-0117                  00255 check_3
-0117   0820           00256     movf    keytemp, W
-0118   3A02           00257     xorlw   0x2
-0119   1D03           00258     btfss   STATUS,Z
-011A   2???           00259     goto check_4
-011B   2???           00260     call Clear_Display
-                      00261     writenum 0x3
+0114   082C           00255     movf status2, W
+0115   2???           00256     call display_status
+0116   0008           00257     return
+                      00258 
+0117                  00259 check_3
+0117   0820           00260     movf    keytemp, W
+0118   3A02           00261     xorlw   0x2
+0119   1D03           00262     btfss   STATUS,Z
+011A   2???           00263     goto check_4
+011B   2???           00264     call Clear_Display
+                      00265     writenum 0x3
 011C   3003               M             movlw    0x3
 011D   3E30               M             addlw   B'00110000'
 011E   00A4               M             movwf   dat
 011F   2???               M             call WR_DATA
-0120   082D           00262     movf status3, W
-0121   2???           00263     call display_status
-0122   0008           00264     return
-                      00265 
-0123                  00266 check_4
-0123   0820           00267     movf    keytemp, W
-0124   3A04           00268     xorlw   0x4
-0125   1D03           00269     btfss   STATUS,Z
-0126   2???           00270     goto check_5
-0127   2???           00271     call Clear_Display
-                      00272     writenum 0x4
+0120   082D           00266     movf status3, W
+0121   2???           00267     call display_status
+0122   0008           00268     return
+                      00269 
+0123                  00270 check_4
+0123   0820           00271     movf    keytemp, W
+0124   3A04           00272     xorlw   0x4
+0125   1D03           00273     btfss   STATUS,Z
+0126   2???           00274     goto check_5
+0127   2???           00275     call Clear_Display
+                      00276     writenum 0x4
 0128   3004               M             movlw    0x4
 0129   3E30               M             addlw   B'00110000'
 012A   00A4               M             movwf   dat
 012B   2???               M             call WR_DATA
-012C   082E           00273     movf status4, W
-012D   2???           00274     call display_status
-012E   0008           00275     return
-                      00276 
-012F                  00277 check_5
-012F   0820           00278     movf    keytemp, W
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE  9
+012C   082E           00277     movf status4, W
+012D   2???           00278     call display_status
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE  9
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0130   3A05           00279     xorlw   0x5
-0131   1D03           00280     btfss   STATUS,Z
-0132   2???           00281     goto check_6
-0133   2???           00282     call Clear_Display
-                      00283     writenum 0x5
+012E   0008           00279     return
+                      00280 
+012F                  00281 check_5
+012F   0820           00282     movf    keytemp, W
+0130   3A05           00283     xorlw   0x5
+0131   1D03           00284     btfss   STATUS,Z
+0132   2???           00285     goto check_6
+0133   2???           00286     call Clear_Display
+                      00287     writenum 0x5
 0134   3005               M             movlw    0x5
 0135   3E30               M             addlw   B'00110000'
 0136   00A4               M             movwf   dat
 0137   2???               M             call WR_DATA
-0138   082F           00284     movf status5, W
-0139   2???           00285     call display_status
-013A   0008           00286     return
-                      00287 
-013B                  00288 check_6
-013B   0820           00289     movf    keytemp, W
-013C   3A06           00290     xorlw   0x6
-013D   1D03           00291     btfss   STATUS,Z
-013E   2???           00292     goto check_7
-013F   2???           00293     call Clear_Display
-                      00294     writenum 0x6
+0138   082F           00288     movf status5, W
+0139   2???           00289     call display_status
+013A   0008           00290     return
+                      00291 
+013B                  00292 check_6
+013B   0820           00293     movf    keytemp, W
+013C   3A06           00294     xorlw   0x6
+013D   1D03           00295     btfss   STATUS,Z
+013E   2???           00296     goto check_7
+013F   2???           00297     call Clear_Display
+                      00298     writenum 0x6
 0140   3006               M             movlw    0x6
 0141   3E30               M             addlw   B'00110000'
 0142   00A4               M             movwf   dat
 0143   2???               M             call WR_DATA
-0144   0830           00295     movf status6, W
-0145   2???           00296     call display_status
-0146   0008           00297     return
-                      00298 
-0147                  00299 check_7
-0147   0820           00300     movf    keytemp, W
-0148   3A08           00301     xorlw   0x8
-0149   1D03           00302     btfss   STATUS,Z
-014A   2???           00303     goto check_8
-014B   2???           00304     call Clear_Display
-                      00305     writenum 0x7
+0144   0830           00299     movf status6, W
+0145   2???           00300     call display_status
+0146   0008           00301     return
+                      00302 
+0147                  00303 check_7
+0147   0820           00304     movf    keytemp, W
+0148   3A08           00305     xorlw   0x8
+0149   1D03           00306     btfss   STATUS,Z
+014A   2???           00307     goto check_8
+014B   2???           00308     call Clear_Display
+                      00309     writenum 0x7
 014C   3007               M             movlw    0x7
 014D   3E30               M             addlw   B'00110000'
 014E   00A4               M             movwf   dat
 014F   2???               M             call WR_DATA
-0150   0831           00306     movf status7, W
-0151   2???           00307     call display_status
-0152   0008           00308     return
-                      00309 
-0153                  00310 check_8
-0153   0820           00311     movf    keytemp, W
-0154   3A09           00312     xorlw   0x9
-0155   1D03           00313     btfss   STATUS,Z
-0156   2???           00314     goto check_9
-0157   2???           00315     call Clear_Display
-                      00316     writenum 0x8
-0158   3008               M             movlw    0x8
-0159   3E30               M             addlw   B'00110000'
-015A   00A4               M             movwf   dat
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE 10
+0150   0831           00310     movf status7, W
+0151   2???           00311     call display_status
+0152   0008           00312     return
+                      00313 
+0153                  00314 check_8
+0153   0820           00315     movf    keytemp, W
+0154   3A09           00316     xorlw   0x9
+0155   1D03           00317     btfss   STATUS,Z
+0156   2???           00318     goto check_9
+0157   2???           00319     call Clear_Display
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE 10
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
+                      00320     writenum 0x8
+0158   3008               M             movlw    0x8
+0159   3E30               M             addlw   B'00110000'
+015A   00A4               M             movwf   dat
 015B   2???               M             call WR_DATA
-015C   0832           00317     movf status8, W
-015D   2???           00318     call display_status
-015E   0008           00319     return
-                      00320 
-015F                  00321 check_9
-015F   0820           00322     movf    keytemp, W
-0160   3A0A           00323     xorlw   0xA
-0161   1D03           00324     btfss   STATUS,Z
-0162   2???           00325     goto check_summary
-0163   2???           00326     call Clear_Display
-                      00327     writenum 0x9
+015C   0832           00321     movf status8, W
+015D   2???           00322     call display_status
+015E   0008           00323     return
+                      00324 
+015F                  00325 check_9
+015F   0820           00326     movf    keytemp, W
+0160   3A0A           00327     xorlw   0xA
+0161   1D03           00328     btfss   STATUS,Z
+0162   2???           00329     goto check_summary
+0163   2???           00330     call Clear_Display
+                      00331     writenum 0x9
 0164   3009               M             movlw    0x9
 0165   3E30               M             addlw   B'00110000'
 0166   00A4               M             movwf   dat
 0167   2???               M             call WR_DATA
-0168   0833           00328     movf status9, W
-0169   2???           00329     call display_status
-016A   0008           00330     return
-                      00331 
-016B                  00332 check_summary           
-016B   0820           00333     movf    keytemp, W
-016C   3A07           00334     xorlw   0x7
-016D   1D03           00335     btfss   STATUS,Z
-016E   2???           00336     goto check_time
-016F   2???           00337     call Clear_Display
-                      00338     writenum_reg num_dis
+0168   0833           00332     movf status9, W
+0169   2???           00333     call display_status
+016A   0008           00334     return
+                      00335 
+016B                  00336 check_summary           
+016B   0820           00337     movf    keytemp, W
+016C   3A07           00338     xorlw   0x7
+016D   1D03           00339     btfss   STATUS,Z
+016E   2???           00340     goto check_time
+016F   2???           00341     call Clear_Display
+                      00342     writenum_reg num_dis
 0170   0834               M             movfw    num_dis
 0171   3E30               M             addlw   B'00110000'
 0172   00A4               M             movwf   dat
 0173   2???               M             call WR_DATA
-                      00339     Display Of
+                      00343     Display Of
   0000                    M                 local   loop_
   0000                    M                 local   end_
 0174   01A2               M                 clrf    Table_Counter
@@ -580,20 +584,20 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 017C   0AA2               M                 incf    Table_Counter,F
 017D   2???               M                 goto    loop_
 017E                      M end_
-                      00340     writenum_reg num_tot
+                      00344     writenum_reg num_tot
 017E   0835               M             movfw    num_tot
 017F   3E30               M             addlw   B'00110000'
 0180   00A4               M             movwf   dat
-0181   2???               M             call WR_DATA
-                      00341     Display Candles
-  0000                    M                 local   loop_
-  0000                    M                 local   end_
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE 11
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE 11
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
+0181   2???               M             call WR_DATA
+                      00345     Display Candles
+  0000                    M                 local   loop_
+  0000                    M                 local   end_
 0182   01A2               M                 clrf    Table_Counter
 0183   0103               M                 clrw
 0184   0822               M loop_   movf    Table_Counter,W
@@ -605,8 +609,8 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 018A   0AA2               M                 incf    Table_Counter,F
 018B   2???               M                 goto    loop_
 018C                      M end_
-018C   2???           00342     call Switch_Lines
-                      00343     Display Defective
+018C   2???           00346     call Switch_Lines
+                      00347     Display Defective
   0000                    M                 local   loop_
   0000                    M                 local   end_
 018D   01A2               M                 clrf    Table_Counter
@@ -620,15 +624,15 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0195   0AA2               M                 incf    Table_Counter,F
 0196   2???               M                 goto    loop_
 0197                      M end_
-0197   0008           00344     return
-                      00345 
-0198                  00346 check_time
-0198   0820           00347     movf    keytemp, W
-0199   3A0B           00348     xorlw   0xB
-019A   1D03           00349     btfss   STATUS,Z
-019B   2???           00350     goto check_start
-019C   2???           00351     call Clear_Display
-                      00352     Display Time_Msg
+0197   0008           00348     return
+                      00349 
+0198                  00350 check_time
+0198   0820           00351     movf    keytemp, W
+0199   3A0B           00352     xorlw   0xB
+019A   1D03           00353     btfss   STATUS,Z
+019B   2???           00354     goto check_start
+019C   2???           00355     call Clear_Display
+                      00356     Display Time_Msg
   0000                    M                 local   loop_
   0000                    M                 local   end_
 019D   01A2               M                 clrf    Table_Counter
@@ -642,329 +646,412 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 01A5   0AA2               M                 incf    Table_Counter,F
 01A6   2???               M                 goto    loop_
 01A7                      M end_
-01A7   2???           00353     call Switch_Lines
-01A8   082A           00354     movf    op_time, W
-01A9   2???           00355     call    big_number      ; this doesnt actually work
-                      00356     Display Seconds
-  0000                    M                 local   loop_
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE 12
+01A7   2???           00357     call Switch_Lines
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE 12
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
+01A8   082A           00358     movf    op_time, W
+01A9   2???           00359     call    big_number      ; this doesnt actually work
+                      00360     writenum_reg    huns
+01AA   0836               M             movfw    huns
+01AB   3E30               M             addlw   B'00110000'
+01AC   00A4               M             movwf   dat
+01AD   2???               M             call WR_DATA
+                      00361     writenum_reg    tens
+01AE   0837               M             movfw    tens
+01AF   3E30               M             addlw   B'00110000'
+01B0   00A4               M             movwf   dat
+01B1   2???               M             call WR_DATA
+                      00362     writenum_reg    ones
+01B2   0838               M             movfw    ones
+01B3   3E30               M             addlw   B'00110000'
+01B4   00A4               M             movwf   dat
+01B5   2???               M             call WR_DATA
+                      00363     Display Seconds
+  0000                    M                 local   loop_
   0000                    M                 local   end_
-01AA   01A2               M                 clrf    Table_Counter
-01AB   0103               M                 clrw
-01AC   0822               M loop_   movf    Table_Counter,W
-01AD   2???               M                 call    Seconds
-01AE   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
-01AF   1903               M                 btfsc   STATUS,Z
-01B0   2???               M                 goto    end_
-01B1   2???               M                 call    WR_DATA
-01B2   0AA2               M                 incf    Table_Counter,F
-01B3   2???               M                 goto    loop_
-01B4                      M end_
-01B4   0008           00357     return
-                      00358 
-01B5                  00359 check_start
-01B5   0820           00360     movf    keytemp, W
-01B6   3A03           00361     xorlw   0x3
-01B7   1D03           00362     btfss   STATUS,Z
-01B8   2???           00363     goto check_standby
-01B9   2???           00364     goto start
+01B6   01A2               M                 clrf    Table_Counter
+01B7   0103               M                 clrw
+01B8   0822               M loop_   movf    Table_Counter,W
+01B9   2???               M                 call    Seconds
+01BA   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
+01BB   1903               M                 btfsc   STATUS,Z
+01BC   2???               M                 goto    end_
+01BD   2???               M                 call    WR_DATA
+01BE   0AA2               M                 incf    Table_Counter,F
+01BF   2???               M                 goto    loop_
+01C0                      M end_
+01C0   0008           00364     return
                       00365 
-01BA                  00366 check_standby
-01BA   0820           00367     movf    keytemp, W
-01BB   3A0F           00368     xorlw   0xF
-01BC   1D03           00369     btfss   STATUS,Z
-01BD   2???           00370     goto default_key
-01BE   2???           00371     goto init
+01C1                  00366 check_start
+01C1   0820           00367     movf    keytemp, W
+01C2   3A03           00368     xorlw   0x3
+01C3   1D03           00369     btfss   STATUS,Z
+01C4   2???           00370     goto check_standby
+01C5   2???           00371     goto start
                       00372 
-01BF                  00373 default_key
-01BF   0008           00374     return
-                      00375 
-                      00376 
-                      00377 ;***************************************
-                      00378 ; STATUS SLECECTOR ROUTINE (written by me)
-                      00379 ;***************************************
-01C0                  00380 display_status
-01C0   00A1           00381     movwf  statustemp
+01C6                  00373 check_standby
+01C6   0820           00374     movf    keytemp, W
+01C7   3A0F           00375     xorlw   0xF
+01C8   1D03           00376     btfss   STATUS,Z
+01C9   2???           00377     goto default_key
+01CA   2???           00378     goto init
+                      00379 
+01CB                  00380 default_key
+01CB   0008           00381     return
                       00382 
-01C1                  00383 check_none
-01C1   3A00           00384     xorlw   0x0
-01C2   1D03           00385     btfss   STATUS,Z
-01C3   2???           00386     goto check_pass
-                      00387     Display None
-  0000                    M                 local   loop_
-  0000                    M                 local   end_
-01C4   01A2               M                 clrf    Table_Counter
-01C5   0103               M                 clrw
-01C6   0822               M loop_   movf    Table_Counter,W
-01C7   2???               M                 call    None
-01C8   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
-01C9   1903               M                 btfsc   STATUS,Z
-01CA   2???               M                 goto    end_
-01CB   2???               M                 call    WR_DATA
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE 13
+                      00383 
+                      00384 ;***************************************
+                      00385 ; STATUS SLECECTOR ROUTINE (written by me)
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE 13
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-01CC   0AA2               M                 incf    Table_Counter,F
-01CD   2???               M                 goto    loop_
-01CE                      M end_
-01CE   0008           00388     return
+                      00386 ;***************************************
+01CC                  00387 display_status
+01CC   00A1           00388     movwf  statustemp
                       00389 
-01CF                  00390 check_pass
-01CF   0821           00391     movf    statustemp, W
-01D0   3A01           00392     xorlw   0x1
-01D1   1D03           00393     btfss   STATUS,Z
-01D2   2???           00394     goto check_LED
-                      00395     Display Pass
+01CD                  00390 check_none
+01CD   3A00           00391     xorlw   0x0
+01CE   1D03           00392     btfss   STATUS,Z
+01CF   2???           00393     goto check_pass
+                      00394     Display None
   0000                    M                 local   loop_
   0000                    M                 local   end_
-01D3   01A2               M                 clrf    Table_Counter
-01D4   0103               M                 clrw
-01D5   0822               M loop_   movf    Table_Counter,W
-01D6   2???               M                 call    Pass
-01D7   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
-01D8   1903               M                 btfsc   STATUS,Z
-01D9   2???               M                 goto    end_
-01DA   2???               M                 call    WR_DATA
-01DB   0AA2               M                 incf    Table_Counter,F
-01DC   2???               M                 goto    loop_
-01DD                      M end_
-01DD   0008           00396     return
-                      00397 
-01DE                  00398 check_LED
-01DE   0821           00399     movf    statustemp, W
-01DF   3A02           00400     xorlw   0x2
-01E0   1D03           00401     btfss   STATUS,Z
-01E1   2???           00402     goto check_flick
-                      00403     Display LED_fail
+01D0   01A2               M                 clrf    Table_Counter
+01D1   0103               M                 clrw
+01D2   0822               M loop_   movf    Table_Counter,W
+01D3   2???               M                 call    None
+01D4   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
+01D5   1903               M                 btfsc   STATUS,Z
+01D6   2???               M                 goto    end_
+01D7   2???               M                 call    WR_DATA
+01D8   0AA2               M                 incf    Table_Counter,F
+01D9   2???               M                 goto    loop_
+01DA                      M end_
+01DA   0008           00395     return
+                      00396 
+01DB                  00397 check_pass
+01DB   0821           00398     movf    statustemp, W
+01DC   3A01           00399     xorlw   0x1
+01DD   1D03           00400     btfss   STATUS,Z
+01DE   2???           00401     goto check_LED
+                      00402     Display Pass
   0000                    M                 local   loop_
   0000                    M                 local   end_
-01E2   01A2               M                 clrf    Table_Counter
-01E3   0103               M                 clrw
-01E4   0822               M loop_   movf    Table_Counter,W
-01E5   2???               M                 call    LED_fail
-01E6   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
-01E7   1903               M                 btfsc   STATUS,Z
-01E8   2???               M                 goto    end_
-01E9   2???               M                 call    WR_DATA
-01EA   0AA2               M                 incf    Table_Counter,F
-01EB   2???               M                 goto    loop_
-01EC                      M end_
-01EC   0008           00404     return
-                      00405 
-01ED                  00406 check_flick
-01ED   0821           00407     movf    statustemp, W
-01EE   3A03           00408     xorlw   0x3
-01EF   1D03           00409     btfss   STATUS,Z
-01F0   2???           00410     goto default_status
-                      00411     Display Flick_fail
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE 14
+01DF   01A2               M                 clrf    Table_Counter
+01E0   0103               M                 clrw
+01E1   0822               M loop_   movf    Table_Counter,W
+01E2   2???               M                 call    Pass
+01E3   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
+01E4   1903               M                 btfsc   STATUS,Z
+01E5   2???               M                 goto    end_
+01E6   2???               M                 call    WR_DATA
+01E7   0AA2               M                 incf    Table_Counter,F
+01E8   2???               M                 goto    loop_
+01E9                      M end_
+01E9   0008           00403     return
+                      00404 
+01EA                  00405 check_LED
+01EA   0821           00406     movf    statustemp, W
+01EB   3A02           00407     xorlw   0x2
+01EC   1D03           00408     btfss   STATUS,Z
+01ED   2???           00409     goto check_flick
+                      00410     Display LED_fail
+  0000                    M                 local   loop_
+  0000                    M                 local   end_
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE 14
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
+01EE   01A2               M                 clrf    Table_Counter
+01EF   0103               M                 clrw
+01F0   0822               M loop_   movf    Table_Counter,W
+01F1   2???               M                 call    LED_fail
+01F2   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
+01F3   1903               M                 btfsc   STATUS,Z
+01F4   2???               M                 goto    end_
+01F5   2???               M                 call    WR_DATA
+01F6   0AA2               M                 incf    Table_Counter,F
+01F7   2???               M                 goto    loop_
+01F8                      M end_
+01F8   0008           00411     return
+                      00412 
+01F9                  00413 check_flick
+01F9   0821           00414     movf    statustemp, W
+01FA   3A03           00415     xorlw   0x3
+01FB   1D03           00416     btfss   STATUS,Z
+01FC   2???           00417     goto default_status
+                      00418     Display Flick_fail
   0000                    M                 local   loop_
   0000                    M                 local   end_
-01F1   01A2               M                 clrf    Table_Counter
-01F2   0103               M                 clrw
-01F3   0822               M loop_   movf    Table_Counter,W
-01F4   2???               M                 call    Flick_fail
-01F5   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
-01F6   1903               M                 btfsc   STATUS,Z
-01F7   2???               M                 goto    end_
-01F8   2???               M                 call    WR_DATA
-01F9   0AA2               M                 incf    Table_Counter,F
-01FA   2???               M                 goto    loop_
-01FB                      M end_
-01FB   0008           00412     return
-                      00413 
-01FC                  00414 default_status
-01FC   0008           00415     return
-                      00416 
-                      00417 ;***************************************
-                      00418 ; DISPLAY BIG NUMBER ROUTINE (written by me)
-                      00419 ;***************************************
+01FD   01A2               M                 clrf    Table_Counter
+01FE   0103               M                 clrw
+01FF   0822               M loop_   movf    Table_Counter,W
+0200   2???               M                 call    Flick_fail
+0201   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
+0202   1903               M                 btfsc   STATUS,Z
+0203   2???               M                 goto    end_
+0204   2???               M                 call    WR_DATA
+0205   0AA2               M                 incf    Table_Counter,F
+0206   2???               M                 goto    loop_
+0207                      M end_
+0207   0008           00419     return
                       00420 
-01FD                  00421 big_number      ;WRITE THIS!!!
-                      00422     writenum 0x9
-01FD   3009               M             movlw    0x9
-01FE   3E30               M             addlw   B'00110000'
-01FF   00A4               M             movwf   dat
-0200   2???               M             call WR_DATA
-                      00423     writenum 0x0
-0201   3000               M             movlw    0x0
-0202   3E30               M             addlw   B'00110000'
-0203   00A4               M             movwf   dat
-0204   2???               M             call WR_DATA
-0205   0008           00424     return
-                      00425 
-                      00426 
-                      00427 ;***************************************
-                      00428 ; DISPLAY ROUTINES (copied from sample code)
-                      00429 ;***************************************
-                      00430 
-0206                  00431 InitLCD
-0206   1283           00432         bcf STATUS,RP0
-0207   1588           00433         bsf E     ;E default high
+0208                  00421 default_status
+0208   0008           00422     return
+                      00423 
+                      00424 ;***************************************
+                      00425 ; DISPLAY BIG NUMBER ROUTINE http://www.piclist.com/techref/microchip/math/radix/b2a-8b3d-ab.htm
+                      00426 ;***************************************
+                      00427 
+0209                  00428 big_number      
+0209   3008           00429     movlw 8
+020A   00B9           00430     movwf count
+020B   01B6           00431     clrf huns
+020C   01B7           00432     clrf tens
+020D   01B8           00433     clrf ones
                       00434 
-                      00435         ;Wait for LCD POR to finish (~15ms)
-0208   2???           00436         call lcdLongDelay
-0209   2???           00437         call lcdLongDelay
-020A   2???           00438         call lcdLongDelay
-                      00439 
-                      00440         ;Ensure 8-bit mode first (no way to immediately guarantee 4-bit mode)
-                      00441         ; -> Send b'0011' 3 times
-020B   3033           00442         movlw   b'00110011'
-020C   2???           00443         call    WR_INS
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE 15
+020E                  00435 BCDADD3
+                      00436 
+020E   3005           00437     movlw 5
+020F   0236           00438     subwf huns, 0
+0210   1803           00439     btfsc STATUS, C
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE 15
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-020D   2???           00444         call lcdLongDelay
-020E   2???           00445         call lcdLongDelay
-020F   3032           00446         movlw   b'00110010'
-0210   2???           00447         call    WR_INS
-0211   2???           00448         call lcdLongDelay
-0212   2???           00449         call lcdLongDelay
-                      00450 
-                      00451         ; 4 bits, 2 lines, 5x7 dots
-0213   3028           00452         movlw   b'00101000'
-0214   2???           00453         call    WR_INS
-0215   2???           00454         call lcdLongDelay
-0216   2???           00455         call lcdLongDelay
-                      00456 
-                      00457         ; display on/off
-0217   300C           00458         movlw   b'00001100'
-0218   2???           00459         call    WR_INS
-0219   2???           00460         call lcdLongDelay
-021A   2???           00461         call lcdLongDelay
-                      00462 
-                      00463         ; Entry mode
-021B   3006           00464         movlw   b'00000110'
-021C   2???           00465         call    WR_INS
-021D   2???           00466         call lcdLongDelay
-021E   2???           00467         call lcdLongDelay
+0211   2???           00440     CALL ADD3HUNS
+                      00441 
+0212   3005           00442     movlw 5
+0213   0237           00443     subwf tens, 0
+0214   1803           00444     btfsc STATUS, C
+0215   2???           00445     CALL ADD3TENS
+                      00446 
+0216   3005           00447     movlw 5
+0217   0238           00448     subwf ones, 0
+0218   1803           00449     btfsc STATUS, C
+0219   2???           00450     CALL ADD3ONES
+                      00451 
+021A   03B9           00452     decf count, 1
+021B   1003           00453     bcf STATUS, C
+021C   0DAA           00454     rlf op_time, 1
+021D   0DB8           00455     rlf ones, 1
+021E   1A38           00456     btfsc ones,4 ;
+021F   2???           00457     CALL CARRYONES
+0220   0DB7           00458     rlf tens, 1
+                      00459 
+0221   1A37           00460     btfsc tens,4 ;
+0222   2???           00461     CALL CARRYTENS
+0223   0DB6           00462     rlf huns,1
+0224   1003           00463     bcf STATUS, C
+                      00464 
+0225   0839           00465     movf count, 0
+0226   1D03           00466     btfss STATUS, Z
+0227   2???           00467     GOTO BCDADD3
                       00468 
-                      00469         ; Clear ram
-021F   3001           00470         movlw   b'00000001'
-0220   2???           00471         call    WR_INS
-0221   2???           00472         call lcdLongDelay
-0222   2???           00473         call lcdLongDelay
-0223   0008           00474         return
+0228   0008           00469     RETURN
+                      00470 
+0229                  00471 ADD3HUNS
+                      00472 
+0229   3003           00473     movlw 3
+022A   07B6           00474     addwf huns,1
                       00475 
-                      00476 
-0224                  00477 Clear_Display
-0224   3001           00478                 movlw   B'00000001'
-0225   2???           00479                 call    WR_INS
-0226   0008           00480                 return
-                      00481 
-0227                  00482 Switch_Lines
-0227   30C0           00483                 movlw   B'11000000'
-0228   2???           00484                 call    WR_INS
-0229   0008           00485                 return
+022B   0008           00476     RETURN
+                      00477 
+022C                  00478 ADD3TENS
+                      00479 
+022C   3003           00480     movlw 3
+022D   07B7           00481     addwf tens,1
+                      00482 
+022E   0008           00483     RETURN
+                      00484 
+022F                  00485 ADD3ONES
                       00486 
-022A                  00487 WR_INS
-022A   1108           00488         bcf             RS                              ;clear RS
-022B   00A3           00489         movwf   com                             ;W --> com
-022C   39F0           00490         andlw   0xF0                    ;mask 4 bits MSB w = X0
-022D   0088           00491         movwf   PORTD                   ;Send 4 bits MSB
-022E   1588           00492         bsf             E                               ;
-022F   2???           00493         call    lcdLongDelay    ;__    __
-0230   1188           00494         bcf             E                               ;  |__|
-0231   0E23           00495         swapf   com,w
-0232   39F0           00496         andlw   0xF0                    ;1111 0010
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE 16
+022F   3003           00487     movlw 3
+0230   07B8           00488     addwf ones,1
+                      00489 
+0231   0008           00490     RETURN
+                      00491 
+0232                  00492 CARRYONES
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE 16
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0233   0088           00497         movwf   PORTD                   ;send 4 bits LSB
-0234   1588           00498         bsf             E                               ;
-0235   2???           00499         call    lcdLongDelay    ;__    __
-0236   1188           00500         bcf             E                               ;  |__|
-0237   2???           00501         call    lcdLongDelay
-0238   0008           00502         return
+0232   1238           00493     bcf ones, 4
+0233   1403           00494     bsf STATUS, C
+0234   0008           00495     RETURN
+                      00496 
+0235                  00497 CARRYTENS
+0235   1237           00498     bcf tens, 4
+0236   1403           00499     bsf STATUS, C
+0237   0008           00500     RETURN
+                      00501     
+                      00502 
                       00503 
-                      00504 
-0239                  00505 WR_DATA
-0239   1508           00506         bsf             RS
-023A   00A4           00507         movwf   dat
-023B   0824           00508         movf    dat,w
-023C   39F0           00509         andlw   0xF0
-023D   3E04           00510         addlw   4
-023E   0088           00511         movwf   PORTD
-023F   1588           00512         bsf             E                               ;
-0240   2???           00513         call    lcdLongDelay    ;__    __
-0241   1188           00514         bcf             E                               ;  |__|
-0242   0E24           00515         swapf   dat,w
-0243   39F0           00516         andlw   0xF0
-0244   3E04           00517         addlw   4
-0245   0088           00518         movwf   PORTD
-0246   1588           00519         bsf             E                               ;
-0247   2???           00520         call    lcdLongDelay    ;__    __
-0248   1188           00521         bcf             E                               ;  |__|
-0249   0008           00522         return
-                      00523 
-024A                  00524 lcdLongDelay
-024A   3014           00525     movlw d'20'
-024B   00A6           00526     movwf lcd_d2
-024C                  00527 LLD_LOOP
-                      00528     LCD_DELAY
-024C   30FF               M         movlw   0xFF
-024D   00A5               M         movwf   lcd_d1
-024E   0BA5               M         decfsz  lcd_d1,f
-024F   2???               M         goto    $-1
-0250   0BA6           00529     decfsz lcd_d2,f
-0251   2???           00530     goto LLD_LOOP
-0252   0008           00531     return
-                      00532 
-                      00533     
-                      00534 
-                      00535 
-                      00536 ;***************************************
-                      00537 ; Delay 0.5s
-                      00538 ;***************************************
-0253                  00539 HalfS
-  0000                00540         local   HalfS_0
-0253   3088           00541       movlw 0x88
-0254   00A7           00542       movwf COUNTH
-0255   30BD           00543       movlw 0xBD
-0256   00A8           00544       movwf COUNTM
-0257   3003           00545       movlw 0x03
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE 17
+                      00504 ;***************************************
+                      00505 ; DISPLAY ROUTINES (copied from sample code)
+                      00506 ;***************************************
+                      00507 
+0238                  00508 InitLCD
+0238   1283           00509         bcf STATUS,RP0
+0239   1588           00510         bsf E     ;E default high
+                      00511 
+                      00512         ;Wait for LCD POR to finish (~15ms)
+023A   2???           00513         call lcdLongDelay
+023B   2???           00514         call lcdLongDelay
+023C   2???           00515         call lcdLongDelay
+                      00516 
+                      00517         ;Ensure 8-bit mode first (no way to immediately guarantee 4-bit mode)
+                      00518         ; -> Send b'0011' 3 times
+023D   3033           00519         movlw   b'00110011'
+023E   2???           00520         call    WR_INS
+023F   2???           00521         call lcdLongDelay
+0240   2???           00522         call lcdLongDelay
+0241   3032           00523         movlw   b'00110010'
+0242   2???           00524         call    WR_INS
+0243   2???           00525         call lcdLongDelay
+0244   2???           00526         call lcdLongDelay
+                      00527 
+                      00528         ; 4 bits, 2 lines, 5x7 dots
+0245   3028           00529         movlw   b'00101000'
+0246   2???           00530         call    WR_INS
+0247   2???           00531         call lcdLongDelay
+0248   2???           00532         call lcdLongDelay
+                      00533 
+                      00534         ; display on/off
+0249   300C           00535         movlw   b'00001100'
+024A   2???           00536         call    WR_INS
+024B   2???           00537         call lcdLongDelay
+024C   2???           00538         call lcdLongDelay
+                      00539 
+                      00540         ; Entry mode
+024D   3006           00541         movlw   b'00000110'
+024E   2???           00542         call    WR_INS
+024F   2???           00543         call lcdLongDelay
+0250   2???           00544         call lcdLongDelay
+                      00545 
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE 17
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0258   00A9           00546       movwf COUNTL
-                      00547 
-0259                  00548 HalfS_0
-0259   0BA7           00549       decfsz COUNTH, f
-025A   2???           00550       goto   $+2
-025B   0BA8           00551       decfsz COUNTM, f
-025C   2???           00552       goto   $+2
-025D   0BA9           00553       decfsz COUNTL, f
-025E   2???           00554       goto   HalfS_0
-                      00555 
-025F   2???           00556       goto $+1
-0260   0000           00557       nop
-0261   0000           00558       nop
-0262   0008           00559                 return
-                      00560 
-3F72                  00561     END
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE 18
+                      00546         ; Clear ram
+0251   3001           00547         movlw   b'00000001'
+0252   2???           00548         call    WR_INS
+0253   2???           00549         call lcdLongDelay
+0254   2???           00550         call lcdLongDelay
+0255   0008           00551         return
+                      00552 
+                      00553 
+0256                  00554 Clear_Display
+0256   3001           00555                 movlw   B'00000001'
+0257   2???           00556                 call    WR_INS
+0258   0008           00557                 return
+                      00558 
+0259                  00559 Switch_Lines
+0259   30C0           00560                 movlw   B'11000000'
+025A   2???           00561                 call    WR_INS
+025B   0008           00562                 return
+                      00563 
+025C                  00564 WR_INS
+025C   1108           00565         bcf             RS                              ;clear RS
+025D   00A3           00566         movwf   com                             ;W --> com
+025E   39F0           00567         andlw   0xF0                    ;mask 4 bits MSB w = X0
+025F   0088           00568         movwf   PORTD                   ;Send 4 bits MSB
+0260   1588           00569         bsf             E                               ;
+0261   2???           00570         call    lcdLongDelay    ;__    __
+0262   1188           00571         bcf             E                               ;  |__|
+0263   0E23           00572         swapf   com,w
+0264   39F0           00573         andlw   0xF0                    ;1111 0010
+0265   0088           00574         movwf   PORTD                   ;send 4 bits LSB
+0266   1588           00575         bsf             E                               ;
+0267   2???           00576         call    lcdLongDelay    ;__    __
+0268   1188           00577         bcf             E                               ;  |__|
+0269   2???           00578         call    lcdLongDelay
+026A   0008           00579         return
+                      00580 
+                      00581 
+026B                  00582 WR_DATA
+026B   1508           00583         bsf             RS
+026C   00A4           00584         movwf   dat
+026D   0824           00585         movf    dat,w
+026E   39F0           00586         andlw   0xF0
+026F   3E04           00587         addlw   4
+0270   0088           00588         movwf   PORTD
+0271   1588           00589         bsf             E                               ;
+0272   2???           00590         call    lcdLongDelay    ;__    __
+0273   1188           00591         bcf             E                               ;  |__|
+0274   0E24           00592         swapf   dat,w
+0275   39F0           00593         andlw   0xF0
+0276   3E04           00594         addlw   4
+0277   0088           00595         movwf   PORTD
+0278   1588           00596         bsf             E                               ;
+0279   2???           00597         call    lcdLongDelay    ;__    __
+027A   1188           00598         bcf             E                               ;  |__|
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE 18
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+027B   0008           00599         return
+                      00600 
+027C                  00601 lcdLongDelay
+027C   3014           00602     movlw d'20'
+027D   00A6           00603     movwf lcd_d2
+027E                  00604 LLD_LOOP
+                      00605     LCD_DELAY
+027E   30FF               M         movlw   0xFF
+027F   00A5               M         movwf   lcd_d1
+0280   0BA5               M         decfsz  lcd_d1,f
+0281   2???               M         goto    $-1
+0282   0BA6           00606     decfsz lcd_d2,f
+0283   2???           00607     goto LLD_LOOP
+0284   0008           00608     return
+                      00609 
+                      00610     
+                      00611 
+                      00612 
+                      00613 ;***************************************
+                      00614 ; Delay 0.5s
+                      00615 ;***************************************
+0285                  00616 HalfS
+  0000                00617         local   HalfS_0
+0285   3088           00618       movlw 0x88
+0286   00A7           00619       movwf COUNTH
+0287   30BD           00620       movlw 0xBD
+0288   00A8           00621       movwf COUNTM
+0289   3003           00622       movlw 0x03
+028A   00A9           00623       movwf COUNTL
+                      00624 
+028B                  00625 HalfS_0
+028B   0BA7           00626       decfsz COUNTH, f
+028C   2???           00627       goto   $+2
+028D   0BA8           00628       decfsz COUNTM, f
+028E   2???           00629       goto   $+2
+028F   0BA9           00630       decfsz COUNTL, f
+0290   2???           00631       goto   HalfS_0
+                      00632 
+0291   2???           00633       goto $+1
+0292   0000           00634       nop
+0293   0000           00635       nop
+0294   0008           00636                 return
+                      00637 
+3F72                  00638     END
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE 19
 
 
 SYMBOL TABLE
@@ -977,6 +1064,9 @@ ADCON0                            0000001F
 ADCON1                            0000009F
 ADCS0                             00000006
 ADCS1                             00000007
+ADD3HUNS                          00000229
+ADD3ONES                          0000022F
+ADD3TENS                          0000022C
 ADDEN                             00000003
 ADFM                              00000007
 ADIE                              00000006
@@ -984,11 +1074,14 @@ ADIF                              00000006
 ADON                              00000000
 ADRESH                            0000001E
 ADRESL                            0000009E
+BCDADD3                           0000020E
 BCLIE                             00000003
 BCLIF                             00000003
 BF                                00000000
 BRGH                              00000002
 C                                 00000000
+CARRYONES                         00000232
+CARRYTENS                         00000235
 CCP1CON                           00000017
 CCP1IE                            00000002
 CCP1IF                            00000002
@@ -1017,20 +1110,20 @@ CHS0                              00000003
 CHS1                              00000004
 CHS2                              00000005
 CKE                               00000006
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE 20
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 CKP                               00000004
 COUNTH                            00000027
 COUNTL                            00000029
 COUNTM                            00000028
 CREN                              00000004
 CSRC                              00000007
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE 19
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 Candles                           000000EA
-Clear_Display                     00000224
+Clear_Display                     00000256
 D                                 00000005
 DATA_ADDRESS                      00000005
 DC                                00000001
@@ -1058,7 +1151,7 @@ GIE                               00000007
 GO                                00000002
 GO_DONE                           00000002
 GO_NOT_DONE                       00000002
-HalfS                             00000253
+HalfS                             00000285
 I2C_DATA                          00000005
 I2C_READ                          00000002
 I2C_START                         00000003
@@ -1071,23 +1164,23 @@ INTE                              00000004
 INTEDG                            00000006
 INTF                              00000001
 IRP                               00000007
-InitLCD                           00000206
+InitLCD                           00000238
 LCD_DELAY                         
 LED_fail                          000000C8
-LLD_LOOP                          0000024C
+LLD_LOOP                          0000027E
 NOT_A                             00000005
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE 21
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 NOT_ADDRESS                       00000005
 NOT_BO                            00000000
 NOT_BOR                           00000000
 NOT_DONE                          00000002
 NOT_PD                            00000003
 NOT_POR                           00000001
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE 20
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 NOT_RBPU                          00000007
 NOT_RC8                           00000006
 NOT_T1SYNC                        00000002
@@ -1135,18 +1228,18 @@ RA2                               00000002
 RA3                               00000003
 RA4                               00000004
 RA5                               00000005
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE 22
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 RB0                               00000000
 RB1                               00000001
 RB2                               00000002
 RB3                               00000003
 RB4                               00000004
 RB5                               00000005
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE 21
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 RB6                               00000006
 RB7                               00000007
 RBIE                              00000003
@@ -1194,18 +1287,18 @@ SMP                               00000007
 SPBRG                             00000099
 SPEN                              00000007
 SREN                              00000005
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE 23
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 SSPADD                            00000093
 SSPBUF                            00000013
 SSPCON                            00000014
 SSPCON2                           00000091
 SSPEN                             00000005
 SSPIE                             00000003
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE 22
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 SSPIF                             00000003
 SSPM0                             00000000
 SSPM1                             00000001
@@ -1218,7 +1311,7 @@ SYNC                              00000004
 Seconds                           000000A7
 Standby_Msg                       00000077
 Start_Msg                         00000080
-Switch_Lines                      00000227
+Switch_Lines                      00000259
 T0CS                              00000005
 T0IE                              00000005
 T0IF                              00000002
@@ -1253,18 +1346,18 @@ TOUTPS3                           00000006
 TRISA                             00000085
 TRISA0                            00000000
 TRISA1                            00000001
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE 24
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 TRISA2                            00000002
 TRISA3                            00000003
 TRISA4                            00000004
 TRISA5                            00000005
 TRISB                             00000086
 TRISB0                            00000000
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE 23
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 TRISB1                            00000001
 TRISB2                            00000002
 TRISB3                            00000003
@@ -1312,23 +1405,23 @@ WCOL                              00000007
 WR                                00000001
 WREN                              00000002
 WRERR                             00000003
-WR_DATA                           00000239
-WR_INS                            0000022A
-Z                                 00000002
-_.org_0_0019                      00000019
-_.org_0_0020                      00000020
-_.org_0_0070                      00000070
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE 24
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE 25
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+WR_DATA                           0000026B
+WR_INS                            0000025C
+Z                                 00000002
+_.org_0_0019                      00000019
+_.org_0_0020                      00000020
+_.org_0_0070                      00000070
 _.org_0_0075                      00000075
-_.org_0_024F                      0000024F
-_.org_0_025A                      0000025A
-_.org_0_025C                      0000025C
-_.org_0_025F                      0000025F
+_.org_0_0281                      00000281
+_.org_0_028C                      0000028C
+_.org_0_028E                      0000028E
+_.org_0_0291                      00000291
 _BODEN_OFF                        00003FBF
 _BODEN_ON                         00003FFF
 _BOREN_OFF                        00003FBF
@@ -1368,44 +1461,47 @@ _WRT_OFF                          00003DFF
 _WRT_ON                           00003FFF
 _XT_OSC                           00003FFD
 __16F877                          00000001
-big_number                        000001FD
+big_number                        00000209
 check_1                           00000100
 check_2                           0000010B
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE 26
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 check_3                           00000117
 check_4                           00000123
 check_5                           0000012F
 check_6                           0000013B
 check_7                           00000147
 check_8                           00000153
-MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:01:09         PAGE 25
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 check_9                           0000015F
-check_LED                         000001DE
-check_flick                       000001ED
-check_none                        000001C1
-check_pass                        000001CF
-check_standby                     000001BA
-check_start                       000001B5
+check_LED                         000001EA
+check_flick                       000001F9
+check_none                        000001CD
+check_pass                        000001DB
+check_standby                     000001C6
+check_start                       000001C1
 check_summary                     0000016B
 check_time                        00000198
 com                               00000023
+count                             00000039
 dat                               00000024
-default_key                       000001BF
-default_status                    000001FC
-display_status                    000001C0
+default_key                       000001CB
+default_status                    00000208
+display_status                    000001CC
+huns                              00000036
 information                       000000FF
 init                              00000001
 keytemp                           00000020
-lcdLongDelay                      0000024A
+lcdLongDelay                      0000027C
 lcd_d1                            00000025
 lcd_d2                            00000026
 movlf                             
 num_dis                           00000034
 num_tot                           00000035
+ones                              00000038
 op_time                           0000002A
 poll                              0000006F
 start                             00000022
@@ -1419,9 +1515,16 @@ status7                           00000031
 status8                           00000032
 status9                           00000033
 statustemp                        00000021
+tens                              00000037
 waiting                           00000018
 writenum                          
 writenum_reg                      
+
+MPASM 5.54                     INTERFACE.ASM   1-29-2014  17:45:22         PAGE 27
+
+
+
+
 
 Errors   :     0
 Warnings :     0 reported,     0 suppressed

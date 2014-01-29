@@ -31,6 +31,10 @@
         status9
         num_dis
         num_tot
+        huns
+        tens
+        ones
+        count
 	endc
 
 
@@ -353,6 +357,9 @@ check_time
     call Switch_Lines
     movf    op_time, W
     call    big_number      ; this doesnt actually work
+    writenum_reg    huns
+    writenum_reg    tens
+    writenum_reg    ones
     Display Seconds
     return
 
@@ -415,13 +422,83 @@ default_status
     return
 
 ;***************************************
-; DISPLAY BIG NUMBER ROUTINE (written by me)
+; DISPLAY BIG NUMBER ROUTINE http://www.piclist.com/techref/microchip/math/radix/b2a-8b3d-ab.htm
 ;***************************************
 
-big_number      ;WRITE THIS!!!
-    writenum 0x9
-    writenum 0x0
-    return
+big_number      
+    movlw 8
+    movwf count
+    clrf huns
+    clrf tens
+    clrf ones
+
+BCDADD3
+
+    movlw 5
+    subwf huns, 0
+    btfsc STATUS, C
+    CALL ADD3HUNS
+
+    movlw 5
+    subwf tens, 0
+    btfsc STATUS, C
+    CALL ADD3TENS
+
+    movlw 5
+    subwf ones, 0
+    btfsc STATUS, C
+    CALL ADD3ONES
+
+    decf count, 1
+    bcf STATUS, C
+    rlf op_time, 1
+    rlf ones, 1
+    btfsc ones,4 ;
+    CALL CARRYONES
+    rlf tens, 1
+
+    btfsc tens,4 ;
+    CALL CARRYTENS
+    rlf huns,1
+    bcf STATUS, C
+
+    movf count, 0
+    btfss STATUS, Z
+    GOTO BCDADD3
+
+    RETURN
+
+ADD3HUNS
+
+    movlw 3
+    addwf huns,1
+
+    RETURN
+
+ADD3TENS
+
+    movlw 3
+    addwf tens,1
+
+    RETURN
+
+ADD3ONES
+
+    movlw 3
+    addwf ones,1
+
+    RETURN
+
+CARRYONES
+    bcf ones, 4
+    bsf STATUS, C
+    RETURN
+
+CARRYTENS
+    bcf tens, 4
+    bsf STATUS, C
+    RETURN
+    
 
 
 ;***************************************
