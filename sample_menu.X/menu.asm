@@ -77,7 +77,7 @@ init
          call      InitLCD    ;Initialize the LCD 
          Display    Welcome_Msg
 
-test     btfss		PORTB,1     ;Wait until data is available from the keypad
+poll     btfss		PORTB,1     ;Wait until data is available from the keypad
          goto		$-1
 
          swapf		PORTB,W     ;Read PortB<7:4> into W<3:0>
@@ -86,7 +86,7 @@ test     btfss		PORTB,1     ;Wait until data is available from the keypad
 
          btfsc		PORTB,1     ;Wait until key is released
          goto		$-1
-         goto     test
+         goto     poll
 
 
 ;***************************************
@@ -104,9 +104,14 @@ Message_B
 Message_C
 		addwf	PCL,F
 		dt		"You picked C",0
-Message_D
+Message_D1
 		addwf	PCL,F
-		dt		"D??? You devil!",0
+		dt		"D???????",0
+Message_D2
+        addwf   PCL,F
+        dt      "You devil!",0
+
+
 
 
 
@@ -149,7 +154,9 @@ check_d
     btfss   STATUS,Z    ;and Z will be high, so skip if not high
     goto default
     call Clear_Display
-    Display Message_D
+    Display Message_D1
+    call Switch_Lines
+    Display Message_D2
     return
 
 default
@@ -214,6 +221,10 @@ Clear_Display
 		call	WR_INS
 		return
 
+Switch_Lines
+		movlw	B'11000000'
+		call	WR_INS
+		return
 
 WR_INS
 	bcf		RS				;clear RS
