@@ -170,9 +170,10 @@ init
          clrf      PORTD
 
          call      InitLCD    ;Initialize the LCD
-         Display   Standby_Msg
+        Display   Standby_Msg
 
-waiting  btfss		PORTB,1     ;Wait until data is available from the keypad
+  waiting
+        btfss		PORTB,1     ;Wait until data is available from the keypad
          goto		$-1
 
          swapf		PORTB,W     ;Read PortB<7:4> into W<3:0>
@@ -211,7 +212,7 @@ start
         call    HalfS
 
 ; Putting values in manually. This will be done automatically in main program
-         movlf     D'5', op_time
+         movlf     D'74', op_time
          movlf     B'00', status1
          movlf     B'01', status2
          movlf     B'10', status3
@@ -394,7 +395,9 @@ check_standby
     xorlw   0xE
     btfss   STATUS,Z
     goto    default_key
-    goto    init
+    call    Clear_Display
+    Display Standby_Msg
+    goto    waiting
 
 default_key
     return
@@ -532,78 +535,77 @@ no_tens
 ;***************************************
 ; DISPLAY BIG NUMBER ROUTINE
 ; modified from http://www.piclist.com/techref/microchip/math/radix/b2a-8b3d-ab.htm
+; converts 8-bit binary number to three BCDs representing huns, tens, ones
+; uses "shift and add 3" algorithm
 ;***************************************
 
 big_number      
     movff   op_time, op_time_save         ;save the original op_time
+    movlf   8, count                      ;8 bits per register
+    clrf    huns
+    clrf    tens
+    clrf    ones
 
-    movlw 8
-    movwf count
-    clrf huns
-    clrf tens
-    clrf ones
+BCDadd3
+    movlw   0x5
+    subwf   huns, W
+    btfsc   STATUS, C       
+    call    add3huns
+    
+    movlw   0x5
+    subwf   tens, W
+    btfsc   STATUS, C
+    call    add3tens
 
-BCDADD3
-    movlw 5
-    subwf huns, 0
-    btfsc STATUS, C
+    movlw   0x5
+    subwf   ones, W
+    btfsc   STATUS, C
+    call    add3ones
 
-    CALL ADD3HUNS
-    movlw 5
-    subwf tens, 0
-    btfsc STATUS, C
-    CALL ADD3TENS
+    decf    count, 1
+    bcf     STATUS, C
+    rlf     op_time, 1
+    rlf     ones, 1
+    btfsc   ones,4 ;
+    call    carryones
+    rlf     tens, 1
 
-    movlw 5
-    subwf ones, 0
-    btfsc STATUS, C
-    CALL ADD3ONES
+    btfsc   tens,4 ;
+    call    carrytens
+    rlf     huns,1
+    bcf     STATUS, C
 
-    decf count, 1
-    bcf STATUS, C
-    rlf op_time, 1
-    rlf ones, 1
-    btfsc ones,4 ;
-    CALL CARRYONES
-    rlf tens, 1
-
-    btfsc tens,4 ;
-    CALL CARRYTENS
-    rlf huns,1
-    bcf STATUS, C
-
-    movf count, 0
-    btfss STATUS, Z
-    GOTO BCDADD3
+    movf    count, W
+    btfss   STATUS, Z
+    goto    BCDadd3
 
     movff    op_time_save, op_time     ;restore the original op_time
+    return
 
-    RETURN
+add3huns
+    movlw 0x3
+    addwf huns,F
+    return
 
-ADD3HUNS
-    movlw 3
-    addwf huns,1
-    RETURN
+add3tens
+    movlw 0x3
+    addwf tens,F
+    return
 
-ADD3TENS
-    movlw 3
-    addwf tens,1
-    RETURN
+add3ones
+    movlw 0x3
+    addwf ones,F
+    return
 
-ADD3ONES
-    movlw 3
-    addwf ones,1
-    RETURN
-
-CARRYONES
+carryones
     bcf ones, 4
     bsf STATUS, C
-    RETURN
+    return
 
-CARRYTENS
+carrytens
     bcf tens, 4
     bsf STATUS, C
-    RETURN
+    return
     
 
 ;***************************************
