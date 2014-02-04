@@ -1,0 +1,214 @@
+;***************************************
+; RTC
+;***************************************
+
+
+#define RTC_TRIS TRISC
+#define RTC_TRIS_SDA TRISC,4
+#define RTC_TRIS_SCL TRISC,3
+#define RTC_WRITE 0xD0
+#define RTC_READ 0xD1
+
+
+; RTCHR MACRO:
+; Inputs: -
+; Outputs: W, the hour number.
+; Stores the RTC hour in rtc_data.
+	rtchr macro
+	movlw 2
+	movwf rtc_addr
+	call RTC_Read_Sub
+	endm
+
+
+; RTCMIN MACRO:
+; Inputs: -
+; Outputs: W, the min number.
+; Stores the RTC min in rtc_data.
+	rtcmin macro
+	movlw 1
+	movwf rtc_addr
+
+	call RTC_Read_Sub
+	endm
+
+
+; RTCSEC MACRO:
+; Inputs: -
+; Outputs: W, the second number.
+; Stores the RTC second in rtc_data.
+	rtcsec macro
+	movlw 0
+	movwf rtc_addr
+	call RTC_Read_Sub
+	endm
+
+
+RTC_Write_Sub
+; Assumed that address and data are stored in rtc_addr and rtc_data registers
+	i2cst
+	movlw RTC_WRITE
+	i2cwrit
+	movf rtc_addr, W
+	i2cwrit
+	movf rtc_data, W
+	i2cwrit
+	
+	i2cstop
+	return
+	
+
+RTC_Read_Sub
+; Assumed that address is stored in rtc_addr
+	i2cst
+	movlw RTC_WRITE
+	i2cwrit
+	movf rtc_addr, W
+	i2cwrit
+	i2crst
+	movlw RTC_READ
+	i2cwrit
+	i2cread
+	movwf rtc_data
+	i2cack bsf ; Send Nack
+	
+	i2cstop
+	return
+	
+
+RTC_Setup
+	bsf RTC_TRIS_SDA
+	bsf RTC_TRIS_SCL
+	
+	clrf SSPSTAT
+	movlw 24
+	movwf SSPADD
+	movlw b'00101000'
+	movwf SSPCON1
+	
+	; Disable interrupt
+	bcf PIR1,SSPIF
+	i2cstop
+	return
+	
+
+Display_RTC macro
+	rtchr 			; Get the hour
+	swapf rtc_data, W 	;display 10 Hr
+	andlw 0x01
+	addlw 0x30
+	call WR_DATA
+	movf rtc_data, W 	;display Hr
+	andlw 0x0F
+	addlw 0x30
+	call WR_DATA
+	movlw ':'
+	call WR_DATA
+	
+	rtcmin 			; Get the minute
+	swapf rtc_data, W 	;display 10 Min
+	andlw 0x0F
+	addlw 0x30
+	call WR_DATA
+	movf rtc_data, W 	;display Min
+	andlw 0x0F
+	addlw 0x30
+	call WR_DATA
+	movlw ':'
+	call WR_DATA
+	
+	rtcsec 			; Get the second
+	swapf rtc_data, W 	;display 10 Sec
+	andlw 0x0F
+	addlw 0x30
+	call WR_DATA
+	movf rtc_data, W 	;display Sec
+	andlw 0x0F
+	addlw 0x30
+	call WR_DATA
+	endm
+
+
+
+
+
+;***************************************
+; I2C Macros
+;***************************************
+
+; I2CACK MACRO:
+; Inputs: bxf, set or clear depending on ack or nack. Ack = bcf, Nack = bsf.
+; Outputs: -
+; Sends an acknowledge signal on I2C.
+	i2cack macro bxf
+	bxf SSPCON2,ACKDT
+	bsf SSPCON2,ACKEN
+	i2cbz
+	endm
+
+; I2CREAD MACRO:
+; Inputs: -
+; Outputs: W, data stored in W.
+; Read a byte of data from I2C.
+	i2cread macro
+	bsf SSPCON2,RCEN
+	i2cbz
+	movf SSPBUF, W
+	endm
+	
+; I2CWRIT MACRO:
+; Inputs: W
+; Outputs: -
+; Writes the data in the working register to the I2C.
+	i2cwrit macro
+	movwf SSPBUF
+	i2cbz
+	endm
+
+; I2CSTOP MACRO:385 ; Inputs: -
+; Outputs: -
+; Sends a stop condition on the I2C.
+	i2cstop macro
+	bsf SSPCON2,PEN
+	i2cbz
+	endm
+	
+; I2CRST MACRO:
+; Inputs: -
+; Outputs: -
+; Sends a restart c
+; Inputs: -
+; Outputs: -
+; Sends a stop condition on the I2C.
+	i2cstop macro
+	bsf SSPCON2,PEN
+	i2cbz
+	endm
+	
+; I2CRST MACRO:
+; Inputs: -
+; Outputs: -
+; Sends a restart condition on the I2C.
+	i2crst macro
+	bsf SSPCON2,RSEN
+	i2cbz
+	endm
+	
+; I2CST MACRO:
+; Inputs: -
+; Outputs: -
+; Sends a start condition on the I2C.
+	i2cst macro
+	bsf SSPCON2,SEN
+	i2cbz
+	endm
+
+; I2CBZ MACRO:
+; Inputs: -
+; Outputs: -
+; Busy signal for I2C.
+	i2cbz macro
+	btfss PIR1,SSPIF
+	bra $-2
+	bcf PIR1,SSPIF
+	endm

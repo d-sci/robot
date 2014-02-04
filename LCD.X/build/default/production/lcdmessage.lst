@@ -1,4 +1,4 @@
-MPASM 5.54                    LCDMESSAGE.ASM   1-23-2014  20:51:08         PAGE  1
+MPASM 5.54                    LCDMESSAGE.ASM   2-3-2014  20:07:20         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -57,7 +57,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00041                 local   loop_
                       00042                 local   end_
                       00043                 clrf    Table_Counter
-MPASM 5.54                    LCDMESSAGE.ASM   1-23-2014  20:51:08         PAGE  2
+MPASM 5.54                    LCDMESSAGE.ASM   2-3-2014  20:07:20         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -116,7 +116,7 @@ Message[302]: Register in operand not in bank 0.  Ensure that bank bits are corr
 0015   2???               M                 call    WR_DATA
 0016   0AF3               M                 incf    Table_Counter,F
 0017   2???               M                 goto    loop_
-MPASM 5.54                    LCDMESSAGE.ASM   1-23-2014  20:51:08         PAGE  3
+MPASM 5.54                    LCDMESSAGE.ASM   2-3-2014  20:07:20         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -175,7 +175,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00104 
                       00105 ;***************************************
                       00106 ; Look up table
-MPASM 5.54                    LCDMESSAGE.ASM   1-23-2014  20:51:08         PAGE  4
+MPASM 5.54                    LCDMESSAGE.ASM   2-3-2014  20:07:20         PAGE  4
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -234,7 +234,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 006E   0BF1           00145       decfsz COUNTM, f
 006F   2???           00146       goto   $+2
 0070   0BF2           00147       decfsz COUNTL, f
-MPASM 5.54                    LCDMESSAGE.ASM   1-23-2014  20:51:08         PAGE  5
+MPASM 5.54                    LCDMESSAGE.ASM   2-3-2014  20:07:20         PAGE  5
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -293,7 +293,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00198         ; Clear ram
 008F   3001           00199         movlw   b'00000001'
 0090   2???           00200         call    WR_INS
-MPASM 5.54                    LCDMESSAGE.ASM   1-23-2014  20:51:08         PAGE  6
+MPASM 5.54                    LCDMESSAGE.ASM   2-3-2014  20:07:20         PAGE  6
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -352,7 +352,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 00B5   1188           00251         bcf             E                               ;  |__|
 00B6   0008           00252         return
                       00253 
-MPASM 5.54                    LCDMESSAGE.ASM   1-23-2014  20:51:08         PAGE  7
+MPASM 5.54                    LCDMESSAGE.ASM   2-3-2014  20:07:20         PAGE  7
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -373,7 +373,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00262 
                       00263 
 3F72                  00264         END
-MPASM 5.54                    LCDMESSAGE.ASM   1-23-2014  20:51:08         PAGE  8
+MPASM 5.54                    LCDMESSAGE.ASM   2-3-2014  20:07:20         PAGE  8
 
 
 SYMBOL TABLE
@@ -432,7 +432,7 @@ COUNTH                            00000070
 COUNTL                            00000072
 COUNTM                            00000071
 CREN                              00000004
-MPASM 5.54                    LCDMESSAGE.ASM   1-23-2014  20:51:08         PAGE  9
+MPASM 5.54                    LCDMESSAGE.ASM   2-3-2014  20:07:20         PAGE  9
 
 
 SYMBOL TABLE
@@ -491,7 +491,7 @@ NOT_BOR                           00000000
 NOT_DONE                          00000002
 NOT_PD                            00000003
 NOT_POR                           00000001
-MPASM 5.54                    LCDMESSAGE.ASM   1-23-2014  20:51:08         PAGE 10
+MPASM 5.54                    LCDMESSAGE.ASM   2-3-2014  20:07:20         PAGE 10
 
 
 SYMBOL TABLE
@@ -550,7 +550,7 @@ RB5                               00000005
 RB6                               00000006
 RB7                               00000007
 RBIE                              00000003
-MPASM 5.54                    LCDMESSAGE.ASM   1-23-2014  20:51:08         PAGE 11
+MPASM 5.54                    LCDMESSAGE.ASM   2-3-2014  20:07:20         PAGE 11
 
 
 SYMBOL TABLE
@@ -609,7 +609,7 @@ SSPIE                             00000003
 SSPIF                             00000003
 SSPM0                             00000000
 SSPM1                             00000001
-MPASM 5.54                    LCDMESSAGE.ASM   1-23-2014  20:51:08         PAGE 12
+MPASM 5.54                    LCDMESSAGE.ASM   2-3-2014  20:07:20         PAGE 12
 
 
 SYMBOL TABLE
@@ -668,7 +668,7 @@ TRISB1                            00000001
 TRISB2                            00000002
 TRISB3                            00000003
 TRISB4                            00000004
-MPASM 5.54                    LCDMESSAGE.ASM   1-23-2014  20:51:08         PAGE 13
+MPASM 5.54                    LCDMESSAGE.ASM   2-3-2014  20:07:20         PAGE 13
 
 
 SYMBOL TABLE
@@ -727,7 +727,7 @@ _.org_0_0072                      00000072
 _.org_0_00BC                      000000BC
 _BODEN_OFF                        00003FBF
 _BODEN_ON                         00003FFF
-MPASM 5.54                    LCDMESSAGE.ASM   1-23-2014  20:51:08         PAGE 14
+MPASM 5.54                    LCDMESSAGE.ASM   2-3-2014  20:07:20         PAGE 14
 
 
 SYMBOL TABLE

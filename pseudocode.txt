@@ -1,0 +1,120 @@
+PSEUDOCODE FOR GO-GO-GADGET-CANDLELIGHT!!
+David Simons Feb 5, 2014
+
+
+***CONFIGURATION STUFF***
+
+
+***DEFINITIONS***
+
+
+***VARIABLES***
+
+
+***MACROS***
+
+
+***VECTORS***
+ORG	0x000
+goto	init
+ORG	0x004
+goto	isr
+
+
+***MESSAGE TABLES***
+// consider moving to EEPROM if it gets too big
+
+
+***MAIN PROGRAM***
+
+init
+	initialize the ports, LCD, etc. 
+	(this is already written)
+
+waiting
+	display real date and time 	// hopefully, eventually
+	poll for operator to press "START" -> goto start_op
+	else goto waiting
+	(this is already written, minus the RTC stuff)
+
+start_op
+	display "Inspecting. . ."
+	save start_time from RTC data	// hopefully, eventually
+	clear op_time
+	clear timer0
+	enable timer0 interrupts (to incremement op_time)				
+	n = 1 				
+
+detect_candle
+	turn on IR light
+	save IR sensor data	
+	turn off IR light
+	if no candle 
+		status(n) = not present
+		goto rotate
+
+test_candle
+	num_candles++			// keeping track of total number of candles
+	pulse solenoid 1 to turn on candle
+	clear the photosensor counter ( = TIMER1 on count mode)
+	start the counter
+	delay 2 seconds 		// or whatever appears to be reasonable
+	stop the counter
+	move the count value into photosensor_counter
+	if photosensor_counter < threshold1
+		status(n) = led fail
+		num_defective ++	// keeping track of number of defective candles
+	else if photosensor_counter < threshold2
+		status(n) = pass
+	else 
+		status(n) = flicker fail
+		num_defective ++	
+	pulse solenoid 2 to turn off candle
+
+rotate
+	if n==9 goto end_op
+	else 
+		pulse stepper motor to rotate tray 40deg
+		n++
+		goto detect_candle
+
+end_op
+	disable timer0 interrupts (op_time stops incrementing)
+	display "Complete" for 0.5s
+	display op_time for 1s
+	display summary screen for 1s
+	display defective candles
+
+interface
+	poll for operator to press keys -> display appropriate info / restart / go to standby
+	(this is already written)
+
+
+*** SUBROUTINES ***
+
+
+*** ISR ***
+isr
+	save w and status
+
+	if "STOP" pressed (RB0 external interrupt)
+		stop all moving parts
+		display "Emergency Stop" for 1s
+		display "Adjust tray and restart"
+		clear interrupt flag
+		goto exit_isr
+	
+	if Timer0 overflow
+		increment op_time	  // actually slightly more complicated than this
+		(this is already written) // see the actual code
+		clear interrupt flag
+		goto exit_isr
+	
+exit_isr
+	restore w and status
+	retfie
+	
+
+	 
+	
+	
