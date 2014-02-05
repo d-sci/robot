@@ -1,19 +1,17 @@
-Message[302] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 193 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 195 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 196 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 197 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 200 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 201 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 227 : Using default destination of 1 (file).
-Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 230 : Using default destination of 1 (file).
-Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 236 : Using default destination of 1 (file).
-Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 239 : Using default destination of 1 (file).
-Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 245 : Using default destination of 1 (file).
-Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 248 : Using default destination of 1 (file).
-Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 253 : Using default destination of 1 (file).
-Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 256 : Using default destination of 1 (file).
-Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 262 : Using default destination of 1 (file).
-Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 265 : Using default destination of 1 (file).
+Message[302] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 198 : Register in operand not in bank 0.  Ensure that bank bits are correct.
 Message[302] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 107 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 906 : Using default destination of 1 (file).
-Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 909 : Using default destination of 1 (file).
+Message[302] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 107 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 202 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 228 : Using default destination of 1 (file).
+Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 231 : Using default destination of 1 (file).
+Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 237 : Using default destination of 1 (file).
+Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 240 : Using default destination of 1 (file).
+Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 246 : Using default destination of 1 (file).
+Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 249 : Using default destination of 1 (file).
+Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 254 : Using default destination of 1 (file).
+Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 257 : Using default destination of 1 (file).
+Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 263 : Using default destination of 1 (file).
+Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 266 : Using default destination of 1 (file).
+Message[302] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 107 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 972 : Using default destination of 1 (file).
+Message[305] C:\USERS\DOGE\DOCUMENTS\GITHUB\ROBOT\GO_GO_GADGET_CANDLELIGHT.X\MAIN.ASM 975 : Using default destination of 1 (file).
