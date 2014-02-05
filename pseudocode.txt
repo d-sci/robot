@@ -28,22 +28,23 @@ goto	isr
 ***MAIN PROGRAM***
 
 init
-	initialize the ports, LCD, etc. 
+	initialize the ports, I2C, LCD, etc. 
 	(this is already written)
 
 waiting
-	display real date and time 	// hopefully, eventually
+	display real date and time
+	save current date and time as "start time" (will update until START)
 	poll for operator to press "START" -> goto start_op
 	else goto waiting
-	(this is already written, minus the RTC stuff)
+	(this is already written)
 
 start_op
 	display "Inspecting. . ."
-	save start_time from RTC data	// hopefully, eventually
 	clear op_time
 	clear timer0
-	enable timer0 interrupts (to incremement op_time)				
-	n = 1 				
+	enable timer0 interrupts (to start incremement op_time)				
+	n = 1 	
+	(this is already written)			
 
 detect_candle
 	turn on IR light
@@ -55,7 +56,7 @@ detect_candle
 
 test_candle
 	num_candles++			// keeping track of total number of candles
-	pulse solenoid 1 to turn on candle
+	pulse solenoid 1 to turn on candle	//unless we switch to ramp method
 	clear the photosensor counter ( = TIMER1 on count mode)
 	start the counter
 	delay 2 seconds 		// or whatever appears to be reasonable
@@ -72,7 +73,8 @@ test_candle
 	pulse solenoid 2 to turn off candle
 
 rotate
-	if n==9 goto end_op
+	if n==9 
+		goto end_op
 	else 
 		pulse stepper motor to rotate tray 40deg
 		n++
@@ -84,6 +86,7 @@ end_op
 	display op_time for 1s
 	display summary screen for 1s
 	display defective candles
+	(this is already written)
 
 interface
 	poll for operator to press keys -> display appropriate info / restart / go to standby
@@ -98,9 +101,11 @@ isr
 	save w and status
 
 	if "STOP" pressed (RB0 external interrupt)
-		stop all moving parts
+		stop all moving parts		//this may be done physically
 		display "Emergency Stop" for 1s
-		display "Adjust tray and restart"
+		display "Press START to resume"
+		poll for operator to press START
+		restart any moving parts	//or just reset entire program
 		clear interrupt flag
 		goto exit_isr
 	

@@ -1,4 +1,4 @@
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE  1
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -57,7 +57,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00036 ;input:         addliteral: value of address
                       00037 ;                       datliteral: value of data
                       00038 ;output:        none
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE  2
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -102,7 +102,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00016 ; VARIABLES
                       00017 ;***************************************
                       00018 
-                      00019 ; Also see i2c_commmon.asm -> has stuff at 0x70 on
+                      00019 ; Also see i2c_commmon.asm -> has stuff at 0x70 on for RTC
                       00020 
                       00021     cblock      0x20
                       00022         ; temps, counters, etc.
@@ -116,7 +116,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
   00000027            00030         COUNTH          ;for delay 0.5s routine
   00000028            00031         COUNTM
   00000029            00032         COUNTL
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE  3
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -175,7 +175,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00083                 local   loop_
                       00084                 local   end_
                       00085                 clrf    Table_Counter
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE  4
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE  4
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -234,7 +234,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0000   2???           00136          goto      init
                       00137     ORG       0x004
 0004   2???           00138         goto    isr
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE  5
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE  5
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -243,7 +243,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00139 
                       00140 
                       00141 ;***************************************
-                      00142 ; LOOK UP TABLE (MESSAGES)
+                      00142 ; TABLES (MESSAGES)
                       00143 ;***************************************
 0005                  00144 Standby_Msg
 0005   0782           00145                 addwf   PCL,F
@@ -293,7 +293,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 005D   343A 3420 344C 00167                 dt              ": LED fail",0
        3445 3444 3420 
        3466 3461 3469 
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE  6
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE  6
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -352,7 +352,7 @@ Message[302]: Register in operand not in bank 0.  Ensure that bank bits are corr
 00B7   30F2           00194         movlw     b'11110010'    ; Set required keypad inputs
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
 00B8   0086           00195         movwf     TRISB
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE  7
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE  7
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -411,7 +411,7 @@ Message[302]: Register in operand not in bank 0.  Ensure that bank bits are corr
                           M ;                       and load it into 0x75. 0x75 is also converted into 
                           M ;                       ASCII characters and the tens digit is placed into
                           M ;                       0x77 and the ones digit is placed in 0x78
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE  8
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE  8
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -470,7 +470,7 @@ Message[305]: Using default destination of 1 (file).
 00F8   00F3               M         movwf   0x73
 00F9   2???               M         call    read_rtc
 00FA   1283 1303          M         banksel 0x75
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE  9
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE  9
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -529,7 +529,7 @@ Message[305]: Using default destination of 1 (file).
 011F   2???               M         call    rtc_convert   
 0120   0877           00261                 movfw   0x77
 Message[305]: Using default destination of 1 (file).
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 10
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 10
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -588,7 +588,7 @@ Message[302]: Register in operand not in bank 0.  Ensure that bank bits are corr
 013E   0103               M                 clrw
 013F   0822               M loop_   movf    Table_Counter,W
 0140   2???               M                 call    Start_Msg
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 11
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 11
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -647,7 +647,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0153   3001               M         movlw   B'01'
 0154   00B8               M         movwf   state6
                       00336         movlf     B'01', state7
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 12
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 12
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -706,7 +706,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0177   2???           00364          call       information
                       00365 
 0178   1886           00366          btfsc          PORTB,1     ;Wait until key is released
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 13
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 13
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -765,7 +765,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0197   2???           00409     call    Clear_Display
                       00410     writenum 0x3
 0198   3003               M             movlw    0x3
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 14
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 14
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -824,7 +824,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 01C2   0008           00446     return
                       00447 
 01C3                  00448 check_7
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 15
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 15
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -883,7 +883,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 01EC   0008           00487     return
                       00488 
 01ED                  00489 check_defective
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 16
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 16
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -942,7 +942,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0213   2???           00527     call    Switch_Lines
 0214   2???           00528     goto    waiting
                       00529 
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 17
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 17
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -1001,7 +1001,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0234                  00554 check_LED
 0234   0821           00555     movf    statetemp, W
 0235   3A02           00556     xorlw   0x2
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 18
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 18
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -1060,7 +1060,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0254   01A2               M                 clrf    Table_Counter
 0255   0103               M                 clrw
 0256   0822               M loop_   movf    Table_Counter,W
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 19
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 19
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -1119,7 +1119,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 027A   2???               M                 call    WR_DATA
 027B   0AA2               M                 incf    Table_Counter,F
 027C   2???               M                 goto    loop_
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 20
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 20
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -1178,7 +1178,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00611     spacebar
 02A2   3014               M             movlw   B'00010100'
 02A3   2???               M             call    WR_INS
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 21
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 21
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -1237,7 +1237,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 02C8   00A4               M             movwf   dat
 02C9   2???               M             call WR_DATA
                       00636     spacebar
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 22
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 22
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -1296,7 +1296,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 02EB   082C               M             movfw    tens
 02EC   3E30               M             addlw   B'00110000'
 02ED   00A4               M             movwf   dat
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 23
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 23
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -1355,7 +1355,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 030E   0822               M loop_   movf    Table_Counter,W
 030F   2???               M                 call    End_Msg
 0310   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 24
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 24
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -1371,7 +1371,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00680 
                       00681 
                       00682 ;***************************************
-                      00683 ; DISPLAY BIG NUMBER ROUTINE
+                      00683 ; DISPLAY BIG NUMBER SUBROUTINE
                       00684 ; Modified from http://www.piclist.com/techref/microchip/math/radix/b2a-8b3d-ab.htm
                       00685 ; Converts 8-bit binary number op_time to three BCDs representing huns, tens, ones
                       00686 ; Uses "shift and add 3" algorithm
@@ -1414,7 +1414,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0331   1A2C           00719     btfsc   tens,4 ;
 0332   2???           00720     call    carrytens
 0333   0DAB           00721     rlf     huns,1
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 25
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 25
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -1454,7 +1454,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00751 
                       00752 
                       00753 ;***************************************
-                      00754 ; LCD ROUTINES (from sample code)
+                      00754 ; LCD SUBROUTINES (from sample code)
                       00755 ;***************************************
                       00756 
                       00757 ; Initialize the LCD
@@ -1473,7 +1473,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0350   2???           00770         call    WR_INS
 0351   2???           00771         call lcdLongDelay
 0352   2???           00772         call lcdLongDelay
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 26
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 26
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -1532,7 +1532,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0373   2???           00823         call    lcdLongDelay    ;__    __
 0374   1188           00824         bcf             E                               ;  |__|
 0375   0E23           00825         swapf   com,w
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 27
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 27
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -1582,75 +1582,72 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0396   0008           00863     return
                       00864 
                       00865 
-                      00866 
-                      00867 ;***************************************
-                      00868 ; DELAY 0.5S ROUTINE (from sample code)
-                      00869 ; Delays exactly 0.5sec
-                      00870 ;***************************************
-0397                  00871 HalfS
-  0000                00872         local   HalfS_0
-0397   3088           00873       movlw 0x88
-0398   00A7           00874       movwf COUNTH
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 28
+                      00866 ;***************************************
+                      00867 ; DELAY 0.5S SUBROUTINE (from sample code)
+                      00868 ; Delays exactly 0.5sec
+                      00869 ;***************************************
+0397                  00870 HalfS
+  0000                00871         local   HalfS_0
+0397   3088           00872       movlw 0x88
+0398   00A7           00873       movwf COUNTH
+0399   30BD           00874       movlw 0xBD
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 28
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0399   30BD           00875       movlw 0xBD
-039A   00A8           00876       movwf COUNTM
-039B   3003           00877       movlw 0x03
-039C   00A9           00878       movwf COUNTL
-                      00879 
-039D                  00880 HalfS_0
-039D   0BA7           00881       decfsz COUNTH, f
-039E   2???           00882       goto   $+2
-039F   0BA8           00883       decfsz COUNTM, f
-03A0   2???           00884       goto   $+2
-03A1   0BA9           00885       decfsz COUNTL, f
-03A2   2???           00886       goto   HalfS_0
-                      00887 
-03A3   2???           00888       goto $+1
-03A4   0000           00889       nop
-03A5   0000           00890       nop
-03A6   0008           00891                 return
+039A   00A8           00875       movwf COUNTM
+039B   3003           00876       movlw 0x03
+039C   00A9           00877       movwf COUNTL
+                      00878 
+039D                  00879 HalfS_0
+039D   0BA7           00880       decfsz COUNTH, f
+039E   2???           00881       goto   $+2
+039F   0BA8           00882       decfsz COUNTM, f
+03A0   2???           00883       goto   $+2
+03A1   0BA9           00884       decfsz COUNTL, f
+03A2   2???           00885       goto   HalfS_0
+                      00886 
+03A3   2???           00887       goto $+1
+03A4   0000           00888       nop
+03A5   0000           00889       nop
+03A6   0008           00890                 return
+                      00891 
                       00892 
-                      00893 
-                      00894 
-                      00895 ;***************************************
-                      00896 ; ISR
-                      00897 ; Currently only care about TMR0
-                      00898 ; TMR0 overflows at 256*256; each time, decrement count38
-                      00899 ; count38 thus hits 0 every 256*256*38 cycles = 1sec at 10MHz clock
-                      00900 ; When this hapens, op_time increments
-                      00901 ;***************************************
-03A7                  00902 isr
-03A7   00B0           00903     movwf   w_isr           ;save W and status
-03A8   0E03           00904     swapf   STATUS, W
-03A9   1283           00905     bcf     STATUS, RP0
-03AA   00B1           00906     movwf   status_isr
-                      00907 
+                      00893 ;***************************************
+                      00894 ; ISR
+                      00895 ; Currently only care about TMR0
+                      00896 ; TMR0 overflows at 256*256; each time, decrement count38
+                      00897 ; count38 thus hits 0 every 256*256*38 cycles = 1sec with 10MHz clock
+                      00898 ; When this hapens, op_time increments
+                      00899 ;***************************************
+03A7                  00900 isr
+03A7   00B0           00901     movwf   w_isr           ;save W and status
+03A8   0E03           00902     swapf   STATUS, W
+03A9   1283           00903     bcf     STATUS, RP0
+03AA   00B1           00904     movwf   status_isr
+                      00905 
 Message[305]: Using default destination of 1 (file).
-03AB   0BAF           00908     decfsz    count38     ;if count38 gets to 38 it's been one second
-03AC   2???           00909     goto end_isr
-                      00910     movlf   D'38', count38  ;so reset count38
+03AB   0BAF           00906     decfsz    count38     ;if count38 gets to 38 it's been one second
+03AC   2???           00907     goto end_isr
+                      00908     movlf   D'38', count38  ;so reset count38
 03AD   3026               M         movlw   D'38'
 03AE   00AF               M         movwf   count38
 Message[305]: Using default destination of 1 (file).
-03AF   0AB2           00911     incf    op_time         ; and increment op_time
-                      00912 
-03B0                  00913 end_isr
-03B0   0E31           00914     swapf   status_isr, W   ;restore W and status
-03B1   0083           00915     movwf   STATUS
-03B2   0EB0           00916     swapf   w_isr, F
-03B3   0E30           00917     swapf   w_isr, W
-03B4   110B           00918     bcf     INTCON, T0IF    ;clear the interrupt flag
-03B5   0009           00919     retfie
-                      00920 
-                      00921 
-                      00922 
-3F72                  00923     END
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 29
+03AF   0AB2           00909     incf    op_time         ; and increment op_time
+                      00910 
+03B0                  00911 end_isr
+03B0   0E31           00912     swapf   status_isr, W   ;restore W and status
+03B1   0083           00913     movwf   STATUS
+03B2   0EB0           00914     swapf   w_isr, F
+03B3   0E30           00915     swapf   w_isr, W
+03B4   110B           00916     bcf     INTCON, T0IF    ;clear the interrupt flag
+03B5   0009           00917     retfie
+                      00918 
+                      00919 
+3F72                  00920     END
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 29
 
 
 SYMBOL TABLE
@@ -1709,7 +1706,7 @@ COUNTH                            00000027
 COUNTL                            00000029
 COUNTM                            00000028
 CREN                              00000004
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 30
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 30
 
 
 SYMBOL TABLE
@@ -1768,7 +1765,7 @@ NOT_BO                            00000000
 NOT_BOR                           00000000
 NOT_DONE                          00000002
 NOT_PD                            00000003
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 31
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 31
 
 
 SYMBOL TABLE
@@ -1827,7 +1824,7 @@ RB1                               00000001
 RB2                               00000002
 RB3                               00000003
 RB4                               00000004
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 32
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 32
 
 
 SYMBOL TABLE
@@ -1886,7 +1883,7 @@ SSPBUF                            00000013
 SSPCON                            00000014
 SSPCON2                           00000091
 SSPEN                             00000005
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 33
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 33
 
 
 SYMBOL TABLE
@@ -1945,7 +1942,7 @@ TRISA3                            00000003
 TRISA4                            00000004
 TRISA5                            00000005
 TRISB                             00000086
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 34
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 34
 
 
 SYMBOL TABLE
@@ -2004,7 +2001,7 @@ WR_DATA                           0000037D
 WR_INS                            0000036E
 Z                                 00000002
 _.org_1_0130                      00000130
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 35
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 35
 
 
 SYMBOL TABLE
@@ -2063,7 +2060,7 @@ bignumcount                       0000002E
 carryones                         00000344
 carrytens                         00000347
 check_1                           0000017C
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 36
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 36
 
 
 SYMBOL TABLE
@@ -2122,7 +2119,7 @@ op_time                           00000032
 op_time_save                      0000002A
 poll                              00000173
 read_rtc                          00000000
-MPASM 5.54                          MAIN.ASM   2-4-2014  17:48:56         PAGE 37
+MPASM 5.54                          MAIN.ASM   2-4-2014  20:22:08         PAGE 37
 
 
 SYMBOL TABLE

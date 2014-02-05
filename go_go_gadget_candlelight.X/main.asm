@@ -16,7 +16,7 @@
 ; VARIABLES
 ;***************************************
 
-; Also see i2c_commmon.asm -> has stuff at 0x70 on
+; Also see i2c_commmon.asm -> has stuff at 0x70 on for RTC
 
     cblock	0x20
         ; temps, counters, etc.
@@ -139,7 +139,7 @@ writenum_reg    macro   reg         ; from a register
 
 
 ;***************************************
-; LOOK UP TABLE (MESSAGES)
+; TABLES (MESSAGES)
 ;***************************************
 Standby_Msg
 		addwf	PCL,F
@@ -680,7 +680,7 @@ export
 
 
 ;***************************************
-; DISPLAY BIG NUMBER ROUTINE
+; DISPLAY BIG NUMBER SUBROUTINE
 ; Modified from http://www.piclist.com/techref/microchip/math/radix/b2a-8b3d-ab.htm
 ; Converts 8-bit binary number op_time to three BCDs representing huns, tens, ones
 ; Uses "shift and add 3" algorithm
@@ -751,7 +751,7 @@ carrytens
 
 
 ;***************************************
-; LCD ROUTINES (from sample code)
+; LCD SUBROUTINES (from sample code)
 ;***************************************
 
 ; Initialize the LCD
@@ -863,9 +863,8 @@ LLD_LOOP
     return
 
 
-
 ;***************************************
-; DELAY 0.5S ROUTINE (from sample code)
+; DELAY 0.5S SUBROUTINE (from sample code)
 ; Delays exactly 0.5sec
 ;***************************************
 HalfS
@@ -891,12 +890,11 @@ HalfS_0
 		return
 
 
-
 ;***************************************
 ; ISR
 ; Currently only care about TMR0
 ; TMR0 overflows at 256*256; each time, decrement count38
-; count38 thus hits 0 every 256*256*38 cycles = 1sec at 10MHz clock
+; count38 thus hits 0 every 256*256*38 cycles = 1sec with 10MHz clock
 ; When this hapens, op_time increments
 ;***************************************
 isr
@@ -917,7 +915,6 @@ end_isr
     swapf   w_isr, W
     bcf     INTCON, T0IF    ;clear the interrupt flag
     retfie
-
 
 
     END
