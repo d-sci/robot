@@ -1,5 +1,5 @@
 MPLINK 5.00, LINKER
-Linker Map File - Created Thu Feb 06 00:14:24 2014
+Linker Map File - Created Fri Feb 07 01:04:32 2014
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
@@ -26,16 +26,16 @@ Linker Map File - Created Thu Feb 06 00:14:24 2014
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
                   BCDadd3   0x0003f7    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-            Clear_Display   0x000441    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+            Clear_Display   0x000451    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                   End_Msg   0x000020    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                Export_Msg   0x00009d    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                        FF   0x00008f    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                Flick_fail   0x000068    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                    HalfS   0x000470    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  InitLCD   0x000423    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+                    HalfS   0x000423    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+                  InitLCD   0x000433    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                  LED_fail   0x00005c    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                        LF   0x000089    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 LLD_LOOP   0x000469    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+                 LLD_LOOP   0x000479    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                 Logs_Msg1   0x0000ae    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                 Logs_Msg2   0x0000be    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                      None   0x000095    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
@@ -47,13 +47,13 @@ Linker Map File - Created Thu Feb 06 00:14:24 2014
                   Seconds   0x00003b    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
               Standby_Msg   0x000005    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                 Start_Msg   0x00000e    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-             Switch_Lines   0x000444    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             Switch_Lines   0x000454    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                  Time_Msg   0x00002a    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                 Total_Msg   0x000078    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  WR_DATA   0x000456    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+                  WR_DATA   0x000466    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                    WR_END   0x0004d6    program     static ..\realtimeclock.X\i2c_common.asm
                    WR_ERR   0x0004d5    program     static ..\realtimeclock.X\i2c_common.asm
-                   WR_INS   0x000447    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+                   WR_INS   0x000457    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                     W_END   0x00055d    program     static ..\realtimeclock.X\i2c_common.asm
               _.code_0010   0x00049f    program     static ..\realtimeclock.X\i2c_common.asm
               _.code_0016   0x0004a5    program     static ..\realtimeclock.X\i2c_common.asm
@@ -83,63 +83,63 @@ Linker Map File - Created Thu Feb 06 00:14:24 2014
              _.org_1_019F   0x00019f    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
              _.org_1_01B8   0x0001b8    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
              _.org_1_0211   0x000211    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-             _.org_1_046C   0x00046c    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-             _.org_1_0477   0x000477    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-             _.org_1_0479   0x000479    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _.org_1_042A   0x00042a    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _.org_1_042C   0x00042c    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _.org_1_042F   0x00042f    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
              _.org_1_047C   0x00047c    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                _0HalfS_0   0x000476    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _13end_   0x000167    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _13loop_   0x00015f    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _26end_   0x000191    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _26loop_   0x000189    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _27end_   0x0001ac    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _27loop_   0x0001a4    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _28end_   0x0001b7    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _28loop_   0x0001af    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _29end_   0x0001ca    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _29loop_   0x0001c2    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _30end_   0x0001db    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _30loop_   0x0001d3    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _31end_   0x0001ec    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _31loop_   0x0001e4    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _32end_   0x0001fd    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _32loop_   0x0001f5    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _33end_   0x00020e    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _33loop_   0x000206    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _43end_   0x0002a6    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _43loop_   0x00029e    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _44end_   0x0002bc    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _44loop_   0x0002b4    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _45end_   0x0002cb    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _45loop_   0x0002c3    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _46end_   0x0002da    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _46loop_   0x0002d2    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _47end_   0x0002e9    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _47loop_   0x0002e1    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _48end_   0x0002f6    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _48loop_   0x0002ee    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                   _4end_   0x0000e9    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _4loop_   0x0000e1    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _50end_   0x000305    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _50loop_   0x0002fd    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _54end_   0x000317    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _54loop_   0x00030f    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _56end_   0x000327    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _56loop_   0x00031f    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _57end_   0x000334    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _57loop_   0x00032c    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _58end_   0x000342    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _58loop_   0x00033a    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _59end_   0x00034f    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _59loop_   0x000347    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _77end_   0x0003b7    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _77loop_   0x0003af    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _81end_   0x0003d6    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _81loop_   0x0003ce    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _82end_   0x0003e2    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _82loop_   0x0003da    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _83end_   0x0003ef    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _83loop_   0x0003e7    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+                _0HalfS_0   0x000429    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _13end_disp   0x000167    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _13loop_disp   0x00015f    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _26end_disp   0x000191    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _26loop_disp   0x000189    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _27end_disp   0x0001ac    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _27loop_disp   0x0001a4    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _28end_disp   0x0001b7    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _28loop_disp   0x0001af    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _29end_disp   0x0001ca    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _29loop_disp   0x0001c2    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _30end_disp   0x0001db    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _30loop_disp   0x0001d3    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _31end_disp   0x0001ec    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _31loop_disp   0x0001e4    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _32end_disp   0x0001fd    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _32loop_disp   0x0001f5    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _33end_disp   0x00020e    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _33loop_disp   0x000206    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _43end_disp   0x0002a6    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _43loop_disp   0x00029e    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _44end_disp   0x0002bc    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _44loop_disp   0x0002b4    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _45end_disp   0x0002cb    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _45loop_disp   0x0002c3    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _46end_disp   0x0002da    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _46loop_disp   0x0002d2    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _47end_disp   0x0002e9    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _47loop_disp   0x0002e1    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _48end_disp   0x0002f6    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _48loop_disp   0x0002ee    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+               _4end_disp   0x0000e9    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _4loop_disp   0x0000e1    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _50end_disp   0x000305    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _50loop_disp   0x0002fd    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _54end_disp   0x000317    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _54loop_disp   0x00030f    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _56end_disp   0x000327    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _56loop_disp   0x00031f    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _57end_disp   0x000334    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _57loop_disp   0x00032c    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _58end_disp   0x000342    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _58loop_disp   0x00033a    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _59end_disp   0x00034f    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _59loop_disp   0x000347    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _77end_disp   0x0003b7    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _77loop_disp   0x0003af    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _81end_disp   0x0003d6    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _81loop_disp   0x0003ce    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _82end_disp   0x0003e2    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _82loop_disp   0x0003da    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _83end_disp   0x0003ef    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _83loop_disp   0x0003e7    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                  add3huns   0x000414    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                  add3ones   0x00041a    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                  add3tens   0x000417    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
@@ -188,7 +188,7 @@ Linker Map File - Created Thu Feb 06 00:14:24 2014
               information   0x000213    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                      init   0x0000cf    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                       isr   0x000480    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-             lcdLongDelay   0x000467    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             lcdLongDelay   0x000477    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                      logs   0x0001a1    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                      nine   0x0003a3    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                   no_huns   0x0003c1    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
@@ -233,40 +233,40 @@ Linker Map File - Created Thu Feb 06 00:14:24 2014
                 Logs_Msg1   0x0000ae    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                 Logs_Msg2   0x0000be    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                      init   0x0000cf    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _4loop_   0x0000e1    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                   _4end_   0x0000e9    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _4loop_disp   0x0000e1    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+               _4end_disp   0x0000e9    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                   waiting   0x0000ea    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
              _.org_1_0150   0x000150    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                     start   0x000152    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _13loop_   0x00015f    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _13end_   0x000167    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _26loop_   0x000189    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _26end_   0x000191    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _13loop_disp   0x00015f    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _13end_disp   0x000167    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _26loop_disp   0x000189    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _26end_disp   0x000191    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                      poll   0x000199    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
              _.org_1_019A   0x00019a    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
              _.org_1_019F   0x00019f    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                      logs   0x0001a1    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _27loop_   0x0001a4    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _27end_   0x0001ac    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _28loop_   0x0001af    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _28end_   0x0001b7    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _27loop_disp   0x0001a4    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _27end_disp   0x0001ac    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _28loop_disp   0x0001af    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _28end_disp   0x0001b7    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                   polling   0x0001b7    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
              _.org_1_01B8   0x0001b8    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                check_log1   0x0001bc    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _29loop_   0x0001c2    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _29end_   0x0001ca    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _29loop_disp   0x0001c2    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _29end_disp   0x0001ca    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                check_log2   0x0001cc    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _30loop_   0x0001d3    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _30end_   0x0001db    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _30loop_disp   0x0001d3    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _30end_disp   0x0001db    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                check_log3   0x0001dd    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _31loop_   0x0001e4    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _31end_   0x0001ec    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _31loop_disp   0x0001e4    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _31end_disp   0x0001ec    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                check_log4   0x0001ee    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _32loop_   0x0001f5    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _32end_   0x0001fd    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _32loop_disp   0x0001f5    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _32end_disp   0x0001fd    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                check_done   0x0001ff    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _33loop_   0x000206    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _33end_   0x00020e    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _33loop_disp   0x000206    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _33end_disp   0x00020e    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                    badkey   0x000210    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
              _.org_1_0211   0x000211    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
               information   0x000213    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
@@ -284,42 +284,42 @@ Linker Map File - Created Thu Feb 06 00:14:24 2014
                check_time   0x00028b    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
              check_export   0x000291    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
             check_standby   0x000297    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _43loop_   0x00029e    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _43end_   0x0002a6    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _43loop_disp   0x00029e    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _43end_disp   0x0002a6    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
               check_start   0x0002a8    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
               default_key   0x0002ad    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
             display_state   0x0002ae    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                check_none   0x0002af    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _44loop_   0x0002b4    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _44end_   0x0002bc    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _44loop_disp   0x0002b4    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _44end_disp   0x0002bc    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                check_pass   0x0002bd    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _45loop_   0x0002c3    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _45end_   0x0002cb    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _45loop_disp   0x0002c3    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _45end_disp   0x0002cb    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                 check_LED   0x0002cc    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _46loop_   0x0002d2    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _46end_   0x0002da    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _46loop_disp   0x0002d2    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _46end_disp   0x0002da    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
               check_flick   0x0002db    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _47loop_   0x0002e1    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _47end_   0x0002e9    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _47loop_disp   0x0002e1    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _47end_disp   0x0002e9    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
             default_state   0x0002ea    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                   summary   0x0002eb    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _48loop_   0x0002ee    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _48end_   0x0002f6    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _50loop_   0x0002fd    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _50end_   0x000305    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _54loop_   0x00030f    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _54end_   0x000317    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _48loop_disp   0x0002ee    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _48end_disp   0x0002f6    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _50loop_disp   0x0002fd    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _50end_disp   0x000305    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _54loop_disp   0x00030f    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _54end_disp   0x000317    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                 defective   0x00031c    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _56loop_   0x00031f    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _56end_   0x000327    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _57loop_   0x00032c    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _57end_   0x000334    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _56loop_disp   0x00031f    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _56end_disp   0x000327    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _57loop_disp   0x00032c    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _57end_disp   0x000334    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                  check_LF   0x000335    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                    now_FF   0x000337    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _58loop_   0x00033a    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _58end_   0x000342    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _59loop_   0x000347    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _59end_   0x00034f    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _58loop_disp   0x00033a    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _58end_disp   0x000342    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _59loop_disp   0x000347    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _59end_disp   0x00034f    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                  check_FF   0x000350    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
            check_for_fail   0x000353    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                       one   0x000354    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
@@ -333,17 +333,17 @@ Linker Map File - Created Thu Feb 06 00:14:24 2014
                      nine   0x0003a3    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
            end_check_fail   0x0003ab    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                      time   0x0003ac    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _77loop_   0x0003af    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _77end_   0x0003b7    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _77loop_disp   0x0003af    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _77end_disp   0x0003b7    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                   no_huns   0x0003c1    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                   no_tens   0x0003c8    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _81loop_   0x0003ce    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _81end_   0x0003d6    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _81loop_disp   0x0003ce    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _81end_disp   0x0003d6    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                    export   0x0003d7    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _82loop_   0x0003da    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _82end_   0x0003e2    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 _83loop_   0x0003e7    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  _83end_   0x0003ef    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _82loop_disp   0x0003da    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _82end_disp   0x0003e2    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _83loop_disp   0x0003e7    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+              _83end_disp   0x0003ef    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                big_number   0x0003f0    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                   BCDadd3   0x0003f7    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                  add3huns   0x000414    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
@@ -351,18 +351,18 @@ Linker Map File - Created Thu Feb 06 00:14:24 2014
                  add3ones   0x00041a    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                 carryones   0x00041d    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                 carrytens   0x000420    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  InitLCD   0x000423    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-            Clear_Display   0x000441    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-             Switch_Lines   0x000444    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                   WR_INS   0x000447    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                  WR_DATA   0x000456    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-             lcdLongDelay   0x000467    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                 LLD_LOOP   0x000469    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-             _.org_1_046C   0x00046c    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                    HalfS   0x000470    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-                _0HalfS_0   0x000476    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-             _.org_1_0477   0x000477    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
-             _.org_1_0479   0x000479    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+                    HalfS   0x000423    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+                _0HalfS_0   0x000429    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _.org_1_042A   0x00042a    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _.org_1_042C   0x00042c    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             _.org_1_042F   0x00042f    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+                  InitLCD   0x000433    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+            Clear_Display   0x000451    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             Switch_Lines   0x000454    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+                   WR_INS   0x000457    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+                  WR_DATA   0x000466    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+             lcdLongDelay   0x000477    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
+                 LLD_LOOP   0x000479    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
              _.org_1_047C   0x00047c    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                       isr   0x000480    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
                   end_isr   0x000489    program     static C:\Users\Doge\Documents\GitHub\robot\go_go_gadget_candlelight.X\main.asm
