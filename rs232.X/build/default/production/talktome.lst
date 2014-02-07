@@ -1,4 +1,4 @@
-MPASM 5.54                      TALKTOME.ASM   2-7-2014  1:36:13         PAGE  1
+MPASM 5.54                      TALKTOME.ASM   2-7-2014  15:04:38         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -21,191 +21,114 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 2007   3F72           00006         __CONFIG _CP_OFF & _WDT_OFF & _BODEN_ON & _PWRTE_ON & _HS_OSC & _WRT_ENABLE_ON & _CPD_OFF & _LVP
                             _OFF
                       00007 
-                      00008 writetoPC   macro      lit
-                      00009         bcf       STATUS,RP0     ; Go back to bank 0
-                      00010         movlw       lit
-                      00011         movwf     TXREG          ; Send contents of W to RS232
-                      00012         bsf       STATUS,RP0     ; Go to bank with TXSTA
-                      00013         btfss     TXSTA,1        ; check TRMT bit in TXSTA (FSR) until TRMT=1
-                      00014         goto      $-1
-                      00015         endm
-                      00016 
-                      00017 
-  00000020            00018 offset  EQU       0x20
-  00000021            00019 temp    EQU       0x21
-                      00020 
-                      00021         ORG     0x0000
-                      00022 ;************ initialize *******************
-0000   1683           00023 init    bsf       STATUS,RP0     ; select bank 1
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0001   0188           00024         clrf      TRISD
+                      00008         cblock  0x20
+  00000020            00009             testnum2
+  00000021            00010             testnum4
+                      00011             endc
+                      00012 
+                      00013 
+                      00014 printchar   macro   char
+                      00015             movlw   char
+                      00016             call    writetoPC
+                      00017             endm
+                      00018 
+                      00019 printBCD    macro   BCD
+                      00020             movfw   BCD
+                      00021             addlw   0x30
+                      00022             call    writetoPC
+                      00023             endm
+                      00024 
                       00025 
-                      00026         ;Setup USART for RS232
-0002   300F           00027         movlw     d'15'          ; BAUD rate 9600, assuming 10MHz oscillator
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0003   0099           00028         movwf     SPBRG
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0004   0198           00029         clrf      TXSTA          ; 8 bits data ,no,1 stop
-                      00030 
-0005   1283           00031         bcf       STATUS,RP0     ; select bank 0
-0006   1798           00032         bsf       RCSTA,SPEN     ; Asynchronous serial port enable
-0007   1618           00033         bsf       RCSTA,CREN     ; continuous receive
+                      00026 
+  00000020            00027 offset  EQU       0x20
+  00000021            00028 temp    EQU       0x21
+                      00029 
+                      00030         ORG     0x0000
+                      00031 ;************ initialize *******************
+0000   1683           00032 init    bsf       STATUS,RP0     ; select bank 1
+                      00033         ;clrf      TRISD
                       00034 
-0008   1683           00035         bsf       STATUS,RP0     ; select bank 1
+                      00035         ;Setup USART for RS232
+0001   300F           00036         movlw     d'15'          ; BAUD rate 9600, assuming 10MHz oscillator
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0009   1698           00036         bsf       TXSTA,TXEN     ; Transmit enable
-                      00037 
-                      00038 ;********** Send welcome message **********************
+0002   0099           00037         movwf     SPBRG
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0003   0198           00038         clrf      TXSTA          ; 8 bits data ,no,1 stop
                       00039 
-MPASM 5.54                      TALKTOME.ASM   2-7-2014  1:36:13         PAGE  2
+0004   1283           00040         bcf       STATUS,RP0     ; select bank 0
+0005   1798           00041         bsf       RCSTA,SPEN     ; Asynchronous serial port enable
+MPASM 5.54                      TALKTOME.ASM   2-7-2014  15:04:38         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00040 
-                      00041     writetoPC   "Y"
-000A   1283               M         bcf       STATUS,RP0     ; Go back to bank 0
-000B   3059               M         movlw       "Y"
-000C   0099               M         movwf     TXREG          ; Send contents of W to RS232
-000D   1683               M         bsf       STATUS,RP0     ; Go to bank with TXSTA
+0006   1618           00042         bsf       RCSTA,CREN     ; continuous receive
+                      00043 
+0007   1683           00044         bsf       STATUS,RP0     ; select bank 1
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-000E   1C98               M         btfss     TXSTA,1        ; check TRMT bit in TXSTA (FSR) until TRMT=1
-000F   2???               M         goto      $-1
-                      00042     writetoPC   "o"
-0010   1283               M         bcf       STATUS,RP0     ; Go back to bank 0
-0011   306F               M         movlw       "o"
-0012   0099               M         movwf     TXREG          ; Send contents of W to RS232
-0013   1683               M         bsf       STATUS,RP0     ; Go to bank with TXSTA
+0008   1698           00045         bsf       TXSTA,TXEN     ; Transmit enable
+                      00046 
+                      00047 ;********** Send welcome message **********************
+                      00048 
+0009   3002           00049     movlw   D'2'
+000A   00A0           00050     movwf   testnum2
+000B   3004           00051     movlw   D'4'
+000C   00A1           00052     movwf   testnum4
+                      00053 
+                      00054     printchar   "H"
+000D   3048               M             movlw   "H"
+000E   2???               M             call    writetoPC
+                      00055     printchar   "I"
+000F   3049               M             movlw   "I"
+0010   2???               M             call    writetoPC
+                      00056     printchar   " "
+0011   3020               M             movlw   " "
+0012   2???               M             call    writetoPC
+                      00057     printBCD    testnum4
+0013   0821               M             movfw   testnum4
+0014   3E30               M             addlw   0x30
+0015   2???               M             call    writetoPC
+                      00058     printBCD    testnum2
+0016   0820               M             movfw   testnum2
+0017   3E30               M             addlw   0x30
+0018   2???               M             call    writetoPC
+                      00059 
+0019   2???           00060       goto  $
+                      00061         
+001A                  00062 writetoPC
+                      00063 ; Writes the data in W to the PC
+                      00064 ; end up in bank1!
+001A   1283           00065         bcf       STATUS,RP0     ; Go to bank 0
+001B   0099           00066         movwf     TXREG          ; Send contents of W to RS232
+001C   1683           00067         bsf       STATUS,RP0     ; Go to bank with TXSTA
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0014   1C98               M         btfss     TXSTA,1        ; check TRMT bit in TXSTA (FSR) until TRMT=1
-0015   2???               M         goto      $-1
-                      00043     writetoPC   "u"
-0016   1283               M         bcf       STATUS,RP0     ; Go back to bank 0
-0017   3075               M         movlw       "u"
-0018   0099               M         movwf     TXREG          ; Send contents of W to RS232
-0019   1683               M         bsf       STATUS,RP0     ; Go to bank with TXSTA
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-001A   1C98               M         btfss     TXSTA,1        ; check TRMT bit in TXSTA (FSR) until TRMT=1
-001B   2???               M         goto      $-1
-                      00044     writetoPC   " "
-001C   1283               M         bcf       STATUS,RP0     ; Go back to bank 0
-001D   3020               M         movlw       " "
-001E   0099               M         movwf     TXREG          ; Send contents of W to RS232
-001F   1683               M         bsf       STATUS,RP0     ; Go to bank with TXSTA
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0020   1C98               M         btfss     TXSTA,1        ; check TRMT bit in TXSTA (FSR) until TRMT=1
-0021   2???               M         goto      $-1
-                      00045     writetoPC   "s"
-0022   1283               M         bcf       STATUS,RP0     ; Go back to bank 0
-0023   3073               M         movlw       "s"
-0024   0099               M         movwf     TXREG          ; Send contents of W to RS232
-0025   1683               M         bsf       STATUS,RP0     ; Go to bank with TXSTA
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0026   1C98               M         btfss     TXSTA,1        ; check TRMT bit in TXSTA (FSR) until TRMT=1
-0027   2???               M         goto      $-1
-                      00046     writetoPC   "o"
-0028   1283               M         bcf       STATUS,RP0     ; Go back to bank 0
-0029   306F               M         movlw       "o"
-002A   0099               M         movwf     TXREG          ; Send contents of W to RS232
-002B   1683               M         bsf       STATUS,RP0     ; Go to bank with TXSTA
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-002C   1C98               M         btfss     TXSTA,1        ; check TRMT bit in TXSTA (FSR) until TRMT=1
-002D   2???               M         goto      $-1
-                      00047     writetoPC   " "
-002E   1283               M         bcf       STATUS,RP0     ; Go back to bank 0
-002F   3020               M         movlw       " "
-0030   0099               M         movwf     TXREG          ; Send contents of W to RS232
-MPASM 5.54                      TALKTOME.ASM   2-7-2014  1:36:13         PAGE  3
+001D   1C98           00068         btfss     TXSTA,1        ; check TRMT bit in TXSTA (FSR) until TRMT=1
+001E   2???           00069         goto      $-1
+001F   0008           00070         return
+                      00071 
+                      00072 
+                      00073 ;********** Start echoing characters back on RS232 *******************
+                      00074 ;run     btfss     PIR1,RCIF      ; Check RCIF  bit in PIR1 register until RCIF=1
+                      00075 ;        goto      $-1
+                      00076 ;
+                      00077 ;        movf      RCREG,w        ; Read the character received from RS232
+                      00078 ;        movwf     TXREG          ; Write it right back to RS232
+                      00079 ;
+                      00080 ;        goto      run
+MPASM 5.54                      TALKTOME.ASM   2-7-2014  15:04:38         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0031   1683               M         bsf       STATUS,RP0     ; Go to bank with TXSTA
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0032   1C98               M         btfss     TXSTA,1        ; check TRMT bit in TXSTA (FSR) until TRMT=1
-0033   2???               M         goto      $-1
-                      00048     writetoPC   "b"
-0034   1283               M         bcf       STATUS,RP0     ; Go back to bank 0
-0035   3062               M         movlw       "b"
-0036   0099               M         movwf     TXREG          ; Send contents of W to RS232
-0037   1683               M         bsf       STATUS,RP0     ; Go to bank with TXSTA
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0038   1C98               M         btfss     TXSTA,1        ; check TRMT bit in TXSTA (FSR) until TRMT=1
-0039   2???               M         goto      $-1
-                      00049     writetoPC   "o"
-003A   1283               M         bcf       STATUS,RP0     ; Go back to bank 0
-003B   306F               M         movlw       "o"
-003C   0099               M         movwf     TXREG          ; Send contents of W to RS232
-003D   1683               M         bsf       STATUS,RP0     ; Go to bank with TXSTA
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-003E   1C98               M         btfss     TXSTA,1        ; check TRMT bit in TXSTA (FSR) until TRMT=1
-003F   2???               M         goto      $-1
-                      00050     writetoPC   "s"
-0040   1283               M         bcf       STATUS,RP0     ; Go back to bank 0
-0041   3073               M         movlw       "s"
-0042   0099               M         movwf     TXREG          ; Send contents of W to RS232
-0043   1683               M         bsf       STATUS,RP0     ; Go to bank with TXSTA
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0044   1C98               M         btfss     TXSTA,1        ; check TRMT bit in TXSTA (FSR) until TRMT=1
-0045   2???               M         goto      $-1
-                      00051     writetoPC   "s"
-0046   1283               M         bcf       STATUS,RP0     ; Go back to bank 0
-0047   3073               M         movlw       "s"
-0048   0099               M         movwf     TXREG          ; Send contents of W to RS232
-0049   1683               M         bsf       STATUS,RP0     ; Go to bank with TXSTA
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-004A   1C98               M         btfss     TXSTA,1        ; check TRMT bit in TXSTA (FSR) until TRMT=1
-004B   2???               M         goto      $-1
-                      00052     writetoPC   "!"
-004C   1283               M         bcf       STATUS,RP0     ; Go back to bank 0
-004D   3021               M         movlw       "!"
-004E   0099               M         movwf     TXREG          ; Send contents of W to RS232
-004F   1683               M         bsf       STATUS,RP0     ; Go to bank with TXSTA
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0050   1C98               M         btfss     TXSTA,1        ; check TRMT bit in TXSTA (FSR) until TRMT=1
-0051   2???               M         goto      $-1
-                      00053     writetoPC   " "
-0052   1283               M         bcf       STATUS,RP0     ; Go back to bank 0
-0053   3020               M         movlw       " "
-0054   0099               M         movwf     TXREG          ; Send contents of W to RS232
-0055   1683               M         bsf       STATUS,RP0     ; Go to bank with TXSTA
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0056   1C98               M         btfss     TXSTA,1        ; check TRMT bit in TXSTA (FSR) until TRMT=1
-0057   2???               M         goto      $-1
-                      00054     writetoPC   D'1'
-MPASM 5.54                      TALKTOME.ASM   2-7-2014  1:36:13         PAGE  4
-
-
-LOC  OBJECT CODE     LINE SOURCE TEXT
-  VALUE
-
-0058   1283               M         bcf       STATUS,RP0     ; Go back to bank 0
-0059   3001               M         movlw       D'1'
-005A   0099               M         movwf     TXREG          ; Send contents of W to RS232
-005B   1683               M         bsf       STATUS,RP0     ; Go to bank with TXSTA
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-005C   1C98               M         btfss     TXSTA,1        ; check TRMT bit in TXSTA (FSR) until TRMT=1
-005D   2???               M         goto      $-1
-005E   2???           00055       goto  $
-                      00056         
-                      00057 
-                      00058 ;********** Start echoing characters back on RS232 *******************
-                      00059 ;run     btfss     PIR1,RCIF      ; Check RCIF  bit in PIR1 register until RCIF=1
-                      00060 ;        goto      $-1
-                      00061 ;
-                      00062 ;        movf      RCREG,w        ; Read the character received from RS232
-                      00063 ;        movwf     TXREG          ; Write it right back to RS232
-                      00064 ;
-                      00065 ;        goto      run
-                      00066 
-                      00067 ;********* Table containing welcome message ********************
-                      00068 ;TAB     addwf     PCL,f            ; Move offset to PC lower
-                      00069 ;        dt  "Hello David, This is PICtricia talking.",0
-                      00070 
-3F72                  00071         end
-MPASM 5.54                      TALKTOME.ASM   2-7-2014  1:36:13         PAGE  5
+                      00081 
+                      00082 ;********* Table containing welcome message ********************
+                      00083 ;TAB     addwf     PCL,f            ; Move offset to PC lower
+                      00084 ;        dt  "Hello David, This is PICtricia talking.",0
+                      00085 
+3F72                  00086         end
+MPASM 5.54                      TALKTOME.ASM   2-7-2014  15:04:38         PAGE  4
 
 
 SYMBOL TABLE
@@ -264,7 +187,7 @@ CSRC                              00000007
 D                                 00000005
 DATA_ADDRESS                      00000005
 DC                                00000001
-MPASM 5.54                      TALKTOME.ASM   2-7-2014  1:36:13         PAGE  6
+MPASM 5.54                      TALKTOME.ASM   2-7-2014  15:04:38         PAGE  5
 
 
 SYMBOL TABLE
@@ -323,7 +246,7 @@ PCFG0                             00000000
 PCFG1                             00000001
 PCFG2                             00000002
 PCFG3                             00000003
-MPASM 5.54                      TALKTOME.ASM   2-7-2014  1:36:13         PAGE  7
+MPASM 5.54                      TALKTOME.ASM   2-7-2014  15:04:38         PAGE  6
 
 
 SYMBOL TABLE
@@ -382,7 +305,7 @@ RCD8                              00000000
 RCEN                              00000003
 RCIE                              00000005
 RCIF                              00000005
-MPASM 5.54                      TALKTOME.ASM   2-7-2014  1:36:13         PAGE  8
+MPASM 5.54                      TALKTOME.ASM   2-7-2014  15:04:38         PAGE  7
 
 
 SYMBOL TABLE
@@ -441,7 +364,7 @@ T1CON                             00000010
 T1INSYNC                          00000002
 T1OSCEN                           00000003
 T1SYNC                            00000002
-MPASM 5.54                      TALKTOME.ASM   2-7-2014  1:36:13         PAGE  9
+MPASM 5.54                      TALKTOME.ASM   2-7-2014  15:04:38         PAGE  8
 
 
 SYMBOL TABLE
@@ -500,7 +423,7 @@ TRISD2                            00000002
 TRISD3                            00000003
 TRISD4                            00000004
 TRISD5                            00000005
-MPASM 5.54                      TALKTOME.ASM   2-7-2014  1:36:13         PAGE 10
+MPASM 5.54                      TALKTOME.ASM   2-7-2014  15:04:38         PAGE  9
 
 
 SYMBOL TABLE
@@ -529,21 +452,8 @@ WR                                00000001
 WREN                              00000002
 WRERR                             00000003
 Z                                 00000002
-_.org_0_000F                      0000000F
-_.org_0_0015                      00000015
-_.org_0_001B                      0000001B
-_.org_0_0021                      00000021
-_.org_0_0027                      00000027
-_.org_0_002D                      0000002D
-_.org_0_0033                      00000033
-_.org_0_0039                      00000039
-_.org_0_003F                      0000003F
-_.org_0_0045                      00000045
-_.org_0_004B                      0000004B
-_.org_0_0051                      00000051
-_.org_0_0057                      00000057
-_.org_0_005D                      0000005D
-_.org_0_005E                      0000005E
+_.org_0_0019                      00000019
+_.org_0_001E                      0000001E
 _BODEN_OFF                        00003FBF
 _BODEN_ON                         00003FFF
 _BOREN_OFF                        00003FBF
@@ -559,12 +469,6 @@ _DEBUG_OFF                        00003FFF
 _DEBUG_ON                         000037FF
 _DEVID1                           00002006
 _FOSC_EXTRC                       00003FFF
-MPASM 5.54                      TALKTOME.ASM   2-7-2014  1:36:13         PAGE 11
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 _FOSC_HS                          00003FFE
 _FOSC_LP                          00003FFC
 _FOSC_XT                          00003FFD
@@ -578,6 +482,12 @@ _LVP_OFF                          00003F7F
 _LVP_ON                           00003FFF
 _PWRTE_OFF                        00003FFF
 _PWRTE_ON                         00003FF7
+MPASM 5.54                      TALKTOME.ASM   2-7-2014  15:04:38         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 _RC_OSC                           00003FFF
 _WDTE_OFF                         00003FFB
 _WDTE_ON                          00003FFF
@@ -591,11 +501,15 @@ _XT_OSC                           00003FFD
 __16F877                          00000001
 init                              00000000
 offset                            00000020
+printBCD                          
+printchar                         
 temp                              00000021
-writetoPC                         
+testnum2                          00000020
+testnum4                          00000021
+writetoPC                         0000001A
 
 Errors   :     0
 Warnings :     0 reported,     0 suppressed
-Messages :    18 reported,     0 suppressed
+Messages :     4 reported,     0 suppressed
 
 

@@ -1,11 +1,11 @@
 MPLINK 5.00, LINKER
-Linker Map File - Created Fri Feb 07 01:36:13 2014
+Linker Map File - Created Fri Feb 07 15:04:38 2014
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
                 ---------  ---------  ---------  ---------  ---------
-                   .org_0       code   0x000000    program   0x0000be
-                   .cinit    romdata   0x00005f    program   0x000004
+                   .org_0       code   0x000000    program   0x000040
+                   .cinit    romdata   0x000020    program   0x000004
 .config_2007_BUILD/DEFAULT/PRODUCTION/TALKTOM       code   0x002007    program   0x000002
 
 
@@ -13,31 +13,19 @@ Linker Map File - Created Fri Feb 07 01:36:13 2014
                               Program Memory Usage 
                                Start         End      
                            ---------   ---------      
-                            0x000000    0x000060      
+                            0x000000    0x000021      
                             0x002007    0x002007      
-            98 out of 8454 program addresses used, program memory utilization is 1%
+            35 out of 8454 program addresses used, program memory utilization is 0%
 
 
 
                               Symbols - Sorted by Name
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
-             _.org_0_000F   0x00000f    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_0015   0x000015    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_001B   0x00001b    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_0021   0x000021    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_0027   0x000027    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_002D   0x00002d    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_0033   0x000033    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_0039   0x000039    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_003F   0x00003f    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_0045   0x000045    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_004B   0x00004b    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_0051   0x000051    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_0057   0x000057    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_005D   0x00005d    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_005E   0x00005e    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
+             _.org_0_0019   0x000019    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
+             _.org_0_001E   0x00001e    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
                      init   0x000000    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
+                writetoPC   0x00001a    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
 
 
 
@@ -45,20 +33,8 @@ Linker Map File - Created Fri Feb 07 01:36:13 2014
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
                      init   0x000000    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_000F   0x00000f    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_0015   0x000015    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_001B   0x00001b    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_0021   0x000021    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_0027   0x000027    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_002D   0x00002d    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_0033   0x000033    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_0039   0x000039    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_003F   0x00003f    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_0045   0x000045    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_004B   0x00004b    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_0051   0x000051    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_0057   0x000057    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_005D   0x00005d    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
-             _.org_0_005E   0x00005e    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
+             _.org_0_0019   0x000019    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
+                writetoPC   0x00001a    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
+             _.org_0_001E   0x00001e    program     static C:\Users\Doge\Documents\GitHub\robot\rs232.X\talktome.asm
 
 
