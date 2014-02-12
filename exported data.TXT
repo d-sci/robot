@@ -1,13 +1,7 @@
-Test at: 2014/02/07 17:06
-Time: 02sec
-Candles: 8
-LED fail: 0
-Flicker fail: 3
-
-Test at: 2014/02/07 17:06
-Time: 02sec
-Candles: 8
-LED fail: 0
-Flicker fail: 3
+Test at: 2014/02/12 14:56
+Time:    1 sec
+Candles:      8
+LED fail:     2
+Flicker fail: 1
 
 

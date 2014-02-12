@@ -10,8 +10,7 @@
 ;***************************************
     #define	RS 	PORTD,2
 	#define	E 	PORTD,3
-    #define threshold1  D'15'
-    #define threshold2  D'65'
+
 
 ;***************************************
 ; VARIABLES
@@ -364,70 +363,62 @@ start
 
 ; choose fake or real!
 
-;****REAL CODE ******************************************
-    movlf    D'0', candle_index
-    bcf	STATUS, IRP
-    movlf   0x20, FSR       ;pointing at right before state1
-    bsf     IRLIGHT     ;turn on IR
-
-rotate
-	movlw   0x9                 ; stop operation after 9 rotations
-    subwf   candle_index,W      ; candle_index is # you've already tested before rotating
-    btfsc   STATUS,Z
-	goto    end_operation
-	call    ROTATEMOTOR          ; else rotate motor and n++
-	incf    candle_index, F
-    incf    FSR, F
-
-detect_candle
-	btfss   IRDATA      ;IRDATA is 1 if there's no light, 0 if there's a light
-	goto    test_candle     ;yes candle, go test it
-    movlf   D'0', INDF      ;no candle, state = not present
-	goto rotate                 ;and go try next
-
-test_candle
-	incf    num_tot, F			; keeping track of total number of candles
-	; Assume candle is already turned on
-	clrf    photocount
-	call    HalfS       ; delay 2 sec or whatever
-   call    HalfS
-   call    HalfS
-   call    HalfS
-	movff   photocount, photoval        ;to ensure it wont change again
-check_threshold1
-    movlw    threshold1
-    subwf   photoval, W
-    btfsc   STATUS, C       ;if  photoval < threshold 1, C = 0
-    goto check_threshold2
-    movlf   D'2', INDF      ; < threshold 1 means led fail
-	 incf    num_LF, F
-    goto    end_test_candle
-check_threshold2
-    movlw    threshold2
-    subwf   photoval, W
-    btfsc   STATUS, C       ;if  photoval < threshold 2, C = 0
-    goto aboveboth
-    movlf   D'1', INDF      ; < threshold 2 means pass
-    goto    end_test_candle
-aboveboth
-   movlf   D'3', INDF       ;else flicker fail
-   incf    num_FF, F
-end_test_candle
-	call    TURNOFF     ;pulse solenoid to turn off candle
-    goto    rotate
-
-
-ROTATEMOTOR ;rotates stepper motor 40deg
-    return
-
-TURNOFF ;pulses solenoid to turn off candle
-    return
- ;****************************************************
+;;****REAL CODE ******************************************
+;    movlf    D'0', candle_index
+;    bcf	STATUS, IRP
+;    movlf   0x21, FSR       ;pointing at state1
+;
+;rotate
+;	movlw   0x9                 ; stop operation after 9 rotations
+;    subwf   candle_index,W      ; candle_index is # you've already tested before rotating
+;    btfsc   STATUS,Z
+;	goto    end_operation
+;	call    PULSEMOTOR          ; else rotate motor and n++
+;	incf    candle_index, F
+;    incf    FSR, F
+;
+;detect_candle
+;	bsf     IRLIGHT     ;turn on IR
+;	btfss   IRDATA      ;IRDATA is 1 if there's no light, 0 if there's a light
+;	goto    test_candle     ;yes candle, go test it
+;    movlf   D'0', INDF      ;no candle, state = not present
+;	goto rotate                 ;and go try next
+;
+;test_candle
+;	incf    num_tot, F			; keeping track of total number of candles
+;	; Assume candle is already turned on
+;	clrf    photocount
+;	call    HalfS       ; delay 2 sec or whatever
+;   call    HalfS
+;   call    HalfS
+;   call    HalfS
+;	movff   photocount, photoval        ;to ensure it wont change again
+;check_threshold1
+;    movf    threshold1, W
+;    subwf   photoval, W
+;    btfsc   STATUS, C       ;if  photoval < threshold 1, C = 0
+;    goto check_threshold2
+;    movlf   D'2', INDF      ; < threshold 1 means led fail
+;	 incf    num_LF, F
+;    goto    end_test_candle
+;check_threshold2
+;    movf    threshold2, W
+;    subwf   photoval, W
+;    btfsc   STATUS, C       ;if  photoval < threshold 2, C = 0
+;    goto aboveboth
+;    movlf   D'1', INDF      ; < threshold 2 means pass
+;    goto    end_test_candle
+;aboveboth
+;   movlf   D'3', INDF       ;else flicker fail
+;   incf    num_FF, F
+;end_test_candle
+;	 call    TURNOFF     ;pulse solenoid to turn off candle
+;    goto    rotate
+;
+;
+; ;****************************************************
 
 end_operation
-        ;Turn off the IR
-        ;bcf     IRLIGHT
-
         ; Stop the timer
          bcf         INTCON, T0IE  ;disable Timer0 interrupt
 
@@ -1208,7 +1199,7 @@ isr
 end_isr
 
 ;    btfss   PHOTODATA       ;if PHOTODATA is 1, light is off
-;    incf    photocount       ;if it is 0, light is on so photocount++
+;    incf    photocout       ;if it is 0, light is on so photocount++
 
 ;    movf    pclath_isr, W  ;if using pages
 ;    movwf    PCLATH
