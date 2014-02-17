@@ -12,6 +12,11 @@
 	#define	E 	PORTD,3
     #define threshold1  D'15'
     #define threshold2  D'65'
+    #define IRLIGHT    PORTA, 0
+    #define IRDATA     PORTA, 1
+    #define PHOTODATA  PORTA, 2
+   ; note: check analog v digital!
+
 
 ;***************************************
 ; VARIABLES
@@ -50,11 +55,11 @@
 		Table_Counter   ; for LCD stuff
 		com
 		dat
-        lcd_d1
-        lcd_d2
-        COUNTH          ;for delay 0.5s routine
-        COUNTM
-        COUNTL
+        del1            ; for delay 5ms delay routine
+        del2
+        hdelH          ;for delay 0.5s routine
+        hdelM
+        hdelL
         op_time_save    ;for operation time
         huns
         tens
@@ -63,6 +68,8 @@
         count38         ;for isr
 ; For machine program: temps, counters, etc.
         candle_index
+        photocount
+        photoval
 
     endc
 
@@ -75,14 +82,6 @@
 ;***************************************
 ; MACROS
 ;***************************************
-
-;LCD Delay
-LCD_DELAY   macro
-            movlw   0xFF
-            movwf   lcd_d1
-            decfsz  lcd_d1,f
-            goto    $-1
-            endm
 
 ; Display a msg on LCD
 Display macro	Message
@@ -225,17 +224,19 @@ init
         movlf     b'10000000', INTCON   ;interrupts enabled
 
         bsf       STATUS,RP0            ; select bank 1
-        clrf      TRISA                 ; PortA is output - not yet used
+        movlf     b'000110', TRISA      ; PortA *may* be used for Photo and IR stuff
         movlf     b'11110010', TRISB    ; PortB[7:4] and [1] are keypad inputs (rest unused; RB0 may be external interrupt)
                                         ; note can disable keypad to free up these ports during operation if necessary.
-        movlf     b'00011000', TRISC    ; PortC[4:3] is RTC (rest unused; [7:6] may be RS-232)
+        movlf     b'00011000', TRISC    ; PortC[4:3] is RTC; [7:6] is RS-232; rest unused
         clrf      TRISD                 ; PortD[2:7] is LCD output (rest unused)
+        clrf      TRISE                 ; PortE is output- *may* be used for motor (only [2:0] tho!)
 
         bcf       STATUS,RP0     ; select bank 0
         clrf      PORTA
         clrf      PORTB
         clrf      PORTC
         clrf      PORTD
+        clrf      PORTE
 
         call 	  i2c_common_setup  ;Set up I2C for communication
         call      InitLCD           ;Initialize the LCD
@@ -346,7 +347,7 @@ start
         ; Just delaying
         call        HalfS
         call        HalfS
-        
+
        ; Putting values in manually.
         movlf     B'01', state1     ;pass
         movlf     B'01', state2     ;pass
@@ -364,65 +365,65 @@ start
 
 ; choose fake or real!
 
-;****REAL CODE ******************************************
-    movlf    D'0', candle_index
-    bcf	STATUS, IRP
-    movlf   0x20, FSR       ;pointing at right before state1
-    bsf     IRLIGHT     ;turn on IR
-
-rotate
-	movlw   0x9                 ; stop operation after 9 rotations
-    subwf   candle_index,W      ; candle_index is # you've already tested before rotating
-    btfsc   STATUS,Z
-	goto    end_operation
-	call    ROTATEMOTOR          ; else rotate motor and n++
-	incf    candle_index, F
-    incf    FSR, F
-
-detect_candle
-	btfss   IRDATA      ;IRDATA is 1 if there's no light, 0 if there's a light
-	goto    test_candle     ;yes candle, go test it
-    movlf   D'0', INDF      ;no candle, state = not present
-	goto rotate                 ;and go try next
-
-test_candle
-	incf    num_tot, F			; keeping track of total number of candles
-	; Assume candle is already turned on
-	clrf    photocount
-	call    HalfS       ; delay 2 sec or whatever
-   call    HalfS
-   call    HalfS
-   call    HalfS
-	movff   photocount, photoval        ;to ensure it wont change again
-check_threshold1
-    movlw    threshold1
-    subwf   photoval, W
-    btfsc   STATUS, C       ;if  photoval < threshold 1, C = 0
-    goto check_threshold2
-    movlf   D'2', INDF      ; < threshold 1 means led fail
-	 incf    num_LF, F
-    goto    end_test_candle
-check_threshold2
-    movlw    threshold2
-    subwf   photoval, W
-    btfsc   STATUS, C       ;if  photoval < threshold 2, C = 0
-    goto aboveboth
-    movlf   D'1', INDF      ; < threshold 2 means pass
-    goto    end_test_candle
-aboveboth
-   movlf   D'3', INDF       ;else flicker fail
-   incf    num_FF, F
-end_test_candle
-	call    TURNOFF     ;pulse solenoid to turn off candle
-    goto    rotate
-
-
-ROTATEMOTOR ;rotates stepper motor 40deg
-    return
-
-TURNOFF ;pulses solenoid to turn off candle
-    return
- ;****************************************************
+;;****REAL CODE ******************************************
+;    movlf    D'0', candle_index
+;    bcf	STATUS, IRP
+;    movlf   0x20, FSR       ;pointing at right before state1
+;    bsf     IRLIGHT     ;turn on IR
+;
+;rotate
+;	movlw   0x9                 ; stop operation after 9 rotations
+;    subwf   candle_index,W      ; candle_index is # you've already tested before rotating
+;    btfsc   STATUS,Z
+;	goto    end_operation
+;	call    ROTATEMOTOR          ; else rotate motor and n++
+;	incf    candle_index, F
+;    incf    FSR, F
+;
+;detect_candle
+;	btfss   IRDATA      ;IRDATA is 1 if there's no light, 0 if there's a light
+;	goto    test_candle     ;yes candle, go test it
+;    movlf   D'0', INDF      ;no candle, state = not present
+;	goto rotate                 ;and go try next
+;
+;test_candle
+;	incf    num_tot, F			; keeping track of total number of candles
+;	; Assume candle is already turned on
+;	clrf    photocount
+;	call    HalfS       ; delay 2 sec or whatever
+;   call    HalfS
+;   call    HalfS
+;   call    HalfS
+;	movff   photocount, photoval        ;to ensure it wont change again
+;check_threshold1
+;    movlw    threshold1
+;    subwf   photoval, W
+;    btfsc   STATUS, C       ;if  photoval < threshold 1, C = 0
+;    goto check_threshold2
+;    movlf   D'2', INDF      ; < threshold 1 means led fail
+;	 incf    num_LF, F
+;    goto    end_test_candle
+;check_threshold2
+;    movlw    threshold2
+;    subwf   photoval, W
+;    btfsc   STATUS, C       ;if  photoval < threshold 2, C = 0
+;    goto aboveboth
+;    movlf   D'1', INDF      ; < threshold 2 means pass
+;    goto    end_test_candle
+;aboveboth
+;   movlf   D'3', INDF       ;else flicker fail
+;   incf    num_FF, F
+;end_test_candle
+;	call    TURNOFF     ;pulse solenoid to turn off candle
+;    goto    rotate
+;
+;
+;ROTATEMOTOR ;rotates stepper motor 40deg
+;    return
+;
+;TURNOFF ;pulses solenoid to turn off candle
+;    return
+; ;****************************************************
 
 end_operation
         ;Turn off the IR
@@ -1017,30 +1018,36 @@ carrytens
     return
 
 
-; DELAY 0.5S SUBROUTINE (from sample code)
+; DELAY 0.5S SUBROUTINE (from generator at http://www.piclist.com/techref/piclist/codegen/delay.htm)
 ; Delays exactly 0.5sec
 HalfS
-	local	HalfS_0
-      movlw 0x88
-      movwf COUNTH
-      movlw 0xBD
-      movwf COUNTM
-      movlw 0x03
-      movwf COUNTL
-
+      movlf 0x8A, hdelH
+      movlf 0xBA, hdelM
+      movlf 0x03, hdelL
 HalfS_0
-      decfsz COUNTH, f
-      goto   $+2
-      decfsz COUNTM, f
-      goto   $+2
-      decfsz COUNTL, f
-      goto   HalfS_0
+      decfsz	hdelH, F
+	  goto	$+2
+	  decfsz	hdelM, F
+	  goto	$+2
+	  decfsz	hdelL, F
+	  goto	HalfS_0
 
-      goto $+1
-      nop
-      nop
-		return
+	  goto	$+1
+	  nop
+	  return
 
+; DELAY 5ms SUBROUTINE. (from generator at http://www.piclist.com/techref/piclist/codegen/delay.htm)
+; Useful for LCD because PIC is way faster than it can handle
+; Delays exactly 5ms
+delay5ms
+	movlf	0xC3, del1
+	movlf	0x0A, del2
+Delay_0
+	decfsz	del1, f
+	goto	$+2
+	decfsz	del2, f
+	goto	Delay_0
+    return
 
 ;***************************************
 ; LCD SUBROUTINES (from sample code)
@@ -1052,44 +1059,44 @@ InitLCD
 	bsf E     ;E default high
 
 	;Wait for LCD POR to finish (~15ms)
-	call lcdLongDelay
-	call lcdLongDelay
-	call lcdLongDelay
+	call delay5ms
+	call delay5ms
+	call delay5ms
 
 	;Ensure 8-bit mode first (no way to immediately guarantee 4-bit mode)
 	; -> Send b'0011' 3 times
 	movlw	b'00110011'
 	call	WR_INS
-	call lcdLongDelay
-	call lcdLongDelay
+	call delay5ms
+	call delay5ms
 	movlw	b'00110010'
 	call	WR_INS
-	call lcdLongDelay
-	call lcdLongDelay
+	call delay5ms
+	call delay5ms
 
 	; 4 bits, 2 lines, 5x7 dots
 	movlw	b'00101000'
 	call	WR_INS
-	call lcdLongDelay
-	call lcdLongDelay
+	call delay5ms
+	call delay5ms
 
 	; display on/off
 	movlw	b'00001100'
 	call	WR_INS
-	call lcdLongDelay
-	call lcdLongDelay
+	call delay5ms
+	call delay5ms
 
 	; Entry mode
 	movlw	b'00000110'
 	call	WR_INS
-	call lcdLongDelay
-	call lcdLongDelay
+	call delay5ms
+	call delay5ms
 
 	; Clear ram
 	movlw	b'00000001'
 	call	WR_INS
-	call lcdLongDelay
-	call lcdLongDelay
+	call delay5ms
+	call delay5ms
 	return
 
 ; Clear the display
@@ -1112,15 +1119,15 @@ WR_INS
 	andlw	0xF0			;mask 4 bits MSB w = X0
 	movwf	PORTD			;Send 4 bits MSB
 	bsf		E				;
-	call	lcdLongDelay	;__    __
+	call	delay5ms	;__    __
 	bcf		E				;  |__|
 	swapf	com,w
 	andlw	0xF0			;1111 0010
 	movwf	PORTD			;send 4 bits LSB
 	bsf		E				;
-	call	lcdLongDelay	;__    __
+	call	delay5ms	;__    __
 	bcf		E				;  |__|
-	call	lcdLongDelay
+	call	delay5ms
 	return
 
 ; Write data at current cursor location
@@ -1133,26 +1140,16 @@ WR_DATA
 	addlw	4
 	movwf	PORTD
 	bsf		E				;
-	call	lcdLongDelay	;__    __
+	call	delay5ms	;__    __
 	bcf		E				;  |__|
 	swapf	dat,w
 	andlw	0xF0
 	addlw	4
 	movwf	PORTD
 	bsf		E				;
-	call	lcdLongDelay	;__    __
+	call	delay5ms	;__    __
 	bcf		E				;  |__|
 	return
-
-;Delay routine because PIC is way faster than the LCD can handle
-lcdLongDelay
-    movlw d'20'
-    movwf lcd_d2
-LLD_LOOP
-    LCD_DELAY
-    decfsz lcd_d2,f
-    goto LLD_LOOP
-    return
 
 
 ;***************************************
@@ -1208,7 +1205,7 @@ isr
 end_isr
 
 ;    btfss   PHOTODATA       ;if PHOTODATA is 1, light is off
-;    incf    photocount       ;if it is 0, light is on so photocount++
+;    incf    photocount, F       ;if it is 0, light is on so photocount++
 
 ;    movf    pclath_isr, W  ;if using pages
 ;    movwf    PCLATH
