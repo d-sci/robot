@@ -26,7 +26,7 @@
 
     cblock	0x20
     ; Important information (will be displayed)
-        dummy    
+        op_time    ;in seconds    
         state1     ;where   0 = none      1 = pass
         state2     ;        2 = led fail  3 = flicker fail
         state3
@@ -46,7 +46,6 @@
         start_hour1
         start_min10
         start_min1
-        op_time     ;BCD in seconds
         num_tot     ;BCD
         num_LF      ;BCD
         num_FF      ;BCD
@@ -71,9 +70,10 @@
         candle_index
         photocount
         photoval
+
     endc
 
-    cblock  0x79        ;stuff that needs to be in all registers
+    cblock  0x79        ;ISR stuff that needs to be in all registers
         w_isr           
         status_isr
 	endc
@@ -101,6 +101,11 @@ loop_disp
 end_disp
 		endm
 
+;Move cursor right one position
+spacebar    macro
+            movlw   B'00010100'
+            call    WR_INS
+            endm
 
 ;Shortcuts for moving literals / registers
 movlf   macro   l, f
@@ -113,29 +118,22 @@ movff   macro   source, dest
         movwf   dest
         endm
 
-; Write to LCD (all in bank0 please)
-writeBCD    macro   reg         ; from a register containing BCD
-            movf    reg, W
+; Display a BCD on LCD as decimal
+writenum    macro   number          ; literal
+            movlw    number
             addlw   B'00110000'
+            movwf   dat
             call WR_DATA
             endm
 
-writechar   macro   asc             ;ASCII code literal (or in "")
-            movlw   asc
-            call    WR_DATA
-            endm
-
-writeASC        macro   reg         ;from a register containing ASCII
-            movf    reg, W
+writenum_reg    macro   reg         ; from a register containing BCD
+            movf    reg,W
+            addlw   B'00110000'
+            movwf   dat
             call WR_DATA
             endm
 
-spacebar    macro
-            movlw   B'00010100'
-            call    WR_INS
-            endm
-
-;Print to PC (hyperterminal)
+;Write to PC (hyperterminal)
 printchar   macro   char            ;direct ASCII code literal (or in "")
             movlw   char
             call    writetoPC
@@ -216,19 +214,15 @@ Logs_Msg1
 Logs_Msg2
         addwf   PCL,F
         dt      "STANDBY to exit",0
-Op_at
-        addwf   PCL,F
-        dt      "Operation at:",0
 
 ;***************************************
 ; MAIN PROGRAM
 ;***************************************
 
 init
-        movlf     b'00100000', INTCON   ;no interrupts yet, but Timer0 ready
+        movlf     b'10000000', INTCON   ;interrupts enabled
 
         bsf       STATUS,RP0            ; select bank 1
-        movlf     b'11000111', OPTION_REG ; 1:256 prescaler for timer
         movlf     b'000110', TRISA      ; PortA *may* be used for Photo and IR stuff
         movlf     b'11110010', TRISB    ; PortB[7:4] and [1] are keypad inputs (rest unused; RB0 may be external interrupt)
                                         ; note can disable keypad to free up these ports during operation if necessary.
@@ -236,7 +230,7 @@ init
         clrf      TRISD                 ; PortD[2:7] is LCD output (rest unused)
         clrf      TRISE                 ; PortE is output- *may* be used for motor (only [2:0] tho!)
 
-        bcf       STATUS,RP0        ; select bank 0
+        bcf       STATUS,RP0     ; select bank 0
         clrf      PORTA
         clrf      PORTB
         clrf      PORTC
@@ -247,7 +241,7 @@ init
         call      InitLCD           ;Initialize the LCD
         call      InitUSART         ;Set up USART for RS232
 
-        bcf       STATUS,RP0        ; back to bank0
+        bcf       STATUS,RP0          ; bank0
 		
         Display Standby_Msg
         call    Switch_Lines
@@ -258,16 +252,19 @@ init
 waiting
         ; Display date and time. 
         ; Also save starting time for log (will stop updating once we start)
-        writechar "2"       ;First line shows 20**/**/**
-        writechar "0"
-        rtc_read	0x06		;Read Address 0x06 from DS1307---year
+        movlw	"2"				;First line shows 20**/**/**
+		call	WR_DATA
+		movlw	"0"
+		call	WR_DATA
+		rtc_read	0x06		;Read Address 0x06 from DS1307---year
 		movf	0x77,W
         movwf    start_year10    ;Save starting year dig10
 		call	WR_DATA
 		movf	0x78,W
         movwf    start_year1    ;Save starting year dig1
 		call	WR_DATA
-		writechar "/"
+		movlw	"/"
+		call	WR_DATA
 		rtc_read	0x05		;Read Address 0x05 from DS1307---month
 		movf	0x77,W
         movwf    start_month10    ;Save starting month dig10
@@ -275,7 +272,8 @@ waiting
 		movf	0x78,W
         movwf    start_month1    ;Save starting month dig1
 		call	WR_DATA
-		writechar	"/"
+		movlw	"/"
+		call	WR_DATA
 		rtc_read	0x04		;Read Address 0x04 from DS1307---date
 		movf	0x77,W
         movwf    start_date10    ;Save starting date dig10
@@ -291,7 +289,8 @@ waiting
 		movf	0x78,W
         movwf    start_hour1    ;Save starting hour dig1
 		call	WR_DATA
-		writechar ":"
+		movlw	":"
+		call	WR_DATA
 		rtc_read	0x01		;Read Address 0x01 from DS1307---min
 		movf	0x77,W
         movwf    start_min10    ;Save starting min dig10
@@ -332,8 +331,11 @@ start
         ;Start the timer
         movlf       D'38', count38
         clrf        op_time
+        bsf         INTCON, T0IE ;enable Timer0 interrupt
         clrf        TMR0
-        bsf         INTCON, GIE     ;enable interrupts
+        banksel     OPTION_REG
+        movlf       B'11000111', OPTION_REG ; 1:256 prescaler
+        bcf        STATUS,RP0     ; back to bank 0
 
         ;Display starting message
         call        Clear_Display
@@ -423,74 +425,16 @@ start
 ; ;****************************************************
 
 end_operation
-
-
         ;Turn off the IR
         ;bcf     IRLIGHT
 
         ; Stop the timer
-         bcf         INTCON, GIE  ;disable interrupts
+         bcf         INTCON, T0IE  ;disable Timer0 interrupt
+
 
         ; SHIFT LOGS 1-3 -> 2-4
-        ; THEN STORE CURRENT RUN as LOG 1        
-;shiftlogs
-;        banksel     EEADR               ; bank 2
-;        movlf       D'41', EEADR        ; start shifting from 41->55
-;shiftlogs_0
-;        banksel     EECON1              ;bank 3
-;        bcf         EECON1, EEPGD
-;        bsf         EECON1, RD          ;read (EEADR) to EEDATA
-;        btfsc       EECON1, WR          ; ensure a write is not in progress (??)
-;        goto        $-1
-;        banksel     EEADR               ;bank 2
-;        movlw       D'14'               ;add 14 to EEADRto shift 14 places
-;        addwf       EEADR, F
-;        banksel     EECON1              ;bank 3
-;        bcf         EECON1, EEPGD
-;        bsf         EECON1, WREN
-;        movlw       0x55
-;        movwf       EECON2
-;        movlw       0xAA
-;        movwf       EECON2
-;        bsf         EECON1, WR          ; write EEDATA to (EEADR+14)
-;        bcf         EECON1, WREN
-;        banksel     EEADR               ;bank 2
-;        movlw       D'14'
-;        subwf       EEADR, W
-;        btfsc       STATUS, Z
-;        goto        write_log1          ; if EEADR = 14 we're done (just shifted 0->14)
-;        movlw       D'15'
-;        subwf       EEADR, F            ;else EEADR -= 15 to shift next byte
-;        goto        shiftlogs_0
-        
+        ; THEN STORE CURRENT RUN as LOG 1
 
-write_log1
-        bcf         STATUS, IRP
-        movlf       0x37, FSR           ;points to one after last important data
-        movlf       D'14', EEADR        ;points to one after last place to write to
-write_log1_0
-        banksel     EECON1              ;bank3
-        btfsc       EECON1, WR          ;ensure a write is not in progress (??)
-        goto        $-1
-        banksel     EEADR               ;bank 2
-        decf        EEADR, F            ;writing backwords
-        decf        FSR, F
-        movff       INDF, EEDATA
-        banksel     EECON1              ;bank 3
-        bcf         EECON1, EEPGD
-        bsf         EECON1, WREN
-        movlw       0x55
-        movwf       EECON2
-        movlw       0xAA
-        movwf       EECON2
-        bsf         EECON1, WR          ; write (INDF) to EEADR
-        bcf         EECON1, WREN
-        banksel     EEADR               ;bank 2
-        movf        EEADR, F
-        btfss       STATUS, Z           ;if EEADR = 0 we're done
-        goto        write_log1_0
-        bcf         STATUS, RP0         ;so go back to bank 0 and continue
-        bcf         STATUS, RP1
 
         ; Display ending messages
         call       Clear_Display
@@ -542,9 +486,9 @@ check_log1
     xorlw   0x0         ;will be all zeros if its 1
     btfss   STATUS,Z    ;and Z will be high, so skip
     goto    check_log2
-    banksel EEADR
-    movlf   d'0', EEADR
-    call    display_log
+    call    Clear_Display
+    Display None
+    call    HalfS
     goto    logs
 
 check_log2
@@ -552,9 +496,9 @@ check_log2
     xorlw   0x1
     btfss   STATUS,Z
     goto    check_log3
-    banksel EEADR
-    movlf   d'14', EEADR
-    call    display_log
+    call    Clear_Display
+    Display None
+    call    HalfS
     goto    logs
 
 check_log3
@@ -562,9 +506,9 @@ check_log3
     xorlw   0x2
     btfss   STATUS,Z
     goto    check_log4
-    banksel EEADR
-    movlf   d'28', EEADR
-    call    display_log
+    call    Clear_Display
+    Display None
+    call    HalfS
     goto    logs
 
 check_log4
@@ -572,9 +516,9 @@ check_log4
     xorlw   0x4
     btfss   STATUS,Z
     goto    check_done
-    banksel EEADR
-    movlf   d'42', EEADR
-    call    display_log
+    call    Clear_Display
+    Display None
+    call    HalfS
     goto    logs
 
 check_done
@@ -591,55 +535,6 @@ badkey
     btfsc		PORTB,1     ;Wait until key is released
     goto		$-1
     goto        polling
-
-
-display_log                 ;start in bank2
-    ; move EEPROM data back to "current" data
-    bcf	STATUS, IRP
-    movlf   0x2A, FSR
-read_EEPROM
-    banksel EECON1          ;bank3
-    bcf EECON1, EEPGD
-    bcf EECON1, RD          ; read EEPROM
-    banksel EEDATA          ;bank 2
-    movff   EEDATA, INDF    ; move EEDATA to "current" data
-    incf    FSR, F
-    incf    EEADR, F
-    movlw   0x37            ;done if FSR = 0x37
-    subwf   FSR, W
-    btfss   STATUS, Z
-    goto    read_EEPROM
-    ;display that shit
-    banksel Table_Counter   ; bank0
-    call    Clear_Display
-    Display Op_at
-    call    Switch_Lines
-    writechar    "2"
-    writechar    "0"
-    writeASC   start_year10
-    writeASC   start_year1
-    writechar   "/"
-    writeASC   start_month10
-    writeASC   start_month1
-    writechar   "/"
-    writeASC   start_date10
-    writeASC   start_date1
-    writechar   " "
-    writeASC   start_hour10
-    writeASC   start_hour1
-    writechar   ":"
-    writeASC  start_min10
-    writeASC   start_min1
-    call    HalfS
-    call    HalfS
-    call    time
-    call    HalfS
-    call    HalfS
-    call    summary
-    call    HalfS
-    call    HalfS
-    ;option to export??
-    return
   
 ; END OF MAIN PROGRAM
 ;------------------------------------------------------------
@@ -659,7 +554,7 @@ check_1
     btfss   STATUS,Z    ;and Z will be high, so skip
     goto    check_2
     call    Clear_Display
-    writechar "1"
+    writenum 0x1
     movf    state1, W
     call    display_state
     return
@@ -670,7 +565,7 @@ check_2
     btfss   STATUS,Z
     goto    check_3
     call    Clear_Display
-    writechar "2"
+    writenum 0x2
     movf    state2, W
     call    display_state
     return
@@ -681,7 +576,7 @@ check_3
     btfss   STATUS,Z
     goto    check_4
     call    Clear_Display
-    writechar "3"
+    writenum 0x3
     movf    state3, W
     call    display_state
     return
@@ -692,7 +587,7 @@ check_4
     btfss   STATUS,Z
     goto    check_5
     call    Clear_Display
-    writechar "4"
+    writenum 0x4
     movf    state4, W
     call    display_state
     return
@@ -703,7 +598,7 @@ check_5
     btfss   STATUS,Z
     goto    check_6
     call    Clear_Display
-    writechar "5"
+    writenum 0x5
     movf    state5, W
     call    display_state
     return
@@ -714,7 +609,7 @@ check_6
     btfss   STATUS,Z
     goto    check_7
     call    Clear_Display
-    writechar "6"
+    writenum 0x6
     movf    state6, W
     call    display_state
     return
@@ -725,7 +620,7 @@ check_7
     btfss   STATUS,Z
     goto    check_8
     call    Clear_Display
-    writechar "7"
+    writenum 0x7
     movf    state7, W
     call    display_state
     return
@@ -736,7 +631,7 @@ check_8
     btfss   STATUS,Z
     goto    check_9
     call    Clear_Display
-    writechar "8"
+    writenum 0x8
     movf    state8, W
     call    display_state
     return
@@ -747,7 +642,7 @@ check_9
     btfss   STATUS,Z
     goto    check_summary
     call    Clear_Display
-    writechar "9"
+    writenum 0x9
     movf    state9, W
     call    display_state
     return
@@ -850,14 +745,14 @@ default_state   ; should never get here
 summary
     call            Clear_Display
     Display         Total_Msg
-    writeBCD        num_tot
+    writenum_reg    num_tot
     call            Switch_Lines
     Display         LF
-    writeBCD        num_LF
+    writenum_reg    num_LF
     spacebar
     spacebar
     Display         FF
-    writeBCD        num_FF
+    writenum_reg    num_FF
     return
 
 ; Defective candles Subroutine
@@ -907,7 +802,7 @@ check_next
 	subwf	INDF, W
 	btfss	STATUS, Z
 	goto	check_next		;if not, go to next
-	writeBCD	candle_index	;if so, write down the number
+	writenum_reg	candle_index	;if so, write down the number
 	spacebar
 	goto check_next
 end_check_fail
@@ -927,14 +822,14 @@ time
     movf    huns, F
     btfsc   STATUS,Z        ;if huns is zero don't display it
     goto    no_huns
-    writeBCD    huns
+    writenum_reg    huns
 no_huns
     movf    tens, F
     btfsc   STATUS,Z        ;if tens is zero don't display it
     goto    no_tens
-    writeBCD    tens
+    writenum_reg    tens
 no_tens
-    writeBCD    ones
+    writenum_reg    ones
     Display Seconds
     return
 
@@ -1046,8 +941,7 @@ notens
     printBCD    num_FF
     newline
     newline  
-    bcf STATUS,RP0
-    bcf STATUS,RP1     ; back to bank 0
+    bcf STATUS,RP0  ; back to bank 0
     return
 
 
