@@ -25,7 +25,7 @@
 ; Also see i2c_commmon.asm -> has stuff at 0x71-0x78 on for RTC!
 
     cblock	0x20
-    ; Important information (will be displayed)
+    ; Important information (will be displayed)    
         state1     ;where   0 = none      1 = pass
         state2     ;        2 = led fail  3 = flicker fail
         state3
@@ -34,7 +34,7 @@
         state6
         state7
         state8
-        state9
+        state9   
         start_year10    ;starting time (for log)
         start_year1     ; note: these are all ALREADY ASCII!
         start_month10
@@ -73,7 +73,7 @@
     endc
 
     cblock  0x79        ;stuff that needs to be in all registers
-        w_isr
+        w_isr           
         status_isr
 	endc
 
@@ -247,15 +247,15 @@ init
         call      InitUSART         ;Set up USART for RS232
 
         bcf       STATUS,RP0        ; back to bank0
-
+		
         Display Standby_Msg
         call    Switch_Lines
-
+      
  ;--------------------------------------------------
  ;      STANDBY MODE
 
 waiting
-        ; Display date and time.
+        ; Display date and time. 
         ; Also save starting time for log (will stop updating once we start)
         writechar "2"       ;First line shows 20**/**/**
         writechar "0"
@@ -298,7 +298,7 @@ waiting
 		movf	0x78,W
         movwf    start_min1    ;Save starting min dig1
 		call	WR_DATA
-
+		      
         ; Move cursor back to start of second line
         ; We will update displayed time but not the word "STANDBY"
         movlw   B'11000000'
@@ -429,19 +429,18 @@ end_operation
          bcf         INTCON, GIE  ;disable interrupts
 
         ; SHIFT LOGS 1-3 -> 2-4
-        ; THEN STORE CURRENT RUN as LOG 1
+        ; THEN STORE CURRENT RUN as LOG 1        
 shiftlogs
         banksel     EEADR               ; bank 2
         movlf       D'41', EEADR        ; start shifting from 41->55
-
 shiftlogs_0
         banksel     EECON1              ;bank 3
         bcf         EECON1, EEPGD
         bsf         EECON1, RD          ;read (EEADR) to EEDATA
-        btfsc       EECON1, WR          ; ensure a write is not in progress (??)
-        goto        $-1
+;        btfsc       EECON1, WR          ; ensure a write is not in progress (??)
+;        goto        $-1
         banksel     EEADR               ;bank 2
-        movlw       D'14'               ;add 14 to EEADR to shift 14 places
+        movlw       D'14'               ;add 14 to EEADRto shift 14 places
         addwf       EEADR, F
         banksel     EECON1              ;bank 3
         bcf         EECON1, EEPGD
@@ -457,24 +456,20 @@ shiftlogs_0
         subwf       EEADR, W
         btfsc       STATUS, Z
         goto        write_log1          ; if EEADR = 14 we're done (just shifted 0->14)
-
-        banksel op_time             ; FOR SOME FUCKED UP REASON IT DOESNT WORK IF I SKIP THESE LINES
-        call    Clear_Display       ; EVEN THOUGH THEY DO NOTHING
-        banksel EEADR
-
         movlw       D'15'
         subwf       EEADR, F            ;else EEADR -= 15 to shift next byte
         goto        shiftlogs_0
+        
 
 write_log1
-        banksel     EEADR
+;       banksel     EEADR
         bcf         STATUS, IRP
         movlf       0x37, FSR           ;points to one after last important data
         movlf       D'14', EEADR        ;points to one after last place to write to
 write_log1_0
-        banksel     EECON1              ;bank3
-        btfsc       EECON1, WR          ;ensure a write is not in progress (??)
-        goto        $-1
+;       banksel     EECON1              ;bank3
+;       btfsc       EECON1, WR          ;ensure a write is not in progress (??)
+;        goto        $-1
         banksel     EEADR               ;bank 2
         decf        EEADR, F            ;writing backwords
         decf        FSR, F
@@ -643,7 +638,7 @@ read_EEPROM
     call    HalfS
     ;option to export??
     return
-
+  
 ; END OF MAIN PROGRAM
 ;------------------------------------------------------------
 
@@ -779,7 +774,7 @@ check_time
     call    time
     return
 
-check_export
+check_export               
     movf    keytemp, W
     xorlw   0xF
     btfss   STATUS,Z
@@ -941,7 +936,7 @@ no_tens
     Display Seconds
     return
 
-; Export subroutine
+; Export subroutine         
 ; Exports data from current run to hyperterminal
 ; reads start time and num_tot/num_ff/num_lf data
 export
@@ -1048,7 +1043,7 @@ notens
     printchar   " "
     printBCD    num_FF
     newline
-    newline
+    newline  
     bcf STATUS,RP0
     bcf STATUS,RP1     ; back to bank 0
     return
