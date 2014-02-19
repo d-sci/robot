@@ -211,10 +211,16 @@ None
         dt      "<none>", 0
 Logs_Msg1
         addwf   PCL,F
-        dt      "1-4 to see log",0
+        dt      "1-9 to see logs",0
 Logs_Msg2
         addwf   PCL,F
         dt      "STANDBY to exit",0
+Logs_Msg3
+        addwf   PCL,F
+        dt      "Export?",0
+Logs_Msg4
+        addwf   PCL,F
+        dt      "LOGS to return",0
 Op_at
         addwf   PCL,F
         dt      "Operation at:",0
@@ -224,7 +230,7 @@ Op_at
 ;***************************************
 
 init
-        movlf     b'00100000', INTCON   ;no interrupts yet, but Timer0 ready
+        movlf     b'00100000', INTCON   ;no interrupts yet, but Timer0 ready one GIE enabled
 
         bsf       STATUS,RP0            ; select bank 1
         movlf     b'11000111', OPTION_REG ; 1:256 prescaler for timer
@@ -330,7 +336,7 @@ waiting
 start
         ;Start the timer
         movlf       D'38', count38
-        clrf        op_time
+        clrf        op_time         
         clrf        TMR0
         bsf         INTCON, GIE     ;enable interrupts
 
@@ -428,11 +434,15 @@ end_operation
         ; Stop the timer
          bcf         INTCON, GIE  ;disable interrupts
 
-        ; SHIFT LOGS 1-3 -> 2-4
-        ; THEN STORE CURRENT RUN as LOG 1
+        ;Display "complete"
+        call       Clear_Display
+        Display    End_Msg          ; "Complete"
+
+        ; Shift logs 1-8 -> 2-9
+        ; Then store current run as log 1
 shiftlogs
         banksel     EEADR               ; bank 2
-        movlf       D'41', EEADR        ; start shifting from 41->55
+        movlf       D'111', EEADR        ; start shifting from 111->125
 
 shiftlogs_0
         banksel     EECON1              ;bank 3
@@ -458,12 +468,12 @@ shiftlogs_0
         btfsc       STATUS, Z
         goto        write_log1          ; if EEADR = 14 we're done (just shifted 0->14)
 
-        banksel op_time             ; FOR SOME FUCKED UP REASON IT DOESNT WORK IF I SKIP THESE LINES
-        call    Clear_Display       ; EVEN THOUGH THEY DO NOTHING
-        banksel EEADR
+        banksel op_time             ; for some reason I need to delay here
+        call   delay5ms             ; or else I get an infinite loop
+        banksel EEADR               
 
-        movlw       D'15'
-        subwf       EEADR, F            ;else EEADR -= 15 to shift next byte
+        movlw       D'15'               ;else EEADR -= 15 to shift next byte
+        subwf       EEADR, F           
         goto        shiftlogs_0
 
 write_log1
@@ -495,10 +505,7 @@ write_log1_0
         bcf         STATUS, RP0         ;so go back to bank 0 and continue
         bcf         STATUS, RP1
 
-        ; Display ending messages
-        call       Clear_Display
-        Display    End_Msg          ; "Complete"
-        call       HalfS
+        ; Display info screens
         call       time             ; "Operation time: X sec"
         call       HalfS
         call       HalfS
@@ -522,9 +529,8 @@ poll     btfss		PORTB,1     ;Wait until data is available from the keypad
 
 
 ;-------------------------------------------------------------------------
-; LOGS INTERFACE            (DONT ACTUALLY HAVE LOGS YET!)
-; Eventually this will show logs
-; Right now it just displays random crap
+; LOGS INTERFACE       
+; Shows last runs of last 9 logs
 ; Access from STANDBY and return to STANDBY
 
 logs
@@ -547,8 +553,7 @@ check_log1
     goto    check_log2
     banksel EEADR
     movlf   d'0', EEADR
-    call    display_log
-    goto    logs
+    goto    display_log
 
 check_log2
     movf    keytemp, W
@@ -557,8 +562,7 @@ check_log2
     goto    check_log3
     banksel EEADR
     movlf   d'14', EEADR
-    call    display_log
-    goto    logs
+    goto    display_log
 
 check_log3
     movf    keytemp, W
@@ -567,18 +571,61 @@ check_log3
     goto    check_log4
     banksel EEADR
     movlf   d'28', EEADR
-    call    display_log
-    goto    logs
+    goto    display_log
 
 check_log4
     movf    keytemp, W
     xorlw   0x4
     btfss   STATUS,Z
-    goto    check_done
+    goto    check_log5
     banksel EEADR
     movlf   d'42', EEADR
-    call    display_log
-    goto    logs
+    goto    display_log
+
+check_log5
+    movf    keytemp, W
+    xorlw   0x5
+    btfss   STATUS,Z
+    goto    check_log6
+    banksel EEADR
+    movlf   d'56', EEADR
+    goto    display_log
+
+check_log6
+    movf    keytemp, W
+    xorlw   0x6
+    btfss   STATUS,Z
+    goto    check_log7
+    banksel EEADR
+    movlf   d'70', EEADR
+    goto    display_log
+
+check_log7
+    movf    keytemp, W
+    xorlw   0x8
+    btfss   STATUS,Z
+    goto    check_log8
+    banksel EEADR
+    movlf   d'84', EEADR
+    goto    display_log
+
+check_log8
+    movf    keytemp, W
+    xorlw   0x9
+    btfss   STATUS,Z
+    goto    check_log9
+    banksel EEADR
+    movlf   d'98', EEADR
+    goto    display_log
+
+check_log9
+    movf    keytemp, W
+    xorlw   0xA
+    btfss   STATUS,Z
+    goto    check_done
+    banksel EEADR
+    movlf   d'112', EEADR
+    goto    display_log
 
 check_done
     movf    keytemp, W
@@ -641,8 +688,49 @@ read_EEPROM
     call    summary
     call    HalfS
     call    HalfS
-    ;option to export??
-    return
+    ;option to Export
+    call    Clear_Display
+    Display Logs_Msg3
+    call    Switch_Lines
+    Display Logs_Msg4
+
+wanna_export
+    btfss		PORTB,1     ;Wait until data is available from the keypad
+    goto		$-1
+
+    swapf		PORTB,W     ;Read PortB<7:4> into W<3:0>
+    andlw		0x0F
+    movwf       keytemp     ; Save which key was pressed
+
+check_wanna
+    movf    keytemp, W
+    xorlw   0xF
+    btfss   STATUS,Z
+    goto    check_nothx
+    call    export
+    goto    logs
+
+check_nothx
+    movf    keytemp, W
+    xorlw   0xE
+    btfss   STATUS,Z
+    goto    check_immapeace
+    goto    logs
+
+check_immapeace
+    movf    keytemp, W
+    xorlw   0xD
+    btfss   STATUS,Z
+    goto    badkeyagain
+    call    Clear_Display
+    Display Standby_Msg
+    call    Switch_Lines
+    goto    waiting
+
+badkeyagain
+    btfsc		PORTB,1     ;Wait until key is released
+    goto		$-1
+    goto        wanna_export
 
 ; END OF MAIN PROGRAM
 ;------------------------------------------------------------
@@ -783,9 +871,16 @@ check_export
     movf    keytemp, W
     xorlw   0xF
     btfss   STATUS,Z
-    goto    check_standby
+    goto    check_standby       ;or do you wanna allow to check logs?
     call    export
     return
+
+;check_logs
+;    movf    keytemp, W
+;    xorlw   0xE
+;    btfss   STATUS,Z
+;    goto    check_standby
+;    goto    logs
 
 check_standby
     movf    keytemp, W
@@ -1296,6 +1391,7 @@ writetoPC
 ; TMR0 overflows at 256*256; each time, decrement count38
 ; count38 thus hits 0 every 256*256*38 cycles = 1sec with 10MHz clock
 ; When this hapens, op_time increments
+; Also check photodata every time for 2 sec = total of 76 reads
 ;***************************************
 isr
     movwf   w_isr           ;save W and status
