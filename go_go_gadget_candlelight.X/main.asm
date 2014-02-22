@@ -659,9 +659,21 @@ read_EEPROM
     subwf   FSR, W
     btfss   STATUS, Z
     goto    read_EEPROM
+    
     ;display that shit
     banksel Table_Counter   ; bank0
     call    Clear_Display
+    ;if first data is 0xFF (no log) just display "none"
+    movlw   0xFF
+    subwf   start_year10, W
+    btfss   STATUS, Z
+    goto yes_log
+no_log
+    Display None
+    call    HalfS
+    goto    logs
+    ;else display the log
+yes_log
     Display Op_at
     call    Switch_Lines
     writechar    "2"
