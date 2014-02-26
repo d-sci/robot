@@ -1,12 +1,12 @@
-MPLINK 5.00, LINKER
-Linker Map File - Created Mon Feb 17 18:11:38 2014
+MPLINK 5.01, LINKER
+Linker Map File - Created Tue Feb 25 14:27:39 2014
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
                 ---------  ---------  ---------  ---------  ---------
                    .org_0       code   0x000000    program   0x000002
                    .cinit    romdata   0x000001    program   0x000004
-                   .org_1       code   0x000004    program   0x000188
+                   .org_1       code   0x000004    program   0x00018c
 .config_2007_BUILD/DEFAULT/PRODUCTION/DOESIHA       code   0x002007    program   0x000002
 
 
@@ -15,76 +15,76 @@ Linker Map File - Created Mon Feb 17 18:11:38 2014
                                Start         End      
                            ---------   ---------      
                             0x000000    0x000002      
-                            0x000004    0x0000c7      
+                            0x000004    0x0000c9      
                             0x002007    0x002007      
-            200 out of 8454 program addresses used, program memory utilization is 2%
+            202 out of 8454 program addresses used, program memory utilization is 2%
 
 
 
                               Symbols - Sorted by Name
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
-               Candle_Msg   0x000005    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-            Clear_Display   0x0000a2    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                  Delay_0   0x00007f    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                    HalfS   0x00006c    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                  HalfS_0   0x000072    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                  InitLCD   0x000084    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-            No_Candle_Msg   0x000011    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-             Switch_Lines   0x0000a5    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-              Testing_Msg   0x00001c    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                  WR_DATA   0x0000b7    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                   WR_INS   0x0000a8    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-             _.org_1_0040   0x000040    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-             _.org_1_0073   0x000073    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-             _.org_1_0075   0x000075    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-             _.org_1_0078   0x000078    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-             _.org_1_0080   0x000080    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-               _2end_disp   0x00004e    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-              _2loop_disp   0x000046    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-               _3end_disp   0x00005c    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-              _3loop_disp   0x000054    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-               _4end_disp   0x00006a    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-              _4loop_disp   0x000062    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                 delay5ms   0x00007b    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                     init   0x00002b    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                no_candle   0x000050    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                    start   0x000042    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                  waiting   0x000038    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-               yes_candle   0x00005e    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+               Candle_Msg   0x000005    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+            Clear_Display   0x0000a4    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                  Delay_0   0x000081    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                    HalfS   0x00006e    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                  HalfS_0   0x000074    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                  InitLCD   0x000086    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+            No_Candle_Msg   0x000011    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+             Switch_Lines   0x0000a7    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+              Testing_Msg   0x00001c    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                  WR_DATA   0x0000b9    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                   WR_INS   0x0000aa    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+             _.org_1_0045   0x000045    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+             _.org_1_0075   0x000075    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+             _.org_1_0077   0x000077    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+             _.org_1_007A   0x00007a    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+             _.org_1_0082   0x000082    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+               _4end_disp   0x000052    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+              _4loop_disp   0x00004a    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+               _5end_disp   0x000060    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+              _5loop_disp   0x000058    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+               _6end_disp   0x00006d    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+              _6loop_disp   0x000065    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                 delay5ms   0x00007d    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                     init   0x00002b    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                no_candle   0x000054    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                    start   0x000047    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                  waiting   0x00003d    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+               yes_candle   0x000061    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
 
 
 
                               Symbols - Sorted by Address
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
-               Candle_Msg   0x000005    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-            No_Candle_Msg   0x000011    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-              Testing_Msg   0x00001c    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                     init   0x00002b    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                  waiting   0x000038    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-             _.org_1_0040   0x000040    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                    start   0x000042    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-              _2loop_disp   0x000046    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-               _2end_disp   0x00004e    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                no_candle   0x000050    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-              _3loop_disp   0x000054    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-               _3end_disp   0x00005c    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-               yes_candle   0x00005e    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-              _4loop_disp   0x000062    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-               _4end_disp   0x00006a    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                    HalfS   0x00006c    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                  HalfS_0   0x000072    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-             _.org_1_0073   0x000073    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-             _.org_1_0075   0x000075    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-             _.org_1_0078   0x000078    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                 delay5ms   0x00007b    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                  Delay_0   0x00007f    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-             _.org_1_0080   0x000080    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                  InitLCD   0x000084    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-            Clear_Display   0x0000a2    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-             Switch_Lines   0x0000a5    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                   WR_INS   0x0000a8    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                  WR_DATA   0x0000b7    program     static C:\Users\Doge\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+               Candle_Msg   0x000005    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+            No_Candle_Msg   0x000011    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+              Testing_Msg   0x00001c    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                     init   0x00002b    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                  waiting   0x00003d    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+             _.org_1_0045   0x000045    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                    start   0x000047    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+              _4loop_disp   0x00004a    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+               _4end_disp   0x000052    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                no_candle   0x000054    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+              _5loop_disp   0x000058    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+               _5end_disp   0x000060    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+               yes_candle   0x000061    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+              _6loop_disp   0x000065    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+               _6end_disp   0x00006d    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                    HalfS   0x00006e    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                  HalfS_0   0x000074    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+             _.org_1_0075   0x000075    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+             _.org_1_0077   0x000077    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+             _.org_1_007A   0x00007a    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                 delay5ms   0x00007d    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                  Delay_0   0x000081    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+             _.org_1_0082   0x000082    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                  InitLCD   0x000086    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+            Clear_Display   0x0000a4    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+             Switch_Lines   0x0000a7    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                   WR_INS   0x0000aa    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                  WR_DATA   0x0000b9    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
 
 

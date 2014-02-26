@@ -1,5 +1,5 @@
  ; Test for photoresistor circuit.
- ; Connect PHOTODATA to RB3: 1 = light is off   2 = light is on
+ ; Connect PHOTODATA to RA5: 1 = light is on   0 = light is off
 
 
     list p=16f877
@@ -9,7 +9,7 @@
 
     #define	RS 	PORTD,2
 	#define	E 	PORTD,3
-    #define PHOTODATA  PORTB,3
+    #define PHOTODATA  PORTA,5
     #define threshold1  D'15'
     #define threshold2  D'65'
 
@@ -81,17 +81,24 @@ Testing_Msg
 
 init
     movlf     b'10000000', INTCON   ;interrupts enabled
-    banksel     TRISB
-    movlf       b'11111010', TRISB
+
+    banksel     TRISA               ;bank0
+    movlf     b'00100000', TRISA
+    movlf     b'11110010', TRISB
     clrf        TRISD
-    banksel     PORTB
+    movlf   0x07, ADCON1        ;digital input
+
+    banksel     PORTA               ;bank1
+    clrf        PORTA
     clrf        PORTB
+    clrf        PORTC
     clrf        PORTD
-        
+    clrf        PORTE
+
     call        InitLCD
-    bcf       STATUS,RP0          ; bank0
+    bcf       STATUS,RP0          ; back to bank0
     call    Clear_Display
-    
+
 
 waiting
          btfss		PORTB,1     ;Wait until data is available from the keypad
@@ -295,8 +302,8 @@ isr
 
 end_isr
 
-    btfss   PHOTODATA       ;if PHOTODATA is 1, light is off
-    incf    photocount, F       ;if it is 0, light is on so photocount++
+    btfsc   PHOTODATA       ;if PHOTODATA is 1, light is on
+    incf    photocount, F       ;if it is 1, light is on so photocount++
 
 ;    movf    pclath_isr, W  ;if using pages
 ;    movwf    PCLATH
@@ -309,3 +316,5 @@ end_isr
 
 
     END
+
+

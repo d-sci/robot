@@ -1,368 +1,374 @@
-MPASM 5.54               DOESIHAVECANDLE.ASM   2-17-2014  18:11:37         PAGE  1
+MPASM 5.55               DOESIHAVECANDLE.ASM   2-25-2014  14:27:38         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00001 ;Test for IR detector. Connect IR to RB2 (output) and IRDATA to RB3 (input).
+                      00001 ;Test for IR detector. Connect IRDATA to RA5 (input).
                       00002 ;Press start to check for presence of candle; LCD displays state.
-                      00003 ;RB2 is 1 when IR is on.
-                      00004 ;RB3 is 1 for no candle, low for yes candle.
-                      00005 
-                      00006     list p=16f877
-                      00007       #include <p16f877.inc>
+                      00003 ;RA5 is 1 for no candle, low for yes candle.
+                      00004 
+                      00005     list p=16f877
+                      00006       #include <p16f877.inc>
                       00001         LIST
                       00002 
                       00003 ;==========================================================================
                       00004 ;  MPASM PIC16F877 processor include
                       00005 ; 
-                      00006 ;  (c) Copyright 1999-2013 Microchip Technology, All rights reserved
+                      00006 ;  (c) Copyright 1999-2014 Microchip Technology, All rights reserved
                       00007 ;==========================================================================
                       00008 
                       00540         LIST
-2007   3F72           00008       __CONFIG _CP_OFF & _WDT_OFF & _BODEN_ON & _PWRTE_ON & _HS_OSC & _WRT_ENABLE_ON & _CPD_OFF & _LVP_O
+2007   3F72           00007       __CONFIG _CP_OFF & _WDT_OFF & _BODEN_ON & _PWRTE_ON & _HS_OSC & _WRT_ENABLE_ON & _CPD_OFF & _LVP_O
                             FF
+                      00008 
                       00009 
-                      00010 
-                      00011     #define     RS      PORTD,2
-                      00012         #define E       PORTD,3
-                      00013     #define IR  PORTB, 2
-                      00014     #define IRDATA  PORTB,3
-                      00015 
-                      00016 
-                      00017     cblock  0x70
-  00000070            00018         Table_Counter   ; for LCD stuff
-  00000071            00019                 com
-  00000072            00020                 dat
-  00000073            00021         del1            ; for delay 5ms delay routine
-  00000074            00022         del2
-  00000075            00023         hdelH          ;for delay 0.5s routine
-  00000076            00024         hdelM
-  00000077            00025         hdelL
-                      00026     endc
-                      00027 
-                      00028 Display macro   Message
-                      00029                 local   loop_disp
-                      00030                 local   end_disp
-                      00031                 clrf    Table_Counter
-                      00032                 clrw
-                      00033 loop_disp
-                      00034         movf    Table_Counter,W
-                      00035                 call    Message
-                      00036                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
-                      00037                 btfsc   STATUS,Z
-                      00038                 goto    end_disp
-                      00039                 call    WR_DATA
-                      00040                 incf    Table_Counter,F
-                      00041                 goto    loop_disp
-                      00042 end_disp
-                      00043                 endm
-MPASM 5.54               DOESIHAVECANDLE.ASM   2-17-2014  18:11:37         PAGE  2
+                      00010     #define     RS      PORTD,2
+                      00011         #define E       PORTD,3
+                      00012     #define IRDATA  PORTA,5
+                      00013 
+                      00014 
+                      00015     cblock  0x70
+  00000070            00016         Table_Counter   ; for LCD stuff
+  00000071            00017                 com
+  00000072            00018                 dat
+  00000073            00019         del1            ; for delay 5ms delay routine
+  00000074            00020         del2
+  00000075            00021         hdelH          ;for delay 0.5s routine
+  00000076            00022         hdelM
+  00000077            00023         hdelL
+                      00024     endc
+                      00025 
+                      00026 Display macro   Message
+                      00027                 local   loop_disp
+                      00028                 local   end_disp
+                      00029                 clrf    Table_Counter
+                      00030                 clrw
+                      00031 loop_disp
+                      00032         movf    Table_Counter,W
+                      00033                 call    Message
+                      00034                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
+                      00035                 btfsc   STATUS,Z
+                      00036                 goto    end_disp
+                      00037                 call    WR_DATA
+                      00038                 incf    Table_Counter,F
+                      00039                 goto    loop_disp
+                      00040 end_disp
+                      00041                 endm
+                      00042 
+                      00043 
+MPASM 5.55               DOESIHAVECANDLE.ASM   2-25-2014  14:27:38         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00044 
-                      00045 
-                      00046 movlf   macro   l, f
-                      00047         movlw   l
-                      00048         movwf   f
-                      00049         endm
-                      00050 
-                      00051     ORG       0x000
-0000   2???           00052     goto      init
-                      00053     ORG       0x004
-0004   0009           00054     retfie
-                      00055 
-                      00056 
-0005                  00057 Candle_Msg
-0005   0782           00058                 addwf   PCL,F
-0006   3459 3465 3473 00059                 dt              "Yes candle", 0
+                      00044 movlf   macro   l, f
+                      00045         movlw   l
+                      00046         movwf   f
+                      00047         endm
+                      00048 
+                      00049     ORG       0x000
+0000   2???           00050     goto      init
+                      00051     ORG       0x004
+0004   0009           00052     retfie
+                      00053 
+                      00054 
+0005                  00055 Candle_Msg
+0005   0782           00056                 addwf   PCL,F
+0006   3459 3465 3473 00057                 dt              "Yes candle", 0
        3420 3463 3461 
        346E 3464 346C 
        3465 3400 
-0011                  00060 No_Candle_Msg
-0011   0782           00061         addwf   PCL,F
-0012   344E 346F 3420 00062         dt      "No candle",0
+0011                  00058 No_Candle_Msg
+0011   0782           00059         addwf   PCL,F
+0012   344E 346F 3420 00060         dt      "No candle",0
        3463 3461 346E 
        3464 346C 3465 
        3400 
-001C                  00063 Testing_Msg
-001C   0782           00064         addwf   PCL,F
-001D   3443 3468 3465 00065         dt      "Checking. . .",0
+001C                  00061 Testing_Msg
+001C   0782           00062         addwf   PCL,F
+001D   3443 3468 3465 00063         dt      "Checking. . .",0
        3463 346B 3469 
        346E 3467 342E 
        3420 342E 3420 
        342E 3400 
-                      00066 
-                      00067 
-002B                  00068 init
-002B   018B           00069     clrf        INTCON
-002C   1683 1303      00070     banksel     TRISB
-                      00071     movlf       b'11111010', TRISB
-002E   30FA               M         movlw   b'11111010'
+                      00064 
+                      00065 
+002B                  00066 init
+002B   018B           00067     clrf        INTCON
+                      00068 
+002C   1683 1303      00069     banksel     TRISA
+                      00070     movlf      b'100000', TRISA
+002E   3020               M         movlw   b'100000'
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-002F   0086               M         movwf   TRISB
+002F   0085               M         movwf   TRISA
+                      00071     movlf     b'11110010', TRISB
+0030   30F2               M         movlw   b'11110010'
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0030   0188           00072     clrf        TRISD
-0031   1283 1303      00073     banksel     PORTB
-0033   0186           00074     clrf        PORTB
-0034   0188           00075     clrf        PORTD
-                      00076         
-0035   2???           00077     call        InitLCD
-0036   1283           00078     bcf       STATUS,RP0          ; bank0
-0037   2???           00079     call    Clear_Display
-                      00080     
-                      00081 
-0038                  00082 waiting
-MPASM 5.54               DOESIHAVECANDLE.ASM   2-17-2014  18:11:37         PAGE  3
+0031   0086               M         movwf   TRISB
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0032   0188           00072     clrf        TRISD
+                      00073     movlf   0x07, ADCON1        ;digital input
+0033   3007               M         movlw   0x07
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0034   009F               M         movwf   ADCON1
+                      00074 
+0035   1283 1303      00075     banksel     PORTB
+0037   0185           00076     clrf        PORTA
+MPASM 5.55               DOESIHAVECANDLE.ASM   2-25-2014  14:27:38         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0038   1C86           00083          btfss          PORTB,1     ;Wait until data is available from the keypad
-0039   2???           00084          goto           waiting
-                      00085 
-003A   0E06           00086          swapf          PORTB,W     ;Read PortB<7:4> into W<3:0>
-003B   390F           00087          andlw          0x0F
-003C   3A0C           00088          xorlw      0xC         ;Will be all zeros if its "START"
-003D   1903           00089          btfsc      STATUS,Z    ;and Z will be high, so skip if not high
-003E   2???           00090          goto       start
-                      00091 
-003F   1886           00092          btfsc          PORTB,1     ;Wait until key is released
-0040   2???           00093          goto           $-1
-0041   2???           00094          goto       waiting
-                      00095 
-0042                  00096 start
-0042   1506           00097     bsf     IR          ;turn on IR
-0043   2???           00098     call    Clear_Display
-                      00099     Display Testing_Msg
+0038   0186           00077     clrf        PORTB
+0039   0188           00078     clrf        PORTD
+                      00079 
+003A   2???           00080     call        InitLCD
+003B   1283           00081     bcf       STATUS,RP0          ; back to bank0
+003C   2???           00082     call    Clear_Display
+                      00083 
+                      00084 
+003D                  00085 waiting
+003D   1C86           00086          btfss          PORTB,1     ;Wait until data is available from the keypad
+003E   2???           00087          goto           waiting
+                      00088 
+003F   0E06           00089          swapf          PORTB,W     ;Read PortB<7:4> into W<3:0>
+0040   390F           00090          andlw          0x0F
+0041   3A0C           00091          xorlw      0xC         ;Will be all zeros if its "START"
+0042   1903           00092          btfsc      STATUS,Z    ;and Z will be high, so skip if not high
+0043   2???           00093          goto       start
+                      00094 
+0044   1886           00095          btfsc          PORTB,1     ;Wait until key is released
+0045   2???           00096          goto           $-1
+0046   2???           00097          goto       waiting
+                      00098 
+0047                  00099 start
+0047   2???           00100     call    Clear_Display
+                      00101     Display Testing_Msg
   0000                    M                 local   loop_disp
   0000                    M                 local   end_disp
-0044   01F0               M                 clrf    Table_Counter
-0045   0103               M                 clrw
-0046                      M loop_disp
-0046   0870               M         movf    Table_Counter,W
-0047   2???               M                 call    Testing_Msg
-0048   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
-0049   1903               M                 btfsc   STATUS,Z
-004A   2???               M                 goto    end_disp
-004B   2???               M                 call    WR_DATA
-004C   0AF0               M                 incf    Table_Counter,F
-004D   2???               M                 goto    loop_disp
-004E                      M end_disp
-004E   1D86           00100     btfss   IRDATA          ;IRDATA is 1 if there's no light, 0 if there's a light
-004F   2???           00101         goto    yes_candle
-0050                  00102 no_candle
-0050   2???           00103     call    HalfS
-0051   2???           00104     call    Clear_Display
-                      00105     Display     No_Candle_Msg
+0048   01F0               M                 clrf    Table_Counter
+0049   0103               M                 clrw
+004A                      M loop_disp
+004A   0870               M         movf    Table_Counter,W
+004B   2???               M                 call    Testing_Msg
+004C   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
+004D   1903               M                 btfsc   STATUS,Z
+004E   2???               M                 goto    end_disp
+004F   2???               M                 call    WR_DATA
+0050   0AF0               M                 incf    Table_Counter,F
+0051   2???               M                 goto    loop_disp
+0052                      M end_disp
+0052   1E85           00102     btfss   IRDATA          ;IRDATA is 1 if there's no light, 0 if there's a light
+0053   2???           00103         goto    yes_candle
+0054                  00104 no_candle
+0054   2???           00105     call    HalfS
+0055   2???           00106     call    Clear_Display
+                      00107     Display     No_Candle_Msg
   0000                    M                 local   loop_disp
   0000                    M                 local   end_disp
-0052   01F0               M                 clrf    Table_Counter
-0053   0103               M                 clrw
-0054                      M loop_disp
-0054   0870               M         movf    Table_Counter,W
-0055   2???               M                 call    No_Candle_Msg
-0056   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
-0057   1903               M                 btfsc   STATUS,Z
-0058   2???               M                 goto    end_disp
-0059   2???               M                 call    WR_DATA
-005A   0AF0               M                 incf    Table_Counter,F
-005B   2???               M                 goto    loop_disp
-005C                      M end_disp
-005C   1106           00106     bcf IR
-005D   2???           00107     goto waiting
-MPASM 5.54               DOESIHAVECANDLE.ASM   2-17-2014  18:11:37         PAGE  4
+0056   01F0               M                 clrf    Table_Counter
+0057   0103               M                 clrw
+0058                      M loop_disp
+0058   0870               M         movf    Table_Counter,W
+0059   2???               M                 call    No_Candle_Msg
+005A   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
+MPASM 5.55               DOESIHAVECANDLE.ASM   2-25-2014  14:27:38         PAGE  4
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-005E                  00108 yes_candle
-005E   2???           00109     call    HalfS
-005F   2???           00110     call    Clear_Display
-                      00111     Display     Candle_Msg
+005B   1903               M                 btfsc   STATUS,Z
+005C   2???               M                 goto    end_disp
+005D   2???               M                 call    WR_DATA
+005E   0AF0               M                 incf    Table_Counter,F
+005F   2???               M                 goto    loop_disp
+0060                      M end_disp
+0060   2???           00108     goto waiting
+0061                  00109 yes_candle
+0061   2???           00110     call    HalfS
+0062   2???           00111     call    Clear_Display
+                      00112     Display     Candle_Msg
   0000                    M                 local   loop_disp
   0000                    M                 local   end_disp
-0060   01F0               M                 clrf    Table_Counter
-0061   0103               M                 clrw
-0062                      M loop_disp
-0062   0870               M         movf    Table_Counter,W
-0063   2???               M                 call    Candle_Msg
-0064   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
-0065   1903               M                 btfsc   STATUS,Z
-0066   2???               M                 goto    end_disp
-0067   2???               M                 call    WR_DATA
-0068   0AF0               M                 incf    Table_Counter,F
-0069   2???               M                 goto    loop_disp
-006A                      M end_disp
-006A   1106           00112     bcf IR
-006B   2???           00113     goto waiting
+0063   01F0               M                 clrf    Table_Counter
+0064   0103               M                 clrw
+0065                      M loop_disp
+0065   0870               M         movf    Table_Counter,W
+0066   2???               M                 call    Candle_Msg
+0067   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
+0068   1903               M                 btfsc   STATUS,Z
+0069   2???               M                 goto    end_disp
+006A   2???               M                 call    WR_DATA
+006B   0AF0               M                 incf    Table_Counter,F
+006C   2???               M                 goto    loop_disp
+006D                      M end_disp
+006D   2???           00113     goto waiting
                       00114 
                       00115 
                       00116 ; DELAY 0.5S SUBROUTINE (from generator at http://www.piclist.com/techref/piclist/codegen/delay.htm)
                       00117 ; Delays exactly 0.5sec
-006C                  00118 HalfS
+006E                  00118 HalfS
                       00119       movlf 0x8A, hdelH
-006C   308A               M         movlw   0x8A
-006D   00F5               M         movwf   hdelH
+006E   308A               M         movlw   0x8A
+006F   00F5               M         movwf   hdelH
                       00120       movlf 0xBA, hdelM
-006E   30BA               M         movlw   0xBA
-006F   00F6               M         movwf   hdelM
+0070   30BA               M         movlw   0xBA
+0071   00F6               M         movwf   hdelM
                       00121       movlf 0x03, hdelL
-0070   3003               M         movlw   0x03
-0071   00F7               M         movwf   hdelL
-0072                  00122 HalfS_0
-0072   0BF5           00123       decfsz    hdelH, F
-0073   2???           00124           goto  $+2
-0074   0BF6           00125           decfsz        hdelM, F
-0075   2???           00126           goto  $+2
-0076   0BF7           00127           decfsz        hdelL, F
-0077   2???           00128           goto  HalfS_0
+0072   3003               M         movlw   0x03
+0073   00F7               M         movwf   hdelL
+0074                  00122 HalfS_0
+0074   0BF5           00123       decfsz    hdelH, F
+0075   2???           00124           goto  $+2
+0076   0BF6           00125           decfsz        hdelM, F
+0077   2???           00126           goto  $+2
+0078   0BF7           00127           decfsz        hdelL, F
+0079   2???           00128           goto  HalfS_0
                       00129 
-0078   2???           00130           goto  $+1
-0079   0000           00131           nop
-007A   0008           00132           return
+007A   2???           00130           goto  $+1
+007B   0000           00131           nop
+007C   0008           00132           return
                       00133 
                       00134 ; DELAY 5ms SUBROUTINE. (from generator at http://www.piclist.com/techref/piclist/codegen/delay.htm)
-                      00135 ; Useful for LCD because PIC is way faster than it can handle
-                      00136 ; Delays exactly 5ms
-007B                  00137 delay5ms
-                      00138         movlf   0xC3, del1
-007B   30C3               M         movlw   0xC3
-007C   00F3               M         movwf   del1
-MPASM 5.54               DOESIHAVECANDLE.ASM   2-17-2014  18:11:37         PAGE  5
+MPASM 5.55               DOESIHAVECANDLE.ASM   2-25-2014  14:27:38         PAGE  5
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
+                      00135 ; Useful for LCD because PIC is way faster than it can handle
+                      00136 ; Delays exactly 5ms
+007D                  00137 delay5ms
+                      00138         movlf   0xC3, del1
+007D   30C3               M         movlw   0xC3
+007E   00F3               M         movwf   del1
                       00139         movlf   0x0A, del2
-007D   300A               M         movlw   0x0A
-007E   00F4               M         movwf   del2
-007F                  00140 Delay_0
-007F   0BF3           00141         decfsz  del1, f
-0080   2???           00142         goto    $+2
-0081   0BF4           00143         decfsz  del2, f
-0082   2???           00144         goto    Delay_0
-0083   0008           00145     return
+007F   300A               M         movlw   0x0A
+0080   00F4               M         movwf   del2
+0081                  00140 Delay_0
+0081   0BF3           00141         decfsz  del1, f
+0082   2???           00142         goto    $+2
+0083   0BF4           00143         decfsz  del2, f
+0084   2???           00144         goto    Delay_0
+0085   0008           00145     return
                       00146 
                       00147 
                       00148 ; Initialize the LCD
-0084                  00149 InitLCD
-0084   1283           00150         bcf STATUS,RP0
-0085   1588           00151         bsf E     ;E default high
+0086                  00149 InitLCD
+0086   1283           00150         bcf STATUS,RP0
+0087   1588           00151         bsf E     ;E default high
                       00152 
                       00153         ;Wait for LCD POR to finish (~15ms)
-0086   2???           00154         call delay5ms
-0087   2???           00155         call delay5ms
-0088   2???           00156         call delay5ms
+0088   2???           00154         call delay5ms
+0089   2???           00155         call delay5ms
+008A   2???           00156         call delay5ms
                       00157 
                       00158         ;Ensure 8-bit mode first (no way to immediately guarantee 4-bit mode)
                       00159         ; -> Send b'0011' 3 times
-0089   3033           00160         movlw   b'00110011'
-008A   2???           00161         call    WR_INS
-008B   2???           00162         call delay5ms
-008C   2???           00163         call delay5ms
-008D   3032           00164         movlw   b'00110010'
-008E   2???           00165         call    WR_INS
-008F   2???           00166         call delay5ms
-0090   2???           00167         call delay5ms
+008B   3033           00160         movlw   b'00110011'
+008C   2???           00161         call    WR_INS
+008D   2???           00162         call delay5ms
+008E   2???           00163         call delay5ms
+008F   3032           00164         movlw   b'00110010'
+0090   2???           00165         call    WR_INS
+0091   2???           00166         call delay5ms
+0092   2???           00167         call delay5ms
                       00168 
                       00169         ; 4 bits, 2 lines, 5x7 dots
-0091   3028           00170         movlw   b'00101000'
-0092   2???           00171         call    WR_INS
-0093   2???           00172         call delay5ms
-0094   2???           00173         call delay5ms
+0093   3028           00170         movlw   b'00101000'
+0094   2???           00171         call    WR_INS
+0095   2???           00172         call delay5ms
+0096   2???           00173         call delay5ms
                       00174 
                       00175         ; display on/off
-0095   300C           00176         movlw   b'00001100'
-0096   2???           00177         call    WR_INS
-0097   2???           00178         call delay5ms
-0098   2???           00179         call delay5ms
+0097   300C           00176         movlw   b'00001100'
+0098   2???           00177         call    WR_INS
+0099   2???           00178         call delay5ms
+009A   2???           00179         call delay5ms
                       00180 
                       00181         ; Entry mode
-0099   3006           00182         movlw   b'00000110'
-009A   2???           00183         call    WR_INS
-009B   2???           00184         call delay5ms
-009C   2???           00185         call delay5ms
-                      00186 
-                      00187         ; Clear ram
-009D   3001           00188         movlw   b'00000001'
-009E   2???           00189         call    WR_INS
-MPASM 5.54               DOESIHAVECANDLE.ASM   2-17-2014  18:11:37         PAGE  6
+009B   3006           00182         movlw   b'00000110'
+009C   2???           00183         call    WR_INS
+MPASM 5.55               DOESIHAVECANDLE.ASM   2-25-2014  14:27:38         PAGE  6
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-009F   2???           00190         call delay5ms
-00A0   2???           00191         call delay5ms
-00A1   0008           00192         return
+009D   2???           00184         call delay5ms
+009E   2???           00185         call delay5ms
+                      00186 
+                      00187         ; Clear ram
+009F   3001           00188         movlw   b'00000001'
+00A0   2???           00189         call    WR_INS
+00A1   2???           00190         call delay5ms
+00A2   2???           00191         call delay5ms
+00A3   0008           00192         return
                       00193 
                       00194 ; Clear the display
-00A2                  00195 Clear_Display
-00A2   3001           00196                 movlw   B'00000001'
-00A3   2???           00197                 call    WR_INS
-00A4   0008           00198                 return
+00A4                  00195 Clear_Display
+00A4   3001           00196                 movlw   B'00000001'
+00A5   2???           00197                 call    WR_INS
+00A6   0008           00198                 return
                       00199 
                       00200 ;Switch lines
-00A5                  00201 Switch_Lines
-00A5   30C0           00202                 movlw   B'11000000'
-00A6   2???           00203                 call    WR_INS
-00A7   0008           00204                 return
+00A7                  00201 Switch_Lines
+00A7   30C0           00202                 movlw   B'11000000'
+00A8   2???           00203                 call    WR_INS
+00A9   0008           00204                 return
                       00205 
                       00206 ; Write an instruction to the LCD (see page 7-104)
                       00207 ; The instruction must be in W
-00A8                  00208 WR_INS
-00A8   1108           00209         bcf             RS                              ;clear RS
-00A9   00F1           00210         movwf   com                             ;W --> com
-00AA   39F0           00211         andlw   0xF0                    ;mask 4 bits MSB w = X0
-00AB   0088           00212         movwf   PORTD                   ;Send 4 bits MSB
-00AC   1588           00213         bsf             E                               ;
-00AD   2???           00214         call    delay5ms        ;__    __
-00AE   1188           00215         bcf             E                               ;  |__|
-00AF   0E71           00216         swapf   com,w
-00B0   39F0           00217         andlw   0xF0                    ;1111 0010
-00B1   0088           00218         movwf   PORTD                   ;send 4 bits LSB
-00B2   1588           00219         bsf             E                               ;
-00B3   2???           00220         call    delay5ms        ;__    __
-00B4   1188           00221         bcf             E                               ;  |__|
-00B5   2???           00222         call    delay5ms
-00B6   0008           00223         return
+00AA                  00208 WR_INS
+00AA   1108           00209         bcf             RS                              ;clear RS
+00AB   00F1           00210         movwf   com                             ;W --> com
+00AC   39F0           00211         andlw   0xF0                    ;mask 4 bits MSB w = X0
+00AD   0088           00212         movwf   PORTD                   ;Send 4 bits MSB
+00AE   1588           00213         bsf             E                               ;
+00AF   2???           00214         call    delay5ms        ;__    __
+00B0   1188           00215         bcf             E                               ;  |__|
+00B1   0E71           00216         swapf   com,w
+00B2   39F0           00217         andlw   0xF0                    ;1111 0010
+00B3   0088           00218         movwf   PORTD                   ;send 4 bits LSB
+00B4   1588           00219         bsf             E                               ;
+00B5   2???           00220         call    delay5ms        ;__    __
+00B6   1188           00221         bcf             E                               ;  |__|
+00B7   2???           00222         call    delay5ms
+00B8   0008           00223         return
                       00224 
                       00225 ; Write data at current cursor location
                       00226 ; Character code (see page 7-104) must be in W
-00B7                  00227 WR_DATA
-00B7   1508           00228         bsf             RS
-00B8   00F2           00229         movwf   dat
-00B9   0872           00230         movf    dat,w
-00BA   39F0           00231         andlw   0xF0
-00BB   3E04           00232         addlw   4
-00BC   0088           00233         movwf   PORTD
-00BD   1588           00234         bsf             E                               ;
-00BE   2???           00235         call    delay5ms        ;__    __
-00BF   1188           00236         bcf             E                               ;  |__|
-00C0   0E72           00237         swapf   dat,w
-00C1   39F0           00238         andlw   0xF0
-00C2   3E04           00239         addlw   4
-00C3   0088           00240         movwf   PORTD
-00C4   1588           00241         bsf             E                               ;
-00C5   2???           00242         call    delay5ms        ;__    __
-MPASM 5.54               DOESIHAVECANDLE.ASM   2-17-2014  18:11:37         PAGE  7
+00B9                  00227 WR_DATA
+00B9   1508           00228         bsf             RS
+00BA   00F2           00229         movwf   dat
+00BB   0872           00230         movf    dat,w
+00BC   39F0           00231         andlw   0xF0
+00BD   3E04           00232         addlw   4
+00BE   0088           00233         movwf   PORTD
+00BF   1588           00234         bsf             E                               ;
+00C0   2???           00235         call    delay5ms        ;__    __
+00C1   1188           00236         bcf             E                               ;  |__|
+MPASM 5.55               DOESIHAVECANDLE.ASM   2-25-2014  14:27:38         PAGE  7
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-00C6   1188           00243         bcf             E                               ;  |__|
-00C7   0008           00244         return
+00C2   0E72           00237         swapf   dat,w
+00C3   39F0           00238         andlw   0xF0
+00C4   3E04           00239         addlw   4
+00C5   0088           00240         movwf   PORTD
+00C6   1588           00241         bsf             E                               ;
+00C7   2???           00242         call    delay5ms        ;__    __
+00C8   1188           00243         bcf             E                               ;  |__|
+00C9   0008           00244         return
                       00245 
 3F72                  00246     END
-MPASM 5.54               DOESIHAVECANDLE.ASM   2-17-2014  18:11:37         PAGE  8
+MPASM 5.55               DOESIHAVECANDLE.ASM   2-25-2014  14:27:38         PAGE  8
 
 
 SYMBOL TABLE
@@ -419,9 +425,9 @@ CKP                               00000004
 CREN                              00000004
 CSRC                              00000007
 Candle_Msg                        00000005
-Clear_Display                     000000A2
+Clear_Display                     000000A4
 D                                 00000005
-MPASM 5.54               DOESIHAVECANDLE.ASM   2-17-2014  18:11:37         PAGE  9
+MPASM 5.55               DOESIHAVECANDLE.ASM   2-25-2014  14:27:38         PAGE  9
 
 
 SYMBOL TABLE
@@ -431,7 +437,7 @@ DATA_ADDRESS                      00000005
 DC                                00000001
 D_A                               00000005
 D_NOT_A                           00000005
-Delay_0                           0000007F
+Delay_0                           00000081
 Display                           
 E                                 PORTD,3
 EEADR                             0000010D
@@ -451,8 +457,8 @@ GIE                               00000007
 GO                                00000002
 GO_DONE                           00000002
 GO_NOT_DONE                       00000002
-HalfS                             0000006C
-HalfS_0                           00000072
+HalfS                             0000006E
+HalfS_0                           00000074
 I2C_DATA                          00000005
 I2C_READ                          00000002
 I2C_START                         00000003
@@ -464,10 +470,9 @@ INTCON                            0000000B
 INTE                              00000004
 INTEDG                            00000006
 INTF                              00000001
-IR                                PORTB, 2
-IRDATA                            PORTB,3
+IRDATA                            PORTA,5
 IRP                               00000007
-InitLCD                           00000084
+InitLCD                           00000086
 NOT_A                             00000005
 NOT_ADDRESS                       00000005
 NOT_BO                            00000000
@@ -480,13 +485,13 @@ NOT_RC8                           00000006
 NOT_T1SYNC                        00000002
 NOT_TO                            00000004
 NOT_TX8                           00000006
-MPASM 5.54               DOESIHAVECANDLE.ASM   2-17-2014  18:11:37         PAGE 10
+NOT_W                             00000002
+MPASM 5.55               DOESIHAVECANDLE.ASM   2-25-2014  14:27:38         PAGE 10
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
-NOT_W                             00000002
 NOT_WRITE                         00000002
 No_Candle_Msg                     00000011
 OBF                               00000006
@@ -539,13 +544,13 @@ RBIF                              00000000
 RC0                               00000000
 RC1                               00000001
 RC2                               00000002
-MPASM 5.54               DOESIHAVECANDLE.ASM   2-17-2014  18:11:37         PAGE 11
+RC3                               00000003
+MPASM 5.55               DOESIHAVECANDLE.ASM   2-25-2014  14:27:38         PAGE 11
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
-RC3                               00000003
 RC4                               00000004
 RC5                               00000005
 RC6                               00000006
@@ -598,15 +603,15 @@ SSPM2                             00000002
 SSPM3                             00000003
 SSPOV                             00000006
 SSPSTAT                           00000094
-MPASM 5.54               DOESIHAVECANDLE.ASM   2-17-2014  18:11:37         PAGE 12
+STATUS                            00000003
+MPASM 5.55               DOESIHAVECANDLE.ASM   2-25-2014  14:27:38         PAGE 12
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
-STATUS                            00000003
 SYNC                              00000004
-Switch_Lines                      000000A5
+Switch_Lines                      000000A7
 T0CS                              00000005
 T0IE                              00000005
 T0IF                              00000002
@@ -657,13 +662,13 @@ TRISB7                            00000007
 TRISC                             00000087
 TRISC0                            00000000
 TRISC1                            00000001
-MPASM 5.54               DOESIHAVECANDLE.ASM   2-17-2014  18:11:37         PAGE 13
+TRISC2                            00000002
+MPASM 5.55               DOESIHAVECANDLE.ASM   2-25-2014  14:27:38         PAGE 13
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
-TRISC2                            00000002
 TRISC3                            00000003
 TRISC4                            00000004
 TRISC5                            00000005
@@ -700,14 +705,14 @@ WCOL                              00000007
 WR                                00000001
 WREN                              00000002
 WRERR                             00000003
-WR_DATA                           000000B7
-WR_INS                            000000A8
+WR_DATA                           000000B9
+WR_INS                            000000AA
 Z                                 00000002
-_.org_1_0040                      00000040
-_.org_1_0073                      00000073
+_.org_1_0045                      00000045
 _.org_1_0075                      00000075
-_.org_1_0078                      00000078
-_.org_1_0080                      00000080
+_.org_1_0077                      00000077
+_.org_1_007A                      0000007A
+_.org_1_0082                      00000082
 _BODEN_OFF                        00003FBF
 _BODEN_ON                         00003FFF
 _BOREN_OFF                        00003FBF
@@ -716,13 +721,13 @@ _CONFIG                           00002007
 _CPD_OFF                          00003FFF
 _CPD_ON                           00003EFF
 _CP_ALL                           00000FCF
-MPASM 5.54               DOESIHAVECANDLE.ASM   2-17-2014  18:11:37         PAGE 14
+_CP_HALF                          00001FDF
+MPASM 5.55               DOESIHAVECANDLE.ASM   2-25-2014  14:27:38         PAGE 14
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
-_CP_HALF                          00001FDF
 _CP_OFF                           00003FFF
 _CP_UPPER_256                     00002FEF
 _DEBUG_OFF                        00003FFF
@@ -757,19 +762,19 @@ com                               00000071
 dat                               00000072
 del1                              00000073
 del2                              00000074
-delay5ms                          0000007B
+delay5ms                          0000007D
 hdelH                             00000075
 hdelL                             00000077
 hdelM                             00000076
 init                              0000002B
 movlf                             
-no_candle                         00000050
-start                             00000042
-waiting                           00000038
-yes_candle                        0000005E
+no_candle                         00000054
+start                             00000047
+waiting                           0000003D
+yes_candle                        00000061
 
 Errors   :     0
 Warnings :     0 reported,     0 suppressed
-Messages :     2 reported,     0 suppressed
+Messages :     4 reported,     0 suppressed
 
 

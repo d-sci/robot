@@ -1,7 +1,6 @@
-;Test for IR detector. Connect IR to RB2 (output) and IRDATA to RB3 (input).
+;Test for IR detector. Connect IRDATA to RA5 (input).
 ;Press start to check for presence of candle; LCD displays state.
-;RB2 is 1 when IR is on.
-;RB3 is 1 for no candle, low for yes candle.
+;RA5 is 1 for no candle, low for yes candle.
 
     list p=16f877
       #include <p16f877.inc>
@@ -10,8 +9,7 @@
 
     #define	RS 	PORTD,2
 	#define	E 	PORTD,3
-    #define IR  PORTB, 2
-    #define IRDATA  PORTB,3
+    #define IRDATA  PORTA,5
 
 
     cblock  0x70
@@ -67,17 +65,22 @@ Testing_Msg
 
 init
     clrf        INTCON
-    banksel     TRISB
-    movlf       b'11111010', TRISB
+
+    banksel     TRISA
+    movlf      b'100000', TRISA
+    movlf     b'11110010', TRISB
     clrf        TRISD
+    movlf   0x07, ADCON1        ;digital input
+
     banksel     PORTB
+    clrf        PORTA
     clrf        PORTB
     clrf        PORTD
-        
+
     call        InitLCD
-    bcf       STATUS,RP0          ; bank0
+    bcf       STATUS,RP0          ; back to bank0
     call    Clear_Display
-    
+
 
 waiting
          btfss		PORTB,1     ;Wait until data is available from the keypad
@@ -94,7 +97,6 @@ waiting
          goto       waiting
 
 start
-    bsf     IR          ;turn on IR
     call    Clear_Display
     Display Testing_Msg
     btfss   IRDATA          ;IRDATA is 1 if there's no light, 0 if there's a light
@@ -103,13 +105,11 @@ no_candle
     call    HalfS
     call    Clear_Display
     Display     No_Candle_Msg
-    bcf IR
     goto waiting
 yes_candle
     call    HalfS
     call    Clear_Display
     Display     Candle_Msg
-    bcf IR
     goto waiting
 
 
@@ -244,3 +244,5 @@ WR_DATA
 	return
 
     END
+
+
