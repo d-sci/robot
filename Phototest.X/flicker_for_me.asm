@@ -82,13 +82,13 @@ Testing_Msg
 init
     movlf     b'10000000', INTCON   ;interrupts enabled
 
-    banksel     TRISA               ;bank0
+    banksel     TRISA               ;bank1
     movlf     b'00100000', TRISA
     movlf     b'11110010', TRISB
     clrf        TRISD
     movlf   0x07, ADCON1        ;digital input
 
-    banksel     PORTA               ;bank1
+    banksel     PORTA               ;bank0
     clrf        PORTA
     clrf        PORTB
     clrf        PORTC

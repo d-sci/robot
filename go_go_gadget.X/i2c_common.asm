@@ -111,18 +111,18 @@ i2c_common_setup
 ;input:		none
 ;output:	none
 ;desc:		sets up I2C as master device with 100kHz baud rate
-	banksel		SSPSTAT
+	banksel		SSPSTAT         ;bank1
     clrf        SSPSTAT         ;I2C line levels, and clear all flags
     movlw       d'24'         	;100kHz baud rate: 10MHz osc / [4*(24+1)]
-	banksel		SSPADD
+	banksel		SSPADD          ;bank1 again?
     movwf       SSPADD          ;RTC only supports 100kHz
 
     movlw       b'00001000'     ;Config SSP for Master Mode I2C
-	banksel		SSPCON
+	banksel		SSPCON          ;bank0
     movwf       SSPCON
     bsf         SSPCON,SSPEN    ;Enable SSP module
     i2c_common_stop        		;Ensure the bus is free
-	return
+	return                      ;End in bank1!
 
 ;rtc Algorithms;;;;;;
 

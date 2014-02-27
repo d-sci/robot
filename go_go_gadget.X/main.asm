@@ -10,8 +10,8 @@
 ;***************************************
     #define	RS 	PORTD,2
 	#define	E 	PORTD,3
-    #define threshold1  D'15'
-    #define threshold2  D'65'
+    #define threshold1  D'7'
+    #define threshold2  D'69'
     #define IRDATA     PORTE, 0
     #define PHOTODATA  PORTE, 1
    ; note: check analog vs digital!
@@ -23,7 +23,7 @@
 
 ; Also see i2c_commmon.asm -> has stuff at 0x71-0x78 on for RTC!
 
-    cblock	0x20
+    cblock	0x20            ;bank0 variables
     ; Important information (will be displayed)
         state1     ;where   0 = none      1 = pass
         state2     ;        2 = led fail  3 = flicker fail
@@ -67,8 +67,11 @@
         count38         ;for isr
 ; For machine program: temps, counters, etc.
         candle_index
-        photocount
+        photocount      ;for detecting candle
         photoval
+        start_step      ;for motor
+        step_count
+        step_max
     endc
 
     cblock  0x79        ;stuff that needs to be in all registers
@@ -81,7 +84,7 @@
 ; MACROS
 ;***************************************
 
-; Display a msg on LCD
+; Display a msg on LCD. Bank0 please!
 Display macro	Message
 		local	loop_disp
 		local 	end_disp
@@ -111,7 +114,7 @@ movff   macro   source, dest
         movwf   dest
         endm
 
-; Write to LCD (all in bank0 please)
+; Write to LCD. In bank0 please!
 writeBCD    macro   reg         ; from a register containing BCD
             movf    reg, W
             addlw   B'00110000'
@@ -133,7 +136,7 @@ spacebar    macro
             call    WR_INS
             endm
 
-;Print to PC (hyperterminal)
+;Print to PC (hyperterminal). Any bank fine
 printchar   macro   char            ;direct ASCII code literal (or in "")
             movlw   char
             call    writetoPC
@@ -231,7 +234,7 @@ Op_at
 init
         movlf     b'00100000', INTCON   ;no interrupts yet, but Timer0 ready one GIE enabled
 
-        bsf       STATUS,RP0            ; select bank 1
+        banksel   TRISA                 ; bank 1
         movlf     b'11000111', OPTION_REG ; 1:256 prescaler for timer
         clrf      TRISA                 ; PortA *may* be used for motor
         movlf     b'11110010', TRISB    ; PortB[7:4] and [1] are keypad inputs (rest unused; RB0 may be external interrupt)
@@ -241,18 +244,20 @@ init
         movlf     b'011', TRISE         ; PortE *may* be used for ir and photodata
         movlf   0x07, ADCON1            ; digital input
 
-        bcf       STATUS,RP0        ; select bank 0
+        banksel   PORTA                 ; bank 0
         clrf      PORTA
         clrf      PORTB
         clrf      PORTC
         clrf      PORTD
         clrf      PORTE
 
-        call 	  i2c_common_setup  ;Set up I2C for communication
-        call      InitLCD           ;Initialize the LCD
-        call      InitUSART         ;Set up USART for RS232
+        call 	  i2c_common_setup      ;Set up I2C for communication. End in bank1
+        call      InitLCD               ;Initialize the LCD. End in bank0
+        call      InitUSART             ;Set up USART for RS232. End in bank1
 
-        bcf       STATUS,RP0        ; back to bank0
+        banksel     start_step          ; back to bank0
+        movlf       d'1', start_step    ; set-up for motor
+        movlf       d'15', step_max
 
         Display Standby_Msg
         call    Switch_Lines
@@ -367,13 +372,13 @@ start
 
 ; choose fake or real!
 
-;;****REAL CODE ******************************************
-;    movlf    D'0', candle_index
+;;******REAL CODE ******************************************
+;    clrf    candle_index
 ;    bcf	STATUS, IRP
 ;    movlf   0x1F, FSR       ;pointing at right before state1
 ;
 ;rotate
-;	movlw   0x9                 ; stop operation after 9 rotations
+;	movlw   d'10'                 ; stop operation after 10 rotations
 ;    subwf   candle_index,W      ; candle_index is # you've already tested before rotating
 ;    btfsc   STATUS,Z
 ;	goto    end_operation
@@ -384,12 +389,11 @@ start
 ;detect_candle
 ;	btfss   IRDATA      ;IRDATA is 1 if there's no light, 0 if there's a light
 ;	goto    test_candle     ;yes candle, go test it
-;    movlf   D'0', INDF      ;no candle, state = not present
+;   movlf   D'0', INDF      ;no candle, state = not present
 ;	goto rotate                 ;and go try next
 ;
 ;test_candle
 ;	incf    num_tot, F			; keeping track of total number of candles
-;	; Assume candle is already turned on
 ;	clrf    photocount
 ;	call    HalfS       ; delay 2 sec or whatever
 ;   call    HalfS
@@ -403,27 +407,18 @@ start
 ;    goto check_threshold2
 ;    movlf   D'2', INDF      ; < threshold 1 means led fail
 ;	 incf    num_LF, F
-;    goto    end_test_candle
+;    goto    rotate
 ;check_threshold2
 ;    movlw    threshold2
 ;    subwf   photoval, W
 ;    btfsc   STATUS, C       ;if  photoval < threshold 2, C = 0
 ;    goto aboveboth
 ;    movlf   D'1', INDF      ; < threshold 2 means pass
-;    goto    end_test_candle
+;    goto    rotate
 ;aboveboth
 ;   movlf   D'3', INDF       ;else flicker fail
 ;   incf    num_FF, F
-;end_test_candle
-;	call    TURNOFF     ;pulse solenoid to turn off candle
-;    goto    rotate
-;
-;
-;ROTATEMOTOR ;rotates stepper motor 40deg
-;    return
-;
-;TURNOFF ;pulses solenoid to turn off candle
-;    return
+;   goto    rotate
 ; ;****************************************************
 
 end_operation
@@ -438,7 +433,7 @@ end_operation
         ; Then store current run as log 1
 shiftlogs
         banksel     EEADR               ; bank 2
-        movlf       D'111', EEADR        ; start shifting from 111->125
+        movlf       D'111', EEADR       ; start shifting from 111->125
 
 shiftlogs_0
         banksel     EECON1              ;bank 3
@@ -498,10 +493,9 @@ write_log1_0
         movf        EEADR, F
         btfss       STATUS, Z           ;if EEADR = 0 we're done
         goto        write_log1_0
-        bcf         STATUS, RP0         ;so go back to bank 0 and continue
-        bcf         STATUS, RP1
 
         ; Display info screens
+        banksel    time            ; back to bank0
         call       time             ; "Operation time: X sec"
         call       HalfS
         call       HalfS
@@ -547,7 +541,7 @@ check_log1
     xorlw   0x0         ;will be all zeros if its 1
     btfss   STATUS,Z    ;and Z will be high, so skip
     goto    check_log2
-    banksel EEADR
+    banksel EEADR           ;(bank2)
     movlf   d'0', EEADR
     goto    display_log
 
@@ -657,7 +651,7 @@ read_EEPROM
     goto    read_EEPROM
 
     ;display that shit
-    banksel Table_Counter   ; bank0
+    banksel Table_Counter   ; back to bank0
     call    Clear_Display
     ;if first data is 0xFF (no log) just display "none"
     movlw   0xFF
@@ -742,6 +736,109 @@ badkeyagain
 
 ; END OF MAIN PROGRAM
 ;------------------------------------------------------------
+
+;***************************************
+; ROTATE MOTOR ROUTINE
+; Rotates motor approx 36deg. Alternates between 15 and 16 steps
+; for average of 116.25deg per turn = 36.1 deg on actual thing
+;***************************************
+
+;ROTATEMOTOR
+;    clrf    step_count
+;
+;    ;go to the right starting step
+;    movlw   d'1'
+;    subwf   start_step, W
+;    btfsc   STATUS,Z
+;    goto    firststep
+;
+;    movlw   d'2'
+;    subwf   start_step, W
+;    btfsc   STATUS,Z
+;    goto    secondstep
+;
+;    movlw   d'3'
+;    subwf   start_step, W
+;    btfsc   STATUS,Z
+;    goto    thirdstep
+;
+;    movlw   d'4'
+;    subwf   start_step, W
+;    btfsc   STATUS,Z
+;    goto    fourthstep
+;
+;four_steps
+;
+;firststep
+;    movf    step_max, W
+;    subwf   step_count, W
+;    btfss   STATUS, Z
+;    goto    pulse1
+;    movlf   d'1', start_step
+;    goto    end_rotate
+;pulse1
+;    movlf   B'1001', PORTA
+;    call    delay5ms
+;    call    delay5ms
+;    call    HalfS
+;    incf    step_count, F
+;
+;secondstep
+;    movf    step_max, W
+;    subwf   step_count, W
+;    btfss   STATUS, Z
+;    goto    pulse2
+;    movlf   d'2', start_step
+;    goto    end_rotate
+;pulse2
+;    movlf   B'1010', PORTA
+;    call    delay5ms
+;    call    delay5ms
+;    call    HalfS
+;    incf    step_count, F
+;
+;thirdstep
+;    movf    step_max, W
+;    subwf   step_count, W
+;    btfss   STATUS, Z
+;    goto    pulse3
+;    movlf   d'3', start_step
+;    goto    end_rotate
+;pulse3
+;    movlf   B'0110', PORTA
+;    call    delay5ms
+;    call    delay5ms
+;    call    HalfS
+;    incf    step_count, F
+;
+;fourthstep
+;    movf    step_max, W
+;    subwf   step_count, W
+;    btfss   STATUS, Z
+;    goto    pulse4
+;    movlf   d'4', start_step
+;    goto    end_rotate
+;pulse4
+;    movlf   B'0101', PORTA
+;    call    delay5ms
+;    call    delay5ms
+;    call    HalfS
+;    incf    step_count, F
+;
+;    goto    four_steps
+;
+;end_rotate
+;   ;if step_max is 15 incr, 16 dec
+;    movlw    d'16'
+;    subwf   step_max, W
+;    btfss   STATUS,Z
+;    goto    must_inc
+;must_dec
+;    decf    step_max, F
+;    return
+;must_inc
+;    incf     step_max, F
+;    return
 
 
 ;***************************************
@@ -907,9 +1004,8 @@ check_start
     goto    default_key
     goto    start
 
-default_key         ; will never get here
+default_key         ; may never get here
     return
-
 
 ;Display state subroutine
 ;stateN is in W
@@ -1267,8 +1363,8 @@ Delay_0
 
 ; Initialize the LCD
 InitLCD
-	bcf STATUS,RP0
-	bsf E     ;E default high
+	banksel     PORTD       ;bank0
+	bsf     E     ;E default high
 
 	;Wait for LCD POR to finish (~15ms)
 	call delay5ms
@@ -1279,18 +1375,18 @@ InitLCD
 	; -> Send b'0011' 3 times
 	movlw	b'00110011'
 	call	WR_INS
-	call delay5ms
-	call delay5ms
+	call    delay5ms
+	call    delay5ms
 	movlw	b'00110010'
 	call	WR_INS
-	call delay5ms
-	call delay5ms
+	call    delay5ms
+	call    delay5ms
 
 	; 4 bits, 2 lines, 5x7 dots
 	movlw	b'00101000'
 	call	WR_INS
-	call delay5ms
-	call delay5ms
+	call    delay5ms
+	call    delay5ms
 
 	; display on/off
 	movlw	b'00001100'
@@ -1301,14 +1397,14 @@ InitLCD
 	; Entry mode
 	movlw	b'00000110'
 	call	WR_INS
-	call delay5ms
-	call delay5ms
+	call    delay5ms
+	call    delay5ms
 
 	; Clear ram
 	movlw	b'00000001'
 	call	WR_INS
-	call delay5ms
-	call delay5ms
+	call    delay5ms
+	call    delay5ms
 	return
 
 ; Clear the display
@@ -1324,7 +1420,7 @@ Switch_Lines
 		return
 
 ; Write an instruction to the LCD (see page 7-104)
-; The instruction must be in W
+; The instruction must be in W; must be in bank0
 WR_INS
 	bcf		RS				;clear RS
 	movwf	com				;W --> com
@@ -1343,11 +1439,11 @@ WR_INS
 	return
 
 ; Write data at current cursor location
-; Character code (see page 7-104) must be in W
+; Character code (see page 7-104) must be in W; must be in bank0
 WR_DATA
 	bsf		RS
 	movwf	dat
-	movf	dat,w
+	movf	dat,w   ;what? why?
 	andlw	0xF0
 	addlw	4
 	movwf	PORTD
@@ -1368,16 +1464,17 @@ WR_DATA
 ; PC INTERFACE SUBROUTINES (from sample code)
 ;***************************************
 InitUSART
-        bsf       STATUS,RP0     ; select bank 1
+;end up in bank1!
+        banksel SPBRG            ;  bank 1
         movlw     d'15'          ; BAUD rate 9600, assuming 10MHz oscillator
         movwf     SPBRG
         clrf      TXSTA          ; 8 bits data ,no,1 stop
 
-        bcf       STATUS,RP0     ; select bank 0
+        banksel   RCSTA          ; bank 0
         bsf       RCSTA,SPEN     ; Asynchronous serial port enable
         bsf       RCSTA,CREN     ; continuous receive
 
-        bsf       STATUS,RP0     ; select bank 1
+        banksel   TXSTA          ;  bank 1
         bsf       TXSTA,TXEN     ; Transmit enable
         return
 
@@ -1385,9 +1482,9 @@ InitUSART
 writetoPC
 ; Writes the data in W to the PC
 ; end up in bank1!
-        bcf       STATUS,RP0     ; Go to bank 0
+        banksel   TXREG          ; bank 0
         movwf     TXREG          ; Send contents of W to RS232
-        bsf       STATUS,RP0     ; Go to bank with TXSTA
+        banksel   TXSTA          ; bank1
         btfss     TXSTA,1        ; check TRMT bit in TXSTA (FSR) until TRMT=1
         goto      $-1
         return

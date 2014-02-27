@@ -1,19 +1,21 @@
-MPASM 5.55                 SPIN_ME_ROUND.ASM   2-25-2014  16:17:15         PAGE  1
+MPASM 5.55                 SPIN_ME_ROUND.ASM   2-26-2014  18:17:15         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00001 ;Test for motor controlled by L298N. Want to rotate 40deg = 17 steps.
-                      00002 ;Excitation sequence is 1-2-3-4 (four steps) controlled by RA[3:0]
-                      00003 ;   1 = 1001
-                      00004 ;   2 = 1010
-                      00005 ;   3 = 0110
-                      00006 ;   4 = 0101
-                      00007 ;http://duvindu92.blogspot.ca/2013/07/driving-bipolar-stepper-motor-with.html
-                      00008 
-                      00009  list p=16f877
-                      00010       #include <p16f877.inc>
+                      00001 ;Test for motor controlled by L298N. 
+                      00002 ;Want to rotate 36deg = 15.5 steps, so alternate between 15 and 16.
+                      00003 ;Also note we save which step we're on (for the 15 step, you go back one each cycle)
+                      00004 ;Excitation sequence is 1-2-3-4 (four steps) controlled by RA[3:0]
+                      00005 ;   1 = 1001
+                      00006 ;   2 = 1010
+                      00007 ;   3 = 0110
+                      00008 ;   4 = 0101
+                      00009 ;http://duvindu92.blogspot.ca/2013/07/driving-bipolar-stepper-motor-with.html
+                      00010 
+                      00011  list p=16f877
+                      00012       #include <p16f877.inc>
                       00001         LIST
                       00002 
                       00003 ;==========================================================================
@@ -23,156 +25,406 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00007 ;==========================================================================
                       00008 
                       00540         LIST
-2007   3F72           00011       __CONFIG _CP_OFF & _WDT_OFF & _BODEN_ON & _PWRTE_ON & _HS_OSC & _WRT_ENABLE_ON & _CPD_OFF & _LVP_O
+2007   3F72           00013       __CONFIG _CP_OFF & _WDT_OFF & _BODEN_ON & _PWRTE_ON & _HS_OSC & _WRT_ENABLE_ON & _CPD_OFF & _LVP_O
                             FF
-                      00012 
-                      00013 
-                      00014     cblock  0x70
-  00000070            00015         del1
-  00000071            00016         del2
-  00000072            00017         hdelH
-  00000073            00018         hdelM
-  00000074            00019         hdelL
-                      00020     endc
-                      00021 
-                      00022 movlf   macro   l, f
-                      00023         movlw   l
-                      00024         movwf   f
-                      00025         endm
-                      00026 
-                      00027     ORG       0x000
-0000   2???           00028     goto      main
-                      00029     ORG       0x004
-0004   0009           00030     retfie
-                      00031 
-0005                  00032 main
-0005   018B           00033     clrf        INTCON
-0006   1683 1303      00034     banksel     TRISA
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0008   0185           00035     clrf        TRISA
-                      00036     movlf       0x07, ADCON1
-0009   3007               M         movlw   0x07
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-000A   009F               M         movwf   ADCON1
-000B   1283 1303      00037     banksel     PORTA
-000D   0185           00038     clrf        PORTA
-000E   2???           00039     call    delay5ms
-MPASM 5.55                 SPIN_ME_ROUND.ASM   2-25-2014  16:17:15         PAGE  2
+                      00014 
+                      00015     #define     RS      PORTD,2
+                      00016         #define E       PORTD,3
+                      00017 
+                      00018     cblock  0x70
+  00000070            00019         del1
+  00000071            00020         del2
+  00000072            00021         hdelH
+  00000073            00022         hdelM
+  00000074            00023         hdelL
+  00000075            00024         start_step  ;this is new
+  00000076            00025         step_count  ;this is new
+  00000077            00026         step_max    ;this is new
+  00000078            00027         dat
+  00000079            00028         com
+                      00029     endc
+                      00030 
+                      00031 movlf   macro   l, f
+                      00032         movlw   l
+                      00033         movwf   f
+                      00034         endm
+                      00035 
+                      00036 writeBCD    macro   reg         ; from a register containing BCD
+                      00037             movf    reg, W
+                      00038             addlw   B'00110000'
+                      00039             call WR_DATA
+                      00040             endm
+                      00041 
+                      00042     ORG       0x000
+0000   2???           00043     goto      main
+MPASM 5.55                 SPIN_ME_ROUND.ASM   2-26-2014  18:17:15         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-000F   2???           00040     call    delay5ms
-0010   2???           00041     call    HalfS
-0011   2???           00042     call        ROTATEMOTOR
-0012   2???           00043     goto        $
-                      00044 
-0013                  00045 ROTATEMOTOR
-0013   2???           00046     call    four_steps
-0014   2???           00047     call    four_steps
-0015   2???           00048     call    four_steps
-0016   2???           00049     call    four_steps
-                      00050 
-                      00051     movlf   B'1001', PORTA      ;17th step?
-0017   3009               M         movlw   B'1001'
-0018   0085               M         movwf   PORTA
-0019   2???           00052     call    delay5ms
-001A   2???           00053     call    delay5ms
-001B   2???           00054     call    HalfS
-                      00055 
-                      00056     movlf   B'1010', PORTA
-001C   300A               M         movlw   B'1010'
-001D   0085               M         movwf   PORTA
-001E   2???           00057     call    delay5ms
-001F   2???           00058     call    delay5ms
-0020   2???           00059     call    HalfS
-                      00060 
-                      00061     movlf   B'0110', PORTA
-0021   3006               M         movlw   B'0110'
-0022   0085               M         movwf   PORTA
-0023   2???           00062     call    delay5ms
-0024   2???           00063     call    delay5ms
-0025   2???           00064     call    HalfS
+                      00044     ORG       0x004
+0004   0009           00045     retfie
+                      00046 
+0005                  00047 main
+0005   018B           00048     clrf        INTCON
+0006   1683 1303      00049     banksel     TRISA
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0008   0185           00050     clrf        TRISA
+                      00051     movlf       b'11110010', TRISB
+0009   30F2               M         movlw   b'11110010'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000A   0086               M         movwf   TRISB
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000B   0188           00052     clrf        TRISD
+                      00053     movlf       0x07, ADCON1
+000C   3007               M         movlw   0x07
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000D   009F               M         movwf   ADCON1
+000E   1283 1303      00054     banksel     PORTA
+0010   0185           00055     clrf        PORTA
+0011   0186           00056     clrf        PORTB
+0012   0188           00057     clrf        PORTD
+0013   2???           00058     call        InitLCD
+                      00059     movlf       d'1', start_step
+0014   3001               M         movlw   d'1'
+0015   00F5               M         movwf   start_step
+                      00060     movlf       d'15', step_max
+0016   300F               M         movlw   d'15'
+0017   00F7               M         movwf   step_max
+                      00061 
+0018                  00062 waiting
+0018   1C86           00063          btfss          PORTB,1     ;Wait until data is available from the keypad
+0019   2???           00064          goto           waiting
                       00065 
-0026   0185           00066     clrf    PORTA
-                      00067 
-0027   0008           00068     return
-                      00069 
-0028                  00070 four_steps
-                      00071     movlf   B'1001', PORTA
-0028   3009               M         movlw   B'1001'
-0029   0085               M         movwf   PORTA
-002A   2???           00072     call    delay5ms
-002B   2???           00073     call    delay5ms
-002C   2???           00074     call    HalfS
+001A   0E06           00066          swapf          PORTB,W     ;Read PortB<7:4> into W<3:0>
+001B   390F           00067          andlw          0x0F
+001C   3A0C           00068          xorlw      0xC         ;Will be all zeros if its "START"
+001D   1903           00069          btfsc      STATUS,Z    ;and Z will be high, so skip if not high
+001E   2???           00070          call       ROTATEMOTOR
+                      00071 
+001F   1886           00072          btfsc          PORTB,1     ;Wait until key is released
+0020   2???           00073          goto           $-1
+0021   2???           00074          goto       waiting
                       00075 
-                      00076     movlf   B'1010', PORTA
-002D   300A               M         movlw   B'1010'
-002E   0085               M         movwf   PORTA
-002F   2???           00077     call    delay5ms
-0030   2???           00078     call    delay5ms
-0031   2???           00079     call    HalfS
-                      00080 
-                      00081     movlf   B'0110', PORTA
-0032   3006               M         movlw   B'0110'
-MPASM 5.55                 SPIN_ME_ROUND.ASM   2-25-2014  16:17:15         PAGE  3
+0022                  00076 ROTATEMOTOR
+0022   2???           00077     call    Clear_Display
+                      00078     writeBCD    step_max
+0023   0877               M             movf    step_max, W
+0024   3E30               M             addlw   B'00110000'
+0025   2???               M             call WR_DATA
+                      00079     writeBCD    start_step
+0026   0875               M             movf    start_step, W
+0027   3E30               M             addlw   B'00110000'
+MPASM 5.55                 SPIN_ME_ROUND.ASM   2-26-2014  18:17:15         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0033   0085               M         movwf   PORTA
-0034   2???           00082     call    delay5ms
-0035   2???           00083     call    delay5ms
-0036   2???           00084     call    HalfS
-                      00085 
-                      00086     movlf   B'0101', PORTA
-0037   3005               M         movlw   B'0101'
-0038   0085               M         movwf   PORTA
-0039   2???           00087     call    delay5ms
-003A   2???           00088     call    delay5ms
-003B   2???           00089     call    HalfS
-003C   0008           00090     return
-                      00091 
-003D                  00092 delay5ms
-                      00093         movlf   0xC3, del1
-003D   30C3               M         movlw   0xC3
-003E   00F0               M         movwf   del1
-                      00094         movlf   0x0A, del2
-003F   300A               M         movlw   0x0A
-0040   00F1               M         movwf   del2
-0041                  00095 Delay_0
-0041   0BF0           00096         decfsz  del1, f
-0042   2???           00097         goto    $+2
-0043   0BF1           00098         decfsz  del2, f
-0044   2???           00099         goto    Delay_0
-0045   0008           00100     return
-                      00101 
-0046                  00102 HalfS
-                      00103       movlf 0x8A, hdelH
-0046   308A               M         movlw   0x8A
-0047   00F2               M         movwf   hdelH
-                      00104       movlf 0xBA, hdelM
-0048   30BA               M         movlw   0xBA
-0049   00F3               M         movwf   hdelM
-                      00105       movlf 0x03, hdelL
-004A   3003               M         movlw   0x03
-004B   00F4               M         movwf   hdelL
-004C                  00106 HalfS_0
-004C   0BF2           00107       decfsz    hdelH, F
-004D   2???           00108           goto  $+2
-004E   0BF3           00109           decfsz        hdelM, F
-004F   2???           00110           goto  $+2
-0050   0BF4           00111           decfsz        hdelL, F
-0051   2???           00112           goto  HalfS_0
-                      00113 
-0052   2???           00114           goto  $+1
-0053   0000           00115           nop
-0054   0008           00116           return
-                      00117 
-3F72                  00118     END
-MPASM 5.55                 SPIN_ME_ROUND.ASM   2-25-2014  16:17:15         PAGE  4
+0028   2???               M             call WR_DATA
+                      00080 
+0029   01F6           00081     clrf    step_count
+                      00082 
+                      00083     ;go to the right starting step
+002A   3001           00084     movlw   d'1'
+002B   0275           00085     subwf   start_step, W
+002C   1903           00086     btfsc   STATUS,Z
+002D   2???           00087     goto    firststep
+                      00088 
+002E   3002           00089     movlw   d'2'
+002F   0275           00090     subwf   start_step, W
+0030   1903           00091     btfsc   STATUS,Z
+0031   2???           00092     goto    secondstep
+                      00093 
+0032   3003           00094     movlw   d'3'
+0033   0275           00095     subwf   start_step, W
+0034   1903           00096     btfsc   STATUS,Z
+0035   2???           00097     goto    thirdstep
+                      00098 
+0036   3004           00099     movlw   d'4'
+0037   0275           00100     subwf   start_step, W
+0038   1903           00101     btfsc   STATUS,Z
+0039   2???           00102     goto    fourthstep
+                      00103 
+003A                  00104 four_steps
+                      00105 
+003A                  00106 firststep
+003A   0877           00107     movf    step_max, W
+003B   0276           00108     subwf   step_count, W
+003C   1D03           00109     btfss   STATUS, Z
+003D   2???           00110     goto    pulse1
+                      00111     movlf   d'1', start_step
+003E   3001               M         movlw   d'1'
+003F   00F5               M         movwf   start_step
+0040   2???           00112     goto    end_rotate
+0041                  00113 pulse1
+                      00114     movlf   B'1001', PORTA
+0041   3009               M         movlw   B'1001'
+0042   0085               M         movwf   PORTA
+0043   2???           00115     call    delay5ms
+0044   2???           00116     call    delay5ms
+0045   2???           00117     call    HalfS
+0046   0AF6           00118     incf    step_count, F
+                      00119 
+0047                  00120 secondstep
+0047   0877           00121     movf    step_max, W
+0048   0276           00122     subwf   step_count, W
+0049   1D03           00123     btfss   STATUS, Z
+004A   2???           00124     goto    pulse2
+                      00125     movlf   d'2', start_step
+004B   3002               M         movlw   d'2'
+004C   00F5               M         movwf   start_step
+MPASM 5.55                 SPIN_ME_ROUND.ASM   2-26-2014  18:17:15         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+004D   2???           00126     goto    end_rotate
+004E                  00127 pulse2
+                      00128     movlf   B'1010', PORTA
+004E   300A               M         movlw   B'1010'
+004F   0085               M         movwf   PORTA
+0050   2???           00129     call    delay5ms
+0051   2???           00130     call    delay5ms
+0052   2???           00131     call    HalfS
+0053   0AF6           00132     incf    step_count, F
+                      00133 
+0054                  00134 thirdstep
+0054   0877           00135     movf    step_max, W
+0055   0276           00136     subwf   step_count, W
+0056   1D03           00137     btfss   STATUS, Z
+0057   2???           00138     goto    pulse3
+                      00139     movlf   d'3', start_step
+0058   3003               M         movlw   d'3'
+0059   00F5               M         movwf   start_step
+005A   2???           00140     goto    end_rotate
+005B                  00141 pulse3
+                      00142     movlf   B'0110', PORTA
+005B   3006               M         movlw   B'0110'
+005C   0085               M         movwf   PORTA
+005D   2???           00143     call    delay5ms
+005E   2???           00144     call    delay5ms
+005F   2???           00145     call    HalfS
+0060   0AF6           00146     incf    step_count, F
+                      00147 
+0061                  00148 fourthstep
+0061   0877           00149     movf    step_max, W
+0062   0276           00150     subwf   step_count, W
+0063   1D03           00151     btfss   STATUS, Z
+0064   2???           00152     goto    pulse4
+                      00153     movlf   d'4', start_step
+0065   3004               M         movlw   d'4'
+0066   00F5               M         movwf   start_step
+0067   2???           00154     goto    end_rotate
+0068                  00155 pulse4
+                      00156     movlf   B'0101', PORTA
+0068   3005               M         movlw   B'0101'
+0069   0085               M         movwf   PORTA
+006A   2???           00157     call    delay5ms
+006B   2???           00158     call    delay5ms
+006C   2???           00159     call    HalfS
+006D   0AF6           00160     incf    step_count, F
+                      00161 
+006E   2???           00162     goto    four_steps
+                      00163 
+006F                  00164 end_rotate
+                      00165    ;if step_max is 15 incr, 16 dec
+006F   3010           00166     movlw    d'16'
+0070   0277           00167     subwf   step_max, W
+0071   1D03           00168     btfss   STATUS,Z
+MPASM 5.55                 SPIN_ME_ROUND.ASM   2-26-2014  18:17:15         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0072   2???           00169     goto    must_inc
+0073                  00170 must_dec
+0073   03F7           00171     decf    step_max, F
+0074   0008           00172     return
+0075                  00173 must_inc
+0075   0AF7           00174     incf     step_max, F
+0076   0008           00175     return
+                      00176 
+                      00177 
+                      00178 
+                      00179 
+                      00180 
+                      00181 
+                      00182 
+                      00183 
+                      00184 
+                      00185 
+                      00186 
+                      00187 
+                      00188 
+0077                  00189 delay5ms
+                      00190         movlf   0xC3, del1
+0077   30C3               M         movlw   0xC3
+0078   00F0               M         movwf   del1
+                      00191         movlf   0x0A, del2
+0079   300A               M         movlw   0x0A
+007A   00F1               M         movwf   del2
+007B                  00192 Delay_0
+007B   0BF0           00193         decfsz  del1, f
+007C   2???           00194         goto    $+2
+007D   0BF1           00195         decfsz  del2, f
+007E   2???           00196         goto    Delay_0
+007F   0008           00197     return
+                      00198 
+0080                  00199 HalfS
+                      00200       movlf 0x8A, hdelH
+0080   308A               M         movlw   0x8A
+0081   00F2               M         movwf   hdelH
+                      00201       movlf 0xBA, hdelM
+0082   30BA               M         movlw   0xBA
+0083   00F3               M         movwf   hdelM
+                      00202       movlf 0x03, hdelL
+0084   3003               M         movlw   0x03
+0085   00F4               M         movwf   hdelL
+0086                  00203 HalfS_0
+0086   0BF2           00204       decfsz    hdelH, F
+0087   2???           00205           goto  $+2
+0088   0BF3           00206           decfsz        hdelM, F
+0089   2???           00207           goto  $+2
+008A   0BF4           00208           decfsz        hdelL, F
+008B   2???           00209           goto  HalfS_0
+                      00210 
+008C   2???           00211           goto  $+1
+MPASM 5.55                 SPIN_ME_ROUND.ASM   2-26-2014  18:17:15         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+008D   0000           00212           nop
+008E   0008           00213           return
+                      00214 
+                      00215 
+                      00216 ; Initialize the LCD
+008F                  00217 InitLCD
+008F   1283           00218         bcf STATUS,RP0
+0090   1588           00219         bsf E     ;E default high
+                      00220 
+                      00221         ;Wait for LCD POR to finish (~15ms)
+0091   2???           00222         call delay5ms
+0092   2???           00223         call delay5ms
+0093   2???           00224         call delay5ms
+                      00225 
+                      00226         ;Ensure 8-bit mode first (no way to immediately guarantee 4-bit mode)
+                      00227         ; -> Send b'0011' 3 times
+0094   3033           00228         movlw   b'00110011'
+0095   2???           00229         call    WR_INS
+0096   2???           00230         call delay5ms
+0097   2???           00231         call delay5ms
+0098   3032           00232         movlw   b'00110010'
+0099   2???           00233         call    WR_INS
+009A   2???           00234         call delay5ms
+009B   2???           00235         call delay5ms
+                      00236 
+                      00237         ; 4 bits, 2 lines, 5x7 dots
+009C   3028           00238         movlw   b'00101000'
+009D   2???           00239         call    WR_INS
+009E   2???           00240         call delay5ms
+009F   2???           00241         call delay5ms
+                      00242 
+                      00243         ; display on/off
+00A0   300C           00244         movlw   b'00001100'
+00A1   2???           00245         call    WR_INS
+00A2   2???           00246         call delay5ms
+00A3   2???           00247         call delay5ms
+                      00248 
+                      00249         ; Entry mode
+00A4   3006           00250         movlw   b'00000110'
+00A5   2???           00251         call    WR_INS
+00A6   2???           00252         call delay5ms
+00A7   2???           00253         call delay5ms
+                      00254 
+                      00255         ; Clear ram
+00A8   3001           00256         movlw   b'00000001'
+00A9   2???           00257         call    WR_INS
+00AA   2???           00258         call delay5ms
+00AB   2???           00259         call delay5ms
+00AC   0008           00260         return
+                      00261 
+                      00262 ; Clear the display
+00AD                  00263 Clear_Display
+00AD   3001           00264                 movlw   B'00000001'
+MPASM 5.55                 SPIN_ME_ROUND.ASM   2-26-2014  18:17:15         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00AE   2???           00265                 call    WR_INS
+00AF   0008           00266                 return
+                      00267 
+                      00268 ;Switch lines
+00B0                  00269 Switch_Lines
+00B0   30C0           00270                 movlw   B'11000000'
+00B1   2???           00271                 call    WR_INS
+00B2   0008           00272                 return
+                      00273 
+                      00274 ; Write an instruction to the LCD (see page 7-104)
+                      00275 ; The instruction must be in W
+00B3                  00276 WR_INS
+00B3   1108           00277         bcf             RS                              ;clear RS
+00B4   00F9           00278         movwf   com                             ;W --> com
+00B5   39F0           00279         andlw   0xF0                    ;mask 4 bits MSB w = X0
+00B6   0088           00280         movwf   PORTD                   ;Send 4 bits MSB
+00B7   1588           00281         bsf             E                               ;
+00B8   2???           00282         call    delay5ms
+00B9   2???           00283     call delay5ms
+00BA   2???           00284         call delay5ms;__    __
+00BB   1188           00285         bcf             E                               ;  |__|
+00BC   0E79           00286         swapf   com,w
+00BD   39F0           00287         andlw   0xF0                    ;1111 0010
+00BE   0088           00288         movwf   PORTD                   ;send 4 bits LSB
+00BF   1588           00289         bsf             E                               ;
+00C0   2???           00290         call    delay5ms
+00C1   2???           00291     call delay5ms
+00C2   2???           00292         call delay5ms   ;__    __
+00C3   1188           00293         bcf             E                               ;  |__|
+00C4   2???           00294         call    delay5ms
+00C5   2???           00295     call delay5ms
+00C6   2???           00296         call delay5ms
+00C7   0008           00297         return
+                      00298 
+                      00299 ; Write data at current cursor location
+                      00300 ; Character code (see page 7-104) must be in W
+00C8                  00301 WR_DATA
+00C8   1508           00302         bsf             RS
+00C9   00F8           00303         movwf   dat
+00CA   0878           00304         movf    dat,w
+00CB   39F0           00305         andlw   0xF0
+00CC   3E04           00306         addlw   4
+00CD   0088           00307         movwf   PORTD
+00CE   1588           00308         bsf             E                               ;
+00CF   2???           00309         call    delay5ms
+00D0   2???           00310     call delay5ms
+00D1   2???           00311         call delay5ms   ;__    __
+00D2   1188           00312         bcf             E                               ;  |__|
+00D3   0E78           00313         swapf   dat,w
+00D4   39F0           00314         andlw   0xF0
+00D5   3E04           00315         addlw   4
+00D6   0088           00316         movwf   PORTD
+00D7   1588           00317         bsf             E                               ;
+MPASM 5.55                 SPIN_ME_ROUND.ASM   2-26-2014  18:17:15         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00D8   2???           00318         call    delay5ms
+00D9   2???           00319     call delay5ms
+00DA   2???           00320         call delay5ms   ;__    __
+00DB   1188           00321         bcf             E                               ;  |__|
+00DC   0008           00322         return
+                      00323 
+3F72                  00324     END
+MPASM 5.55                 SPIN_ME_ROUND.ASM   2-26-2014  18:17:15         PAGE  9
 
 
 SYMBOL TABLE
@@ -228,18 +480,20 @@ CKE                               00000006
 CKP                               00000004
 CREN                              00000004
 CSRC                              00000007
+Clear_Display                     000000AD
 D                                 00000005
 DATA_ADDRESS                      00000005
-DC                                00000001
-MPASM 5.55                 SPIN_ME_ROUND.ASM   2-25-2014  16:17:15         PAGE  5
+MPASM 5.55                 SPIN_ME_ROUND.ASM   2-26-2014  18:17:15         PAGE 10
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+DC                                00000001
 D_A                               00000005
 D_NOT_A                           00000005
-Delay_0                           00000041
+Delay_0                           0000007B
+E                                 PORTD,3
 EEADR                             0000010D
 EEADRH                            0000010F
 EECON1                            0000018C
@@ -257,8 +511,8 @@ GIE                               00000007
 GO                                00000002
 GO_DONE                           00000002
 GO_NOT_DONE                       00000002
-HalfS                             00000046
-HalfS_0                           0000004C
+HalfS                             00000080
+HalfS_0                           00000086
 I2C_DATA                          00000005
 I2C_READ                          00000002
 I2C_START                         00000003
@@ -271,6 +525,7 @@ INTE                              00000004
 INTEDG                            00000006
 INTF                              00000001
 IRP                               00000007
+InitLCD                           0000008F
 NOT_A                             00000005
 NOT_ADDRESS                       00000005
 NOT_BO                            00000000
@@ -287,15 +542,15 @@ NOT_W                             00000002
 NOT_WRITE                         00000002
 OBF                               00000006
 OERR                              00000001
-OPTION_REG                        00000081
-P                                 00000004
-PCFG0                             00000000
-MPASM 5.55                 SPIN_ME_ROUND.ASM   2-25-2014  16:17:15         PAGE  6
+MPASM 5.55                 SPIN_ME_ROUND.ASM   2-26-2014  18:17:15         PAGE 11
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
 PCFG1                             00000001
 PCFG2                             00000002
 PCFG3                             00000003
@@ -346,15 +601,15 @@ RC4                               00000004
 RC5                               00000005
 RC6                               00000006
 RC7                               00000007
-RC8_9                             00000006
-RC9                               00000006
-RCD8                              00000000
-MPASM 5.55                 SPIN_ME_ROUND.ASM   2-25-2014  16:17:15         PAGE  7
+MPASM 5.55                 SPIN_ME_ROUND.ASM   2-26-2014  18:17:15         PAGE 12
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
 RCEN                              00000003
 RCIE                              00000005
 RCIF                              00000005
@@ -373,9 +628,10 @@ RE0                               00000000
 RE1                               00000001
 RE2                               00000002
 READ_WRITE                        00000002
-ROTATEMOTOR                       00000013
+ROTATEMOTOR                       00000022
 RP0                               00000005
 RP1                               00000006
+RS                                PORTD,2
 RSEN                              00000001
 RX9                               00000006
 RX9D                              00000000
@@ -402,18 +658,19 @@ SSPOV                             00000006
 SSPSTAT                           00000094
 STATUS                            00000003
 SYNC                              00000004
+Switch_Lines                      000000B0
 T0CS                              00000005
-T0IE                              00000005
-T0IF                              00000002
-T0SE                              00000004
-T1CKPS0                           00000004
-T1CKPS1                           00000005
-MPASM 5.55                 SPIN_ME_ROUND.ASM   2-25-2014  16:17:15         PAGE  8
+MPASM 5.55                 SPIN_ME_ROUND.ASM   2-26-2014  18:17:15         PAGE 13
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
 T1CON                             00000010
 T1INSYNC                          00000002
 T1OSCEN                           00000003
@@ -462,17 +719,17 @@ TRISC2                            00000002
 TRISC3                            00000003
 TRISC4                            00000004
 TRISC5                            00000005
-TRISC6                            00000006
-TRISC7                            00000007
-TRISD                             00000088
-TRISD0                            00000000
-TRISD1                            00000001
-MPASM 5.55                 SPIN_ME_ROUND.ASM   2-25-2014  16:17:15         PAGE  9
+MPASM 5.55                 SPIN_ME_ROUND.ASM   2-26-2014  18:17:15         PAGE 14
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+TRISC6                            00000006
+TRISC7                            00000007
+TRISD                             00000088
+TRISD0                            00000000
+TRISD1                            00000001
 TRISD2                            00000002
 TRISD3                            00000003
 TRISD4                            00000004
@@ -499,12 +756,14 @@ WCOL                              00000007
 WR                                00000001
 WREN                              00000002
 WRERR                             00000003
+WR_DATA                           000000C8
+WR_INS                            000000B3
 Z                                 00000002
-_.org_1_0012                      00000012
-_.org_1_0042                      00000042
-_.org_1_004D                      0000004D
-_.org_1_004F                      0000004F
-_.org_1_0052                      00000052
+_.org_1_0020                      00000020
+_.org_1_007C                      0000007C
+_.org_1_0087                      00000087
+_.org_1_0089                      00000089
+_.org_1_008C                      0000008C
 _BODEN_OFF                        00003FBF
 _BODEN_ON                         00003FFF
 _BOREN_OFF                        00003FBF
@@ -519,6 +778,12 @@ _CP_UPPER_256                     00002FEF
 _DEBUG_OFF                        00003FFF
 _DEBUG_ON                         000037FF
 _DEVID1                           00002006
+MPASM 5.55                 SPIN_ME_ROUND.ASM   2-26-2014  18:17:15         PAGE 15
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 _FOSC_EXTRC                       00003FFF
 _FOSC_HS                          00003FFE
 _FOSC_LP                          00003FFC
@@ -526,12 +791,6 @@ _FOSC_XT                          00003FFD
 _HS_OSC                           00003FFE
 _IDLOC0                           00002000
 _IDLOC1                           00002001
-MPASM 5.55                 SPIN_ME_ROUND.ASM   2-25-2014  16:17:15         PAGE 10
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 _IDLOC2                           00002002
 _IDLOC3                           00002003
 _LP_OSC                           00003FFC
@@ -550,18 +809,42 @@ _WRT_OFF                          00003DFF
 _WRT_ON                           00003FFF
 _XT_OSC                           00003FFD
 __16F877                          00000001
+com                               00000079
+dat                               00000078
 del1                              00000070
 del2                              00000071
-delay5ms                          0000003D
-four_steps                        00000028
+delay5ms                          00000077
+end_rotate                        0000006F
+firststep                         0000003A
+four_steps                        0000003A
+fourthstep                        00000061
 hdelH                             00000072
 hdelL                             00000074
 hdelM                             00000073
 main                              00000005
 movlf                             
+must_dec                          00000073
+must_inc                          00000075
+pulse1                            00000041
+pulse2                            0000004E
+pulse3                            0000005B
+pulse4                            00000068
+secondstep                        00000047
+start_step                        00000075
+step_count                        00000076
+step_max                          00000077
+thirdstep                         00000054
+waiting                           00000018
+writeBCD                          
+
+MPASM 5.55                 SPIN_ME_ROUND.ASM   2-26-2014  18:17:15         PAGE 16
+
+
+
+
 
 Errors   :     0
 Warnings :     0 reported,     0 suppressed
-Messages :     2 reported,     0 suppressed
+Messages :     4 reported,     0 suppressed
 
 
