@@ -1,6 +1,6 @@
 ;Test for IR detector. Connect IRDATA to RA5 (input).
 ;Press start to check for presence of candle; LCD displays state.
-;RA5 is 1 for no candle, low for yes candle.
+;RA5 is 1 for yes candle, low for no candle.
 
     list p=16f877
       #include <p16f877.inc>
@@ -99,17 +99,17 @@ waiting
 start
     call    Clear_Display
     Display Testing_Msg
-    btfss   IRDATA          ;IRDATA is 1 if there's no light, 0 if there's a light
-	goto    yes_candle
-no_candle
-    call    HalfS
-    call    Clear_Display
-    Display     No_Candle_Msg
-    goto waiting
+    btfss   IRDATA          ;IRDATA is 1 if there's a light, 0 if there's no light
+	goto    no_candle
 yes_candle
     call    HalfS
     call    Clear_Display
     Display     Candle_Msg
+    goto waiting
+no_candle
+    call    HalfS
+    call    Clear_Display
+    Display     No_Candle_Msg
     goto waiting
 
 

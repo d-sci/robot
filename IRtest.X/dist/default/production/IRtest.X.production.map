@@ -1,5 +1,5 @@
 MPLINK 5.01, LINKER
-Linker Map File - Created Tue Feb 25 14:27:39 2014
+Linker Map File - Created Tue Mar 04 14:54:24 2014
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
@@ -48,10 +48,10 @@ Linker Map File - Created Tue Feb 25 14:27:39 2014
               _6loop_disp   0x000065    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
                  delay5ms   0x00007d    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
                      init   0x00002b    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                no_candle   0x000054    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                no_candle   0x000061    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
                     start   0x000047    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
                   waiting   0x00003d    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-               yes_candle   0x000061    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+               yes_candle   0x000054    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
 
 
 
@@ -67,10 +67,10 @@ Linker Map File - Created Tue Feb 25 14:27:39 2014
                     start   0x000047    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
               _4loop_disp   0x00004a    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
                _4end_disp   0x000052    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-                no_candle   0x000054    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+               yes_candle   0x000054    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
               _5loop_disp   0x000058    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
                _5end_disp   0x000060    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
-               yes_candle   0x000061    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
+                no_candle   0x000061    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
               _6loop_disp   0x000065    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
                _6end_disp   0x00006d    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm
                     HalfS   0x00006e    program     static C:\Users\David\Documents\GitHub\robot\IRtest.X\doesihavecandle.asm

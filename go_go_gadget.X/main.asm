@@ -54,11 +54,9 @@
 		Table_Counter   ; for LCD stuff
 		com
 		dat
-        del1            ; for delay 5ms delay routine
-        del2
-        hdelH          ;for delay 0.5s routine
-        hdelM
-        hdelL
+        delH          ;for delay routines
+        delM
+        delL
         op_time_save    ;for operation time
         huns
         tens
@@ -232,7 +230,7 @@ Op_at
 ;***************************************
 
 init
-        movlf     b'00100000', INTCON   ;no interrupts yet, but Timer0 ready one GIE enabled
+        movlf     b'00110000', INTCON   ;no interrupts yet, but Timer0 and RB0 ready once GIE enabled
 
         banksel   TRISA                 ; bank 1
         movlf     b'11000111', OPTION_REG ; 1:256 prescaler for timer
@@ -354,6 +352,22 @@ start
         ; Just delaying
         call        HalfS
         call        HalfS
+        call        HalfS
+        call        HalfS
+        call        HalfS
+        call        HalfS
+        call        HalfS
+        call        HalfS
+        call        HalfS
+        call        HalfS
+        call        HalfS
+        call        HalfS
+        call        HalfS
+        call        HalfS
+        call        HalfS
+        call        HalfS
+        call        HalfS
+        call        HalfS
 
        ; Putting values in manually.
         movlf     B'01', state1     ;pass
@@ -387,7 +401,7 @@ start
 ;    incf    FSR, F
 ;
 ;detect_candle
-;	btfss   IRDATA      ;IRDATA is 1 if there's no light, 0 if there's a light
+;	btfsc   IRDATA      ;IRDATA is 1 if there's a light, 0 if there's no light
 ;	goto    test_candle     ;yes candle, go test it
 ;   movlf   D'0', INDF      ;no candle, state = not present
 ;	goto rotate                 ;and go try next
@@ -1329,15 +1343,15 @@ carrytens
 ; DELAY 0.5S SUBROUTINE (from generator at http://www.piclist.com/techref/piclist/codegen/delay.htm)
 ; Delays exactly 0.5sec
 HalfS
-      movlf 0x8A, hdelH
-      movlf 0xBA, hdelM
-      movlf 0x03, hdelL
+      movlf 0x8A, delH
+      movlf 0xBA, delM
+      movlf 0x03, delL
 HalfS_0
-      decfsz	hdelH, F
+      decfsz	delH, F
 	  goto	$+2
-	  decfsz	hdelM, F
+	  decfsz	delM, F
 	  goto	$+2
-	  decfsz	hdelL, F
+	  decfsz	delL, F
 	  goto	HalfS_0
 
 	  goto	$+1
@@ -1348,12 +1362,12 @@ HalfS_0
 ; Useful for LCD because PIC is way faster than it can handle
 ; Delays exactly 5ms
 delay5ms
-	movlf	0xC3, del1
-	movlf	0x0A, del2
+	movlf	0xC3, delH
+	movlf	0x0A, delL
 Delay_0
-	decfsz	del1, f
+	decfsz	delH f
 	goto	$+2
-	decfsz	del2, f
+	decfsz	delL, f
 	goto	Delay_0
     return
 
@@ -1507,23 +1521,46 @@ isr
 ;    movwf   pclath_isr
 ;    clrf    PCLATH
 
+;check_emergstop
+;    btfss   INTCON, INTF
+;    goto    not_emergstop
+;    call    Clear_Display
+;    Display None
+;suspend
+;         btfss		PORTB,1     ;Wait until data is available from the keypad
+;         goto		suspend
+;         swapf		PORTB,W     ;Read PortB<7:4> into W<3:0>
+;         andlw		0x0F
+;         xorlw      0xC         ;Will be all zeros if its "START"
+;         btfsc      STATUS,Z    ;and Z will be high, so skip if not high
+;         goto       resume
+;         btfsc		PORTB,1     ;Wait until key is released
+;         goto		$-1
+;         goto       suspend
+;resume
+;    call    Clear_Display
+;    Display Start_Msg
+;    bcf     INTCON, INTF
+;    goto    end_isr
+
+not_emergstop
     decfsz  count38, F     ;if count38 gets to 38 it's been one second
     goto    end_isr
     movlf   D'38', count38  ;so reset count38
     incf    op_time, F         ; and increment op_time
-
-end_isr
-
     btfsc   PHOTODATA       ;if PHOTODATA is 1, light is on
     incf    photocount, F       ;if it is 1, light is on so photocount++
+    bcf     INTCON, T0IF
 
+end_isr
 ;    movf    pclath_isr, W  ;if using pages
 ;    movwf    PCLATH
     swapf   status_isr, W   ;restore W and status
     movwf   STATUS
     swapf   w_isr, F
     swapf   w_isr, W
-    bcf     INTCON, T0IF    ;clear the interrupt flag
+ 
+
     retfie
 
 

@@ -18,9 +18,9 @@
     cblock  0x70
         del1
         del2
-        hdelH
-        hdelM
-        hdelL
+        delH
+        delM
+        delL
         start_step  ;this is new
         step_count  ;this is new
         step_max    ;this is new
@@ -74,6 +74,7 @@ waiting
          goto       waiting
 
 ROTATEMOTOR
+
     call    Clear_Display
     writeBCD    step_max
     writeBCD    start_step
@@ -112,9 +113,7 @@ firststep
     goto    end_rotate
 pulse1
     movlf   B'1001', PORTA
-    call    delay5ms
-    call    delay5ms
-    call    HalfS
+    call    motor_del
     incf    step_count, F
 
 secondstep
@@ -126,9 +125,7 @@ secondstep
     goto    end_rotate
 pulse2
     movlf   B'1010', PORTA
-    call    delay5ms
-    call    delay5ms
-    call    HalfS
+    call    motor_del
     incf    step_count, F
 
 thirdstep
@@ -140,9 +137,7 @@ thirdstep
     goto    end_rotate
 pulse3
     movlf   B'0110', PORTA
-    call    delay5ms
-    call    delay5ms
-    call    HalfS
+    call    motor_del
     incf    step_count, F
 
 fourthstep
@@ -154,9 +149,7 @@ fourthstep
     goto    end_rotate
 pulse4
     movlf   B'0101', PORTA
-    call    delay5ms
-    call    delay5ms
-    call    HalfS
+    call    motor_del
     incf    step_count, F
 
     goto    four_steps
@@ -176,36 +169,37 @@ must_inc
 
 
 
-
-
-
-
-
-
-
-
+motor_del
+      movlf 0xF3, delH
+      movlf 0x7F, delL
+motor_del_0
+      decfsz	delH, F
+	  goto      $+2
+	  decfsz	delL, F
+	  goto      motor_del_0
+	  return
 
 
 delay5ms
-	movlf	0xC3, del1
-	movlf	0x0A, del2
+	movlf	0xC3, delH
+	movlf	0x0A, delL
 Delay_0
-	decfsz	del1, f
+	decfsz	delH, f
 	goto	$+2
-	decfsz	del2, f
+	decfsz	delL, f
 	goto	Delay_0
     return
 
 HalfS
-      movlf 0x8A, hdelH
-      movlf 0xBA, hdelM
-      movlf 0x03, hdelL
+      movlf 0x8A, delH
+      movlf 0xBA, delM
+      movlf 0x03, delL
 HalfS_0
-      decfsz	hdelH, F
+      decfsz	delH, F
 	  goto	$+2
-	  decfsz	hdelM, F
+	  decfsz	delM, F
 	  goto	$+2
-	  decfsz	hdelL, F
+	  decfsz	delL, F
 	  goto	HalfS_0
 
 	  goto	$+1
