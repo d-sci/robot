@@ -156,6 +156,7 @@ pulse4
 
 end_rotate
    ;if step_max is 15 incr, 16 dec
+    clrf    PORTA
     movlw    d'16'
     subwf   step_max, W
     btfss   STATUS,Z

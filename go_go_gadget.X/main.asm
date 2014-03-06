@@ -842,6 +842,7 @@ badkeyagain
 ;    goto    four_steps
 ;
 ;end_rotate
+;   clrf    PORTA
 ;   ;if step_max is 15 incr, 16 dec
 ;    movlw    d'16'
 ;    subwf   step_max, W
