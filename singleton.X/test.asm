@@ -1,12 +1,7 @@
-;Test for motor controlled by L298N. 
-;Want to rotate 36deg = 20 steps
-;Excitation sequence is 1-2-3-4 (four steps) controlled by RA[3:0]
-;   1 = 1001
-;   2 = 1010
-;   3 = 0110
-;   4 = 0101
-;http://duvindu92.blogspot.ca/2013/07/driving-bipolar-stepper-motor-with.html
-; Also scans RE0 (IRDATA). If it's ever 1 (because candle passed by it), saves that the candle is present via a 1 in present,0
+;Full test for a single candle at a time
+;Pressing start will rotate one position, detect presence and state of candle,
+;and display result followed by operation time.
+;Connect motor to RA[3:0], IRDATA to RE0, PHOTODATA to RE1
 
  list p=16f877
       #include <p16f877.inc>
@@ -15,33 +10,29 @@
     #define	RS 	PORTD,2
 	#define	E 	PORTD,3
     #define IRDATA     PORTE, 0
+    #define PHOTODATA   PORTE, 1
+    #define threshold1  D'7'
+    #define threshold2  D'69'
 
-    cblock  0x70
+    cblock  0x70 ;(exactly to 7F!!)
         del1
         del2
         delH
         delM
         delL
         Table_Counter
-;        start_step
-;        step_count
-;        step_max
         motor_count
         dat
         com
         present
+        photocount
+        photoval
+        w_isr
+        status_isr
+        count38
+        op_time
     endc
 
-movlf   macro   l, f
-        movlw   l
-        movwf   f
-        endm
-
-writeBCD    macro   reg         ; from a register containing BCD
-            movf    reg, W
-            addlw   B'00110000'
-            call WR_DATA
-            endm
 
 Display macro	Message
 		local	loop_disp
@@ -60,34 +51,66 @@ loop_disp
 end_disp
 		endm
 
+
+writeBCD    macro   reg         ; from a register containing BCD
+            movf    reg, W
+            addlw   B'00110000'
+            call WR_DATA
+            endm
+
+movlf   macro   l, f
+        movlw   l
+        movwf   f
+        endm
+
+movff   macro   source, dest
+        movf    source, W
+        movwf   dest
+        endm
+
     ORG       0x000
-    goto      main
+    goto      init
     ORG       0x004
-    retfie
+    goto       isr
 
-Candle_Msg
+
+Pass
 		addwf	PCL,F
-		dt		"Yes candle", 0
-No_Candle_Msg
+		dt		"Pass",0
+LED_fail
+		addwf	PCL,F
+		dt		"LED fail",0
+Flick_fail
+		addwf	PCL,F
+		dt		"Flicker fail",0
+Not_present
         addwf   PCL,F
-        dt      "No candle",0
+        dt      "Not present",0
+Testing
+        addwf   PCL,F
+        dt      "Testing...",0
 
-main
-    clrf        INTCON
-    banksel     TRISA
+
+init
+    movlf      b'00100000', INTCON   ;timer intterupt ready enabled
+
+    banksel     TRISA               ;bank1
     clrf        TRISA
+    movlf       B'11000111', OPTION_REG ; 1:256 prescaler
     movlf       b'11110010', TRISB
     clrf        TRISD
-    movlf      b'001', TRISE         ; IRDATA is RE0
-    movlf       0x07, ADCON1
-    banksel     PORTA
+    movlf       b'011', TRISE
+    movlf       0x07, ADCON1        ;digital input
+
+    banksel     PORTA               ;bank0
     clrf        PORTA
     clrf        PORTB
+    clrf        PORTC
     clrf        PORTD
     clrf        PORTE
+
     call        InitLCD
-;    movlf       d'1', start_step
-;    movlf       d'15', step_max
+
 
 waiting
          btfss		PORTB,1     ;Wait until data is available from the keypad
@@ -97,16 +120,23 @@ waiting
          andlw		0x0F
          xorlw      0xC         ;Will be all zeros if its "START"
          btfsc      STATUS,Z    ;and Z will be high, so skip if not high
-         call       ROTATEMOTOR
+         call       start
 
          btfsc		PORTB,1     ;Wait until key is released
          goto		$-1
          goto       waiting
 
-ROTATEMOTOR
+start
+    ;Start the timer
+        movlf       D'38', count38
+        clrf        op_time
+        bsf         INTCON, GIE ;enable interrupts
+        clrf        TMR0
+
     call    Clear_Display
     bcf     present, 0
     movlf   d'5', motor_count
+
 start_rot
     movlf   b'1001', PORTA
     call    motor_del
@@ -129,108 +159,45 @@ start_rot
     goto    start_rot
     clrf    PORTA
     btfsc   present, 0
-    goto    yes_candle
+    goto    test_candle
 no_candle
-    Display No_Candle_Msg
+    Display Not_present
+    goto    finish
+
+
+test_candle
+    Display Testing
+    clrf    photocount
+    call    HalfS       ; delay 2 sec or whatever
+    call    HalfS
+    call    HalfS
+    call    HalfS
+	movff   photocount, photoval        ;to ensure it wont change again
+check_threshold1
+    movlw    threshold1
+    subwf   photoval, W
+    btfsc   STATUS, C       ;if  photoval < threshold 1, C = 0
+    goto check_threshold2
+    call    Clear_Display
+    Display LED_fail        ; < threshold 1 means led fail
+    goto    finish
+check_threshold2
+    movlw    threshold2
+    subwf   photoval, W
+    btfsc   STATUS, C       ;if  photoval < threshold 2, C = 0
+    goto aboveboth
+    call    Clear_Display
+    Display Pass      ; < threshold 2 means pass
+    goto    finish
+aboveboth
+    call    Clear_Display
+    Display  Flick_fail      ; else flicker fail
+
+finish
+    call    Switch_Lines
+    bcf     INTCON, GIE     ;disable interrupts
+    writeBCD    op_time
     return
-yes_candle
-    Display Candle_Msg
-    return
-
-;    call    Clear_Display
-;    writeBCD    step_max
-;    writeBCD    start_step
-;
-;    clrf    step_count
-;
-;    ;go to the right starting step
-;    movlw   d'1'
-;    subwf   start_step, W
-;    btfsc   STATUS,Z
-;    goto    firststep
-;
-;    movlw   d'2'
-;    subwf   start_step, W
-;    btfsc   STATUS,Z
-;    goto    secondstep
-;
-;    movlw   d'3'
-;    subwf   start_step, W
-;    btfsc   STATUS,Z
-;    goto    thirdstep
-;
-;    movlw   d'4'
-;    subwf   start_step, W
-;    btfsc   STATUS,Z
-;    goto    fourthstep
-;
-;four_steps
-;
-;firststep
-;    movf    step_max, W
-;    subwf   step_count, W
-;    btfss   STATUS, Z
-;    goto    pulse1
-;    movlf   d'1', start_step
-;    goto    end_rotate
-;pulse1
-;    movlf   B'1001', PORTA
-;    call    motor_del
-;    incf    step_count, F
-;
-;secondstep
-;    movf    step_max, W
-;    subwf   step_count, W
-;    btfss   STATUS, Z
-;    goto    pulse2
-;    movlf   d'2', start_step
-;    goto    end_rotate
-;pulse2
-;    movlf   B'1010', PORTA
-;    call    motor_del
-;    incf    step_count, F
-;
-;thirdstep
-;    movf    step_max, W
-;    subwf   step_count, W
-;    btfss   STATUS, Z
-;    goto    pulse3
-;    movlf   d'3', start_step
-;    goto    end_rotate
-;pulse3
-;    movlf   B'0110', PORTA
-;    call    motor_del
-;    incf    step_count, F
-;
-;fourthstep
-;    movf    step_max, W
-;    subwf   step_count, W
-;    btfss   STATUS, Z
-;    goto    pulse4
-;    movlf   d'4', start_step
-;    goto    end_rotate
-;pulse4
-;    movlf   B'0101', PORTA
-;    call    motor_del
-;    incf    step_count, F
-;
-;    goto    four_steps
-;
-;end_rotate
-;   ;if step_max is 15 incr, 16 dec
-;    clrf    PORTA
-;    movlw    d'16'
-;    subwf   step_max, W
-;    btfss   STATUS,Z
-;    goto    must_inc
-;must_dec
-;    decf    step_max, F
-;    return
-;must_inc
-;    incf     step_max, F
-;    return
-
-
 
 motor_del
       movlf 0xF3, delH
@@ -245,16 +212,8 @@ motor_del_0
 	  return
 
 
-delay5ms
-	movlf	0xC3, delH
-	movlf	0x0A, delL
-Delay_0
-	decfsz	delH, f
-	goto	$+2
-	decfsz	delL, f
-	goto	Delay_0
-    return
-
+; DELAY 0.5S SUBROUTINE (from generator at http://www.piclist.com/techref/piclist/codegen/delay.htm)
+; Delays exactly 0.5sec
 HalfS
       movlf 0x8A, delH
       movlf 0xBA, delM
@@ -270,6 +229,19 @@ HalfS_0
 	  goto	$+1
 	  nop
 	  return
+
+; DELAY 5ms SUBROUTINE. (from generator at http://www.piclist.com/techref/piclist/codegen/delay.htm)
+; Useful for LCD because PIC is way faster than it can handle
+; Delays exactly 5ms
+delay5ms
+	movlf	0xC3, delH
+	movlf	0x0A, delL
+Delay_0
+	decfsz	delH, f
+	goto	$+2
+	decfsz	delL, f
+	goto	Delay_0
+    return
 
 
 ; Initialize the LCD
@@ -338,21 +310,15 @@ WR_INS
 	andlw	0xF0			;mask 4 bits MSB w = X0
 	movwf	PORTD			;Send 4 bits MSB
 	bsf		E				;
-	call	delay5ms
-    call delay5ms
-	call delay5ms;__    __
+	call	delay5ms	;__    __
 	bcf		E				;  |__|
 	swapf	com,w
 	andlw	0xF0			;1111 0010
 	movwf	PORTD			;send 4 bits LSB
 	bsf		E				;
-	call	delay5ms
-    call delay5ms
-	call delay5ms	;__    __
+	call	delay5ms	;__    __
 	bcf		E				;  |__|
 	call	delay5ms
-    call delay5ms
-	call delay5ms
 	return
 
 ; Write data at current cursor location
@@ -365,22 +331,51 @@ WR_DATA
 	addlw	4
 	movwf	PORTD
 	bsf		E				;
-	call	delay5ms
-    call delay5ms
-	call delay5ms	;__    __
+	call	delay5ms	;__    __
 	bcf		E				;  |__|
 	swapf	dat,w
 	andlw	0xF0
 	addlw	4
 	movwf	PORTD
 	bsf		E				;
-	call	delay5ms
-    call delay5ms
-	call delay5ms	;__    __
+	call	delay5ms	;__    __
 	bcf		E				;  |__|
 	return
 
+
+isr
+    movwf   w_isr           ;save W and status
+    swapf   STATUS, W
+    clrf    STATUS
+    movwf   status_isr
+;    movf    PCLATH, W      ;if using pages
+;    movwf   pclath_isr
+;    clrf    PCLATH
+
+    decfsz  count38, F     ;if count38 gets to 38 it's been one second
+    goto    end_isr
+    movlf   D'38', count38  ;so reset count38
+    incf    op_time, F         ; and increment op_time
+
+end_isr
+
+    btfsc   PHOTODATA       ;if PHOTODATA is 1, light is on
+    incf    photocount, F       ;if it is 1, light is on so photocount++
+
+;    movf    pclath_isr, W  ;if using pages
+;    movwf    PCLATH
+    swapf   status_isr, W   ;restore W and status
+    movwf   STATUS
+    swapf   w_isr, F
+    swapf   w_isr, W
+    bcf     INTCON, T0IF    ;clear the interrupt flag
+    retfie
+
+
     END
+
+
+
 
 
 

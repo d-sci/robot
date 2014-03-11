@@ -229,7 +229,7 @@ Op_at
 ;***************************************
 
 init
-        movlf     b'00110000', INTCON   ;no interrupts yet, but Timer0 and RB0 ready once GIE enabled
+        movlf     b'00100000', INTCON   ;no interrupts yet, but Timer0 ready once GIE enabled
 
         banksel   TRISA                 ; bank 1
         movlf     b'11000111', OPTION_REG ; 1:256 prescaler for timer

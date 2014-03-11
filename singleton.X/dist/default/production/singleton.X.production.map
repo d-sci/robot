@@ -1,0 +1,122 @@
+MPLINK 5.01, LINKER
+Linker Map File - Created Tue Mar 11 16:06:05 2014
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000002
+                   .cinit    romdata   0x000001    program   0x000004
+                   .org_1       code   0x000004    program   0x000286
+.config_2007_BUILD/DEFAULT/PRODUCTION/TEST.O       code   0x002007    program   0x000002
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000002      
+                            0x000004    0x000146      
+                            0x002007    0x002007      
+            327 out of 8454 program addresses used, program memory utilization is 3%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+            Clear_Display   0x000110    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                  Delay_0   0x0000ed    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+               Flick_fail   0x000015    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                    HalfS   0x0000da    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                  HalfS_0   0x0000e0    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                  InitLCD   0x0000f2    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                 LED_fail   0x00000b    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+              Not_present   0x000023    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                     Pass   0x000005    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             Switch_Lines   0x000113    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                  Testing   0x000030    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                  WR_DATA   0x000125    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                   WR_INS   0x000116    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             _.org_1_005A   0x00005a    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             _.org_1_00D6   0x0000d6    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             _.org_1_00E1   0x0000e1    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             _.org_1_00E3   0x0000e3    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             _.org_1_00E6   0x0000e6    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             _.org_1_00EE   0x0000ee    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+              _16end_disp   0x00008c    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             _16loop_disp   0x000084    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+              _17end_disp   0x000097    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             _17loop_disp   0x00008f    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+              _19end_disp   0x0000ad    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             _19loop_disp   0x0000a5    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+              _20end_disp   0x0000bd    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             _20loop_disp   0x0000b5    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+              _21end_disp   0x0000c9    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             _21loop_disp   0x0000c1    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                aboveboth   0x0000be    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+         check_threshold1   0x00009e    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+         check_threshold2   0x0000ae    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                 delay5ms   0x0000e9    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                  end_isr   0x00013f    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                   finish   0x0000c9    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                     init   0x00003c    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                      isr   0x000136    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                motor_del   0x0000cf    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+              motor_del_0   0x0000d3    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                no_candle   0x000082    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                    start   0x00005c    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                start_rot   0x000065    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+              test_candle   0x00008d    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                  waiting   0x000052    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                     Pass   0x000005    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                 LED_fail   0x00000b    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+               Flick_fail   0x000015    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+              Not_present   0x000023    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                  Testing   0x000030    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                     init   0x00003c    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                  waiting   0x000052    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             _.org_1_005A   0x00005a    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                    start   0x00005c    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                start_rot   0x000065    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                no_candle   0x000082    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             _16loop_disp   0x000084    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+              _16end_disp   0x00008c    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+              test_candle   0x00008d    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             _17loop_disp   0x00008f    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+              _17end_disp   0x000097    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+         check_threshold1   0x00009e    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             _19loop_disp   0x0000a5    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+              _19end_disp   0x0000ad    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+         check_threshold2   0x0000ae    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             _20loop_disp   0x0000b5    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+              _20end_disp   0x0000bd    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                aboveboth   0x0000be    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             _21loop_disp   0x0000c1    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                   finish   0x0000c9    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+              _21end_disp   0x0000c9    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                motor_del   0x0000cf    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+              motor_del_0   0x0000d3    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             _.org_1_00D6   0x0000d6    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                    HalfS   0x0000da    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                  HalfS_0   0x0000e0    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             _.org_1_00E1   0x0000e1    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             _.org_1_00E3   0x0000e3    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             _.org_1_00E6   0x0000e6    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                 delay5ms   0x0000e9    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                  Delay_0   0x0000ed    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             _.org_1_00EE   0x0000ee    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                  InitLCD   0x0000f2    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+            Clear_Display   0x000110    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+             Switch_Lines   0x000113    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                   WR_INS   0x000116    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                  WR_DATA   0x000125    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                      isr   0x000136    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+                  end_isr   0x00013f    program     static C:\Users\David\Documents\GitHub\robot\singleton.X\test.asm
+
+

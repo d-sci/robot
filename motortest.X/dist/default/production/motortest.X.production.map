@@ -1,12 +1,12 @@
 MPLINK 5.01, LINKER
-Linker Map File - Created Mon Mar 10 16:49:30 2014
+Linker Map File - Created Tue Mar 11 14:47:50 2014
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
                 ---------  ---------  ---------  ---------  ---------
                    .org_0       code   0x000000    program   0x000002
                    .cinit    romdata   0x000001    program   0x000004
-                   .org_1       code   0x000004    program   0x0001a0
+                   .org_1       code   0x000004    program   0x0001b8
 .config_2007_BUILD/DEFAULT/PRODUCTION/SPIN_ME       code   0x002007    program   0x000002
 
 
@@ -15,9 +15,9 @@ Linker Map File - Created Mon Mar 10 16:49:30 2014
                                Start         End      
                            ---------   ---------      
                             0x000000    0x000002      
-                            0x000004    0x0000d3      
+                            0x000004    0x0000df      
                             0x002007    0x002007      
-            212 out of 8454 program addresses used, program memory utilization is 2%
+            224 out of 8454 program addresses used, program memory utilization is 2%
 
 
 
@@ -25,34 +25,34 @@ Linker Map File - Created Mon Mar 10 16:49:30 2014
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
                Candle_Msg   0x000005    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-            Clear_Display   0x0000a4    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-                  Delay_0   0x000072    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-                    HalfS   0x000077    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-                  HalfS_0   0x00007d    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-                  InitLCD   0x000086    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+            Clear_Display   0x0000b0    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+                  Delay_0   0x00007e    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+                    HalfS   0x000083    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+                  HalfS_0   0x000089    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+                  InitLCD   0x000092    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
             No_Candle_Msg   0x000011    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
               ROTATEMOTOR   0x000038    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-             Switch_Lines   0x0000a7    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-                  WR_DATA   0x0000bf    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-                   WR_INS   0x0000aa    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+             Switch_Lines   0x0000b3    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+                  WR_DATA   0x0000cb    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+                   WR_INS   0x0000b6    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
              _.org_1_0036   0x000036    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-             _.org_1_006A   0x00006a    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-             _.org_1_0073   0x000073    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-             _.org_1_007E   0x00007e    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-             _.org_1_0080   0x000080    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-             _.org_1_0083   0x000083    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-              _10end_disp   0x000062    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-             _10loop_disp   0x00005a    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-               _9end_disp   0x000057    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-              _9loop_disp   0x00004f    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-                 delay5ms   0x00006e    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+             _.org_1_0076   0x000076    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+             _.org_1_007F   0x00007f    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+             _.org_1_008A   0x00008a    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+             _.org_1_008C   0x00008c    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+             _.org_1_008F   0x00008f    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+              _13end_disp   0x000063    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+             _13loop_disp   0x00005b    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+              _14end_disp   0x00006e    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+             _14loop_disp   0x000066    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+                 delay5ms   0x00007a    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
                      main   0x00001c    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-                motor_del   0x000063    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-              motor_del_0   0x000067    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-                no_candle   0x00004d    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+                motor_del   0x00006f    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+              motor_del_0   0x000073    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+                no_candle   0x000059    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
                 start_rot   0x00003c    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
                   waiting   0x00002e    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-               yes_candle   0x000058    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+               yes_candle   0x000064    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
 
 
 
@@ -66,27 +66,27 @@ Linker Map File - Created Mon Mar 10 16:49:30 2014
              _.org_1_0036   0x000036    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
               ROTATEMOTOR   0x000038    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
                 start_rot   0x00003c    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-                no_candle   0x00004d    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-              _9loop_disp   0x00004f    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-               _9end_disp   0x000057    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-               yes_candle   0x000058    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-             _10loop_disp   0x00005a    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-              _10end_disp   0x000062    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-                motor_del   0x000063    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-              motor_del_0   0x000067    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-             _.org_1_006A   0x00006a    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-                 delay5ms   0x00006e    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-                  Delay_0   0x000072    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-             _.org_1_0073   0x000073    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-                    HalfS   0x000077    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-                  HalfS_0   0x00007d    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-             _.org_1_007E   0x00007e    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-             _.org_1_0080   0x000080    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-             _.org_1_0083   0x000083    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-                  InitLCD   0x000086    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-            Clear_Display   0x0000a4    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-             Switch_Lines   0x0000a7    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-                   WR_INS   0x0000aa    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
-                  WR_DATA   0x0000bf    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+                no_candle   0x000059    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+             _13loop_disp   0x00005b    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+              _13end_disp   0x000063    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+               yes_candle   0x000064    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+             _14loop_disp   0x000066    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+              _14end_disp   0x00006e    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+                motor_del   0x00006f    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+              motor_del_0   0x000073    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+             _.org_1_0076   0x000076    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+                 delay5ms   0x00007a    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+                  Delay_0   0x00007e    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+             _.org_1_007F   0x00007f    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+                    HalfS   0x000083    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+                  HalfS_0   0x000089    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+             _.org_1_008A   0x00008a    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+             _.org_1_008C   0x00008c    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+             _.org_1_008F   0x00008f    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+                  InitLCD   0x000092    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+            Clear_Display   0x0000b0    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+             Switch_Lines   0x0000b3    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+                   WR_INS   0x0000b6    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
+                  WR_DATA   0x0000cb    program     static C:\Users\David\Documents\GitHub\robot\motortest.X\spin_me_round.asm
 
 
