@@ -65,11 +65,10 @@
         count38         ;for isr
 ; For machine program: temps, counters, etc.
         candle_index
-        photocount      ;for detecting candle
+        photocount      ;for testing candle
         photoval
-        start_step      ;for motor
-        step_count
-        step_max
+        motor_count     ;for rotate
+        present
     endc
 
     cblock  0x79        ;stuff that needs to be in all registers
@@ -254,8 +253,6 @@ init
         call      InitUSART             ;Set up USART for RS232. End in bank1
 
         banksel     start_step          ; back to bank0
-        movlf       d'1', start_step    ; set-up for motor
-        movlf       d'15', step_max
 
         Display Standby_Msg
         call    Switch_Lines
@@ -387,21 +384,22 @@ start
 ; choose fake or real!
 
 ;;******REAL CODE ******************************************
-;    clrf    candle_index
+;    clrf    candle_index     ; n = 0
 ;    bcf	STATUS, IRP
 ;    movlf   0x1F, FSR       ;pointing at right before state1
 ;
 ;rotate
-;	movlw   d'10'                 ; stop operation after 10 rotations
-;    subwf   candle_index,W      ; candle_index is # you've already tested before rotating
-;    btfsc   STATUS,Z
+;	movlw   d'10'               ; stop operation after 10 rotations (n=10)
+;   subwf   candle_index,W      ; candle_index (n) is # you've already tested before rotating
+;   btfsc   STATUS,Z
 ;	goto    end_operation
-;	call    ROTATEMOTOR          ; else rotate motor and n++
+;   bcf     present, 0           ; else rotate motor and n++. assume no candle. rotate routine will make it 1 if there is
+;	call    ROTATEMOTOR          
 ;	incf    candle_index, F
-;    incf    FSR, F
+;   incf    FSR, F
 ;
 ;detect_candle
-;	btfsc   IRDATA      ;IRDATA is 1 if there's a light, 0 if there's no light
+;	btfsc   present,0       ;1 if there's a light, 0 if there's no light
 ;	goto    test_candle     ;yes candle, go test it
 ;   movlf   D'0', INDF      ;no candle, state = not present
 ;	goto rotate                 ;and go try next
@@ -753,106 +751,32 @@ badkeyagain
 
 ;***************************************
 ; ROTATE MOTOR ROUTINE
-; Rotates motor approx 36deg. Alternates between 15 and 16 steps
-; for average of 116.25deg per turn = 36.1 deg on actual thing
+; Rotates motor 36deg. (20 steps)
 ;***************************************
-
+;
 ;ROTATEMOTOR
-;    clrf    step_count
+;    movlf   d'5', motor_count
+;start_rot
+;    movlf   b'1001', PORTA
+;    call    motor_del
+;;    movlf   b'1000', PORTA
+;;    call    motor_del
+;    movlf   b'1010', PORTA
+;    call    motor_del
+;;    movlf   b'0010', PORTA
+;;    call    motor_del
+;    movlf   b'0110', PORTA
+;    call    motor_del
+;;    movlf   b'0100', PORTA
+;;    call    motor_del
+;    movlf   b'0101', PORTA
+;    call    motor_del
+;;    movlf   b'0001', PORTA
+;;    call    motor_del
 ;
-;    ;go to the right starting step
-;    movlw   d'1'
-;    subwf   start_step, W
-;    btfsc   STATUS,Z
-;    goto    firststep
-;
-;    movlw   d'2'
-;    subwf   start_step, W
-;    btfsc   STATUS,Z
-;    goto    secondstep
-;
-;    movlw   d'3'
-;    subwf   start_step, W
-;    btfsc   STATUS,Z
-;    goto    thirdstep
-;
-;    movlw   d'4'
-;    subwf   start_step, W
-;    btfsc   STATUS,Z
-;    goto    fourthstep
-;
-;four_steps
-;
-;firststep
-;    movf    step_max, W
-;    subwf   step_count, W
-;    btfss   STATUS, Z
-;    goto    pulse1
-;    movlf   d'1', start_step
-;    goto    end_rotate
-;pulse1
-;    movlf   B'1001', PORTA
-;    call    delay5ms
-;    call    delay5ms
-;    call    HalfS
-;    incf    step_count, F
-;
-;secondstep
-;    movf    step_max, W
-;    subwf   step_count, W
-;    btfss   STATUS, Z
-;    goto    pulse2
-;    movlf   d'2', start_step
-;    goto    end_rotate
-;pulse2
-;    movlf   B'1010', PORTA
-;    call    delay5ms
-;    call    delay5ms
-;    call    HalfS
-;    incf    step_count, F
-;
-;thirdstep
-;    movf    step_max, W
-;    subwf   step_count, W
-;    btfss   STATUS, Z
-;    goto    pulse3
-;    movlf   d'3', start_step
-;    goto    end_rotate
-;pulse3
-;    movlf   B'0110', PORTA
-;    call    delay5ms
-;    call    delay5ms
-;    call    HalfS
-;    incf    step_count, F
-;
-;fourthstep
-;    movf    step_max, W
-;    subwf   step_count, W
-;    btfss   STATUS, Z
-;    goto    pulse4
-;    movlf   d'4', start_step
-;    goto    end_rotate
-;pulse4
-;    movlf   B'0101', PORTA
-;    call    delay5ms
-;    call    delay5ms
-;    call    HalfS
-;    incf    step_count, F
-;
-;    goto    four_steps
-;
-;end_rotate
-;   clrf    PORTA
-;   ;if step_max is 15 incr, 16 dec
-;    movlw    d'16'
-;    subwf   step_max, W
-;    btfss   STATUS,Z
-;    goto    must_inc
-;must_dec
-;    decf    step_max, F
-;    return
-;must_inc
-;    incf     step_max, F
+;    decfsz  motor_count
+;    goto    start_rot
+;    clrf    PORTA
 ;    return
 
 
@@ -1341,6 +1265,10 @@ carrytens
     return
 
 
+;***************************************
+; DELAY SUBROUTINES
+;***************************************
+
 ; DELAY 0.5S SUBROUTINE (from generator at http://www.piclist.com/techref/piclist/codegen/delay.htm)
 ; Delays exactly 0.5sec
 HalfS
@@ -1371,6 +1299,20 @@ Delay_0
 	decfsz	delL, f
 	goto	Delay_0
     return
+
+; MOTOR DELAY SUBROUTINE.
+; Delays ~10ms for the motor. Also checks IRDATA and sets PRESENT if there is a candle
+motor_del
+      movlf 0xF3, delH
+      movlf 0x7F, delL
+motor_del_0
+      btfsc     IRDATA
+      bsf       present, 0
+      decfsz	delH, F
+	  goto      $+2
+	  decfsz	delL, F
+	  goto      motor_del_0
+	  return
 
 ;***************************************
 ; LCD SUBROUTINES (from sample code)

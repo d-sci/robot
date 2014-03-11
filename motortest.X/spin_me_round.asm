@@ -1,12 +1,12 @@
 ;Test for motor controlled by L298N. 
-;Want to rotate 36deg = 15.5 steps, so alternate between 15 and 16.
-;Also note we save which step we're on (for the 15 step, you go back one each cycle)
+;Want to rotate 36deg = 20 steps
 ;Excitation sequence is 1-2-3-4 (four steps) controlled by RA[3:0]
 ;   1 = 1001
 ;   2 = 1010
 ;   3 = 0110
 ;   4 = 0101
 ;http://duvindu92.blogspot.ca/2013/07/driving-bipolar-stepper-motor-with.html
+; Also scans RE0 (IRDATA). If it's ever 1 (because candle passed by it), saves that the candle is present via a 1 in present,0
 
  list p=16f877
       #include <p16f877.inc>
@@ -14,6 +14,7 @@
 
     #define	RS 	PORTD,2
 	#define	E 	PORTD,3
+    #define IRDATA     PORTE, 0
 
     cblock  0x70
         del1
@@ -21,11 +22,14 @@
         delH
         delM
         delL
-        start_step  ;this is new
-        step_count  ;this is new
-        step_max    ;this is new
+        Table_Counter
+;        start_step
+;        step_count
+;        step_max
+        motor_count
         dat
         com
+        present
     endc
 
 movlf   macro   l, f
@@ -39,10 +43,34 @@ writeBCD    macro   reg         ; from a register containing BCD
             call WR_DATA
             endm
 
+Display macro	Message
+		local	loop_disp
+		local 	end_disp
+		clrf	Table_Counter
+		clrw
+loop_disp
+    	movf	Table_Counter,W
+		call 	Message
+		xorlw	B'00000000' ;check WORK reg to see if 0 is returned
+		btfsc	STATUS,Z
+		goto	end_disp
+		call	WR_DATA
+		incf	Table_Counter,F
+		goto	loop_disp
+end_disp
+		endm
+
     ORG       0x000
     goto      main
     ORG       0x004
     retfie
+
+Candle_Msg
+		addwf	PCL,F
+		dt		"Yes candle", 0
+No_Candle_Msg
+        addwf   PCL,F
+        dt      "No candle",0
 
 main
     clrf        INTCON
@@ -50,14 +78,16 @@ main
     clrf        TRISA
     movlf       b'11110010', TRISB
     clrf        TRISD
+    movlf      b'001', TRISE         ; IRDATA is RE0
     movlf       0x07, ADCON1
     banksel     PORTA
     clrf        PORTA
     clrf        PORTB
     clrf        PORTD
+    clrf        PORTE
     call        InitLCD
-    movlf       d'1', start_step
-    movlf       d'15', step_max
+;    movlf       d'1', start_step
+;    movlf       d'15', step_max
 
 waiting
          btfss		PORTB,1     ;Wait until data is available from the keypad
@@ -74,99 +104,131 @@ waiting
          goto       waiting
 
 ROTATEMOTOR
-
     call    Clear_Display
-    writeBCD    step_max
-    writeBCD    start_step
-
-    clrf    step_count
-
-    ;go to the right starting step
-    movlw   d'1'
-    subwf   start_step, W
-    btfsc   STATUS,Z
-    goto    firststep
-
-    movlw   d'2'
-    subwf   start_step, W
-    btfsc   STATUS,Z
-    goto    secondstep
-
-    movlw   d'3'
-    subwf   start_step, W
-    btfsc   STATUS,Z
-    goto    thirdstep
-
-    movlw   d'4'
-    subwf   start_step, W
-    btfsc   STATUS,Z
-    goto    fourthstep
-
-four_steps
-
-firststep
-    movf    step_max, W
-    subwf   step_count, W
-    btfss   STATUS, Z
-    goto    pulse1
-    movlf   d'1', start_step
-    goto    end_rotate
-pulse1
-    movlf   B'1001', PORTA
+    bcf     present, 0
+    movlf   d'5', motor_count
+start_rot
+    movlf   b'1001', PORTA
     call    motor_del
-    incf    step_count, F
-
-secondstep
-    movf    step_max, W
-    subwf   step_count, W
-    btfss   STATUS, Z
-    goto    pulse2
-    movlf   d'2', start_step
-    goto    end_rotate
-pulse2
-    movlf   B'1010', PORTA
+;    movlf   b'1000', PORTA
+;    call    motor_del
+    movlf   b'1010', PORTA
     call    motor_del
-    incf    step_count, F
-
-thirdstep
-    movf    step_max, W
-    subwf   step_count, W
-    btfss   STATUS, Z
-    goto    pulse3
-    movlf   d'3', start_step
-    goto    end_rotate
-pulse3
-    movlf   B'0110', PORTA
+;    movlf   b'0010', PORTA
+;    call    motor_del
+    movlf   b'0110', PORTA
     call    motor_del
-    incf    step_count, F
-
-fourthstep
-    movf    step_max, W
-    subwf   step_count, W
-    btfss   STATUS, Z
-    goto    pulse4
-    movlf   d'4', start_step
-    goto    end_rotate
-pulse4
-    movlf   B'0101', PORTA
+;    movlf   b'0100', PORTA
+;    call    motor_del
+    movlf   b'0101', PORTA
     call    motor_del
-    incf    step_count, F
+;    movlf   b'0001', PORTA
+;    call    motor_del
 
-    goto    four_steps
-
-end_rotate
-   ;if step_max is 15 incr, 16 dec
+    decfsz  motor_count
+    goto    start_rot
     clrf    PORTA
-    movlw    d'16'
-    subwf   step_max, W
-    btfss   STATUS,Z
-    goto    must_inc
-must_dec
-    decf    step_max, F
+    btfsc   present, 0
+    goto    yes_candle
+no_candle
+    Display No_Candle_Msg
     return
-must_inc
-    incf     step_max, F
+yes_candle
+    Display Candle_Msg
     return
+
+;    call    Clear_Display
+;    writeBCD    step_max
+;    writeBCD    start_step
+;
+;    clrf    step_count
+;
+;    ;go to the right starting step
+;    movlw   d'1'
+;    subwf   start_step, W
+;    btfsc   STATUS,Z
+;    goto    firststep
+;
+;    movlw   d'2'
+;    subwf   start_step, W
+;    btfsc   STATUS,Z
+;    goto    secondstep
+;
+;    movlw   d'3'
+;    subwf   start_step, W
+;    btfsc   STATUS,Z
+;    goto    thirdstep
+;
+;    movlw   d'4'
+;    subwf   start_step, W
+;    btfsc   STATUS,Z
+;    goto    fourthstep
+;
+;four_steps
+;
+;firststep
+;    movf    step_max, W
+;    subwf   step_count, W
+;    btfss   STATUS, Z
+;    goto    pulse1
+;    movlf   d'1', start_step
+;    goto    end_rotate
+;pulse1
+;    movlf   B'1001', PORTA
+;    call    motor_del
+;    incf    step_count, F
+;
+;secondstep
+;    movf    step_max, W
+;    subwf   step_count, W
+;    btfss   STATUS, Z
+;    goto    pulse2
+;    movlf   d'2', start_step
+;    goto    end_rotate
+;pulse2
+;    movlf   B'1010', PORTA
+;    call    motor_del
+;    incf    step_count, F
+;
+;thirdstep
+;    movf    step_max, W
+;    subwf   step_count, W
+;    btfss   STATUS, Z
+;    goto    pulse3
+;    movlf   d'3', start_step
+;    goto    end_rotate
+;pulse3
+;    movlf   B'0110', PORTA
+;    call    motor_del
+;    incf    step_count, F
+;
+;fourthstep
+;    movf    step_max, W
+;    subwf   step_count, W
+;    btfss   STATUS, Z
+;    goto    pulse4
+;    movlf   d'4', start_step
+;    goto    end_rotate
+;pulse4
+;    movlf   B'0101', PORTA
+;    call    motor_del
+;    incf    step_count, F
+;
+;    goto    four_steps
+;
+;end_rotate
+;   ;if step_max is 15 incr, 16 dec
+;    clrf    PORTA
+;    movlw    d'16'
+;    subwf   step_max, W
+;    btfss   STATUS,Z
+;    goto    must_inc
+;must_dec
+;    decf    step_max, F
+;    return
+;must_inc
+;    incf     step_max, F
+;    return
 
 
 
@@ -174,6 +236,8 @@ motor_del
       movlf 0xF3, delH
       movlf 0x7F, delL
 motor_del_0
+      btfsc     IRDATA
+      bsf       present, 0
       decfsz	delH, F
 	  goto      $+2
 	  decfsz	delL, F
