@@ -24,7 +24,7 @@
         motor_count
         dat
         com
-        present
+        ;present
         photocount
         photoval
         w_isr
@@ -134,7 +134,7 @@ start
         clrf        TMR0
 
     call    Clear_Display
-    bcf     present, 0
+    ;bcf     present, 0
     movlf   d'5', motor_count
 
 start_rot
@@ -144,12 +144,12 @@ start_rot
     call    motor_del
     movlf   b'1010', PORTA
     call    motor_del
-    movlf   b'0010', PORTA
-    call    motor_del
+   movlf   b'0010', PORTA
+   call    motor_del
     movlf   b'0110', PORTA
     call    motor_del
-    movlf   b'0100', PORTA
-    call    motor_del
+   movlf   b'0100', PORTA
+   call    motor_del
     movlf   b'0101', PORTA
     call    motor_del
     movlf   b'0001', PORTA
@@ -158,7 +158,8 @@ start_rot
     decfsz  motor_count
     goto    start_rot
     clrf    PORTA
-    btfsc   present, 0
+    ;btfsc   present, 0
+    btfsc    IRDATA
     goto    test_candle
 no_candle
     Display Not_present
@@ -201,10 +202,10 @@ finish
 
 motor_del
       movlf 0xF3, delH
-      movlf 0x2F, delL
+      movlf 0x35, delL
 motor_del_0
-      btfsc     IRDATA
-      bsf       present, 0
+      ;btfsc     IRDATA
+      ;bsf       present, 0
       decfsz	delH, F
 	  goto      $+2
 	  decfsz	delL, F

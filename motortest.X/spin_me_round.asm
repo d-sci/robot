@@ -128,7 +128,8 @@ start_rot
     decfsz  motor_count
     goto    start_rot
     clrf    PORTA
-    btfsc   present, 0
+    ;btfsc   present, 0
+    btfsc   IRDATA
     goto    yes_candle
 no_candle
     Display No_Candle_Msg
@@ -234,10 +235,10 @@ yes_candle
 
 motor_del
       movlf 0xF3, delH
-      movlf 0x2F, delL
+      movlf 0x35, delL
 motor_del_0
-      btfsc     IRDATA
-      bsf       present, 0
+      ;btfsc     IRDATA
+      ;bsf       present, 0
       decfsz	delH, F
 	  goto      $+2
 	  decfsz	delL, F
