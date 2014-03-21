@@ -62,6 +62,7 @@
         ones
         bignumcount
         count38         ;for isr
+        morethansix     ;for defective routine
 ; For machine program: temps, counters, etc.
         candle_index
         photocount      ;for testing candle
@@ -997,6 +998,16 @@ summary
 defective
     call            Clear_Display
 
+    clrf    morethansix
+    movlw   d'7'
+    subwf   num_LF, W
+    btfsc   STATUS, C       ;if  num_LF < 7, C = 0
+    bsf     morethansix,0
+    movlw   d'7'
+    subwf   num_FF, W
+    btfsc   STATUS, C       ;if  num_FF < 7, C = 0
+    bsf     morethansix,0
+
     Display         LF              ; first look at LF
     movf            num_LF, F
     btfss           STATUS,Z         ;if none LF, just say "none"
@@ -1039,7 +1050,10 @@ check_next
 	btfss	STATUS, Z
 	goto	check_next		;if not, go to next
 	writeBCD	candle_index	;if so, write down the number
+    btfsc   morethansix,0       ;don't write a space if need more than six numbers
+    goto    more_than_six
 	spacebar
+more_than_six
 	goto check_next
 end_check_fail
 	return

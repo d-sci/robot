@@ -1,13 +1,13 @@
 MPLINK 5.01, LINKER
-Linker Map File - Created Thu Mar 20 20:38:08 2014
+Linker Map File - Created Fri Mar 21 13:19:03 2014
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
                 ---------  ---------  ---------  ---------  ---------
                    .org_0       code   0x000000    program   0x000002
                    .cinit    romdata   0x000001    program   0x000004
-                   .org_1       code   0x000004    program   0x000cbc
-                    .code       code   0x000662    program   0x0001fc
+                   .org_1       code   0x000004    program   0x000cd2
+                    .code       code   0x00066d    program   0x0001fc
 .config_2007_BUILD/DEFAULT/PRODUCTION/MAIN.O       code   0x002007    program   0x000002
 
 
@@ -16,25 +16,25 @@ Linker Map File - Created Thu Mar 20 20:38:08 2014
                                Start         End      
                            ---------   ---------      
                             0x000000    0x000002      
-                            0x000004    0x00075f      
+                            0x000004    0x00076a      
                             0x002007    0x002007      
-            1888 out of 8454 program addresses used, program memory utilization is 22%
+            1899 out of 8454 program addresses used, program memory utilization is 22%
 
 
 
                               Symbols - Sorted by Name
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
-                  BCDadd3   0x0005b0    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-            Clear_Display   0x00061b    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                  Delay_0   0x0005ef    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                  BCDadd3   0x0005bb    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+            Clear_Display   0x000626    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                  Delay_0   0x0005fa    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                   End_Msg   0x000020    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                        FF   0x00008f    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                Flick_fail   0x000068    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                    HalfS   0x0005dc    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                  HalfS_0   0x0005e2    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                  InitLCD   0x0005fd    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                InitUSART   0x000641    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                    HalfS   0x0005e7    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                  HalfS_0   0x0005ed    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                  InitLCD   0x000608    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                InitUSART   0x00064c    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                  LED_fail   0x00005c    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                        LF   0x000089    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                 Logs_Msg1   0x00009d    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
@@ -45,44 +45,44 @@ Linker Map File - Created Thu Mar 20 20:38:08 2014
               Not_present   0x000045    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                     Op_at   0x0000d8    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                      Pass   0x000054    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                   RD_END   0x0006f8    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-                   RD_ERR   0x0006f7    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+                   RD_END   0x000703    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+                   RD_ERR   0x000702    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
               ROTATEMOTOR   0x000326    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                    R_END   0x00075a    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+                    R_END   0x000765    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
                   Seconds   0x00003b    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
               Standby_Msg   0x000005    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                 Start_Msg   0x00000e    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             Switch_Lines   0x00061e    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+             Switch_Lines   0x000629    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                  Time_Msg   0x00002a    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                 Total_Msg   0x000078    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                  WR_DATA   0x000630    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                   WR_END   0x0006a9    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-                   WR_ERR   0x0006a8    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-                   WR_INS   0x000621    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                    W_END   0x000730    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_0010   0x000672    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_0016   0x000678    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_001E   0x000680    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_002E   0x000690    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_003E   0x0006a0    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_004B   0x0006ad    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_0051   0x0006b3    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_0059   0x0006bb    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_0069   0x0006cb    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_0074   0x0006d6    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_007C   0x0006de    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_0087   0x0006e9    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_0093   0x0006f5    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_009A   0x0006fc    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_00AE   0x000710    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_00B6   0x000718    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_00C6   0x000728    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_00D2   0x000734    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_00D8   0x00073a    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_00E0   0x000742    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_00EB   0x00074d    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_00F7   0x000759    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_00FC   0x00075e    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+                  WR_DATA   0x00063b    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                   WR_END   0x0006b4    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+                   WR_ERR   0x0006b3    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+                   WR_INS   0x00062c    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                    W_END   0x00073b    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_0010   0x00067d    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_0016   0x000683    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_001E   0x00068b    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_002E   0x00069b    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_003E   0x0006ab    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_004B   0x0006b8    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_0051   0x0006be    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_0059   0x0006c6    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_0069   0x0006d6    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_0074   0x0006e1    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_007C   0x0006e9    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_0087   0x0006f4    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_0093   0x000700    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_009A   0x000707    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_00AE   0x00071b    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_00B6   0x000723    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_00C6   0x000733    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_00D2   0x00073f    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_00D8   0x000745    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_00E0   0x00074d    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_00EB   0x000758    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_00F7   0x000764    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_00FC   0x000769    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
              _.org_1_0172   0x000172    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
              _.org_1_01C8   0x0001c8    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
              _.org_1_01EF   0x0001ef    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
@@ -92,20 +92,20 @@ Linker Map File - Created Thu Mar 20 20:38:08 2014
              _.org_1_0293   0x000293    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
              _.org_1_0303   0x000303    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
              _.org_1_0324   0x000324    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             _.org_1_05E3   0x0005e3    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             _.org_1_05E5   0x0005e5    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             _.org_1_05E8   0x0005e8    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+             _.org_1_05EE   0x0005ee    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
              _.org_1_05F0   0x0005f0    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             _.org_1_05F9   0x0005f9    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             _.org_1_064F   0x00064f    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             _100end_disp   0x00045e    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-            _100loop_disp   0x000456    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             _101end_disp   0x00046b    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-            _101loop_disp   0x000463    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             _106end_disp   0x000491    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-            _106loop_disp   0x000489    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             _110end_disp   0x0004ad    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-            _110loop_disp   0x0004a5    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+             _.org_1_05F3   0x0005f3    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+             _.org_1_05FB   0x0005fb    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+             _.org_1_0604   0x000604    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+             _.org_1_065A   0x00065a    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+             _100end_disp   0x000467    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+            _100loop_disp   0x00045f    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+             _101end_disp   0x000474    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+            _101loop_disp   0x00046c    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+             _106end_disp   0x00049c    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+            _106loop_disp   0x000494    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+             _110end_disp   0x0004b8    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+            _110loop_disp   0x0004b0    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
               _20end_disp   0x000187    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
              _20loop_disp   0x00017f    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
               _27end_disp   0x0001bf    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
@@ -144,19 +144,19 @@ Linker Map File - Created Thu Mar 20 20:38:08 2014
              _92loop_disp   0x00041b    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
               _96end_disp   0x000434    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
              _96loop_disp   0x00042c    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-              _98end_disp   0x000443    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             _98loop_disp   0x00043b    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-              _99end_disp   0x000450    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             _99loop_disp   0x000448    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+              _98end_disp   0x00044c    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+             _98loop_disp   0x000444    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+              _99end_disp   0x000459    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+             _99loop_disp   0x000451    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                 aboveboth   0x0001ae    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                 add3huns   0x0005cd    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                 add3ones   0x0005d3    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                 add3tens   0x0005d0    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                 add3huns   0x0005d8    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                 add3ones   0x0005de    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                 add3tens   0x0005db    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                    badkey   0x000292    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
               badkeyagain   0x000323    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-               big_number   0x0005a9    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                carryones   0x0005d6    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                carrytens   0x0005d9    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+               big_number   0x0005b4    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                carryones   0x0005e1    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                carrytens   0x0005e4    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                   check_1   0x000345    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                   check_2   0x00034e    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                   check_3   0x000358    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
@@ -166,14 +166,14 @@ Linker Map File - Created Thu Mar 20 20:38:08 2014
                   check_7   0x000380    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                   check_8   0x00038a    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                   check_9   0x000394    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                 check_FF   0x00046c    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                 check_FF   0x000475    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                 check_LED   0x0003eb    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                 check_LF   0x000451    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                 check_LF   0x00045a    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
           check_defective   0x0003a4    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                check_done   0x000281    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
              check_export   0x0003b0    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
               check_flick   0x0003fa    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-           check_for_fail   0x00046f    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+           check_for_fail   0x000478    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
           check_immapeace   0x000312    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                check_log1   0x000231    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                check_log2   0x000239    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
@@ -184,7 +184,7 @@ Linker Map File - Created Thu Mar 20 20:38:08 2014
                check_log7   0x000266    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                check_log8   0x00026f    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                check_log9   0x000278    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-               check_next   0x000475    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+               check_next   0x00047e    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                check_none   0x0003ce    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
               check_nothx   0x00030d    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                check_pass   0x0003dc    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
@@ -198,48 +198,49 @@ Linker Map File - Created Thu Mar 20 20:38:08 2014
               default_key   0x0003cc    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
             default_state   0x000409    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                 defective   0x000438    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                 delay5ms   0x0005eb    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                 delay5ms   0x0005f6    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
             detect_candle   0x000192    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
               display_log   0x000295    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
             display_state   0x0003cd    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-           end_check_fail   0x000485    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                  end_isr   0x00065a    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+           end_check_fail   0x000490    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                  end_isr   0x000665    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
             end_operation   0x0001b2    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                   export   0x0004ae    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-         i2c_common_setup   0x000662    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+                   export   0x0004b9    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+         i2c_common_setup   0x00066d    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
               information   0x000344    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                      init   0x0000e7    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                      isr   0x000651    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                      isr   0x00065c    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                      logs   0x000216    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                motor_del   0x0005f4    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-              motor_del_0   0x0005f8    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                  no_huns   0x00049a    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+            more_than_six   0x00048f    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                motor_del   0x0005ff    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+              motor_del_0   0x000603    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                  no_huns   0x0004a5    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                    no_log   0x0002ad    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                  no_tens   0x0004a0    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                   nohuns   0x000518    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                   notens   0x000522    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                   now_FF   0x000453    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                 p2p_read   0x000736    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-                p2p_write   0x00070c    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+                  no_tens   0x0004ab    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                   nohuns   0x000523    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                   notens   0x00052d    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                   now_FF   0x00045c    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                 p2p_read   0x000741    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+                p2p_write   0x000717    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
                      poll   0x00020e    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                   polling   0x00022c    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
               read_EEPROM   0x000298    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                 read_rtc   0x0006af    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+                 read_rtc   0x0006ba    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
                    rotate   0x00018b    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-              rtc_convert   0x0006fe    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              rtc_convert   0x000709    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
                 shiftlogs   0x0001bf    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
               shiftlogs_0   0x0001c3    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                     start   0x000174    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                 start_rot   0x000328    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                   summary   0x00040a    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
               test_candle   0x000197    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                     time   0x000486    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                     time   0x000491    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                   waiting   0x00010c    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
              wanna_export   0x000302    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                write_log1   0x0001e5    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
              write_log1_0   0x0001ec    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                write_rtc   0x000674    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-                writetoPC   0x00064b    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                write_rtc   0x00067f    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+                writetoPC   0x000656    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                   yes_log   0x0002b9    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
 
 
@@ -376,92 +377,93 @@ Linker Map File - Created Thu Mar 20 20:38:08 2014
              _96loop_disp   0x00042c    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
               _96end_disp   0x000434    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
                 defective   0x000438    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             _98loop_disp   0x00043b    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-              _98end_disp   0x000443    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             _99loop_disp   0x000448    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-              _99end_disp   0x000450    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                 check_LF   0x000451    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                   now_FF   0x000453    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-            _100loop_disp   0x000456    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             _100end_disp   0x00045e    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-            _101loop_disp   0x000463    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             _101end_disp   0x00046b    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                 check_FF   0x00046c    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-           check_for_fail   0x00046f    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-               check_next   0x000475    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-           end_check_fail   0x000485    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                     time   0x000486    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-            _106loop_disp   0x000489    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             _106end_disp   0x000491    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                  no_huns   0x00049a    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                  no_tens   0x0004a0    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-            _110loop_disp   0x0004a5    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             _110end_disp   0x0004ad    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                   export   0x0004ae    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                   nohuns   0x000518    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                   notens   0x000522    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-               big_number   0x0005a9    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                  BCDadd3   0x0005b0    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                 add3huns   0x0005cd    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                 add3tens   0x0005d0    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                 add3ones   0x0005d3    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                carryones   0x0005d6    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                carrytens   0x0005d9    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                    HalfS   0x0005dc    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                  HalfS_0   0x0005e2    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             _.org_1_05E3   0x0005e3    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             _.org_1_05E5   0x0005e5    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             _.org_1_05E8   0x0005e8    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                 delay5ms   0x0005eb    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                  Delay_0   0x0005ef    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+             _98loop_disp   0x000444    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+              _98end_disp   0x00044c    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+             _99loop_disp   0x000451    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+              _99end_disp   0x000459    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                 check_LF   0x00045a    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                   now_FF   0x00045c    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+            _100loop_disp   0x00045f    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+             _100end_disp   0x000467    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+            _101loop_disp   0x00046c    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+             _101end_disp   0x000474    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                 check_FF   0x000475    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+           check_for_fail   0x000478    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+               check_next   0x00047e    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+            more_than_six   0x00048f    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+           end_check_fail   0x000490    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                     time   0x000491    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+            _106loop_disp   0x000494    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+             _106end_disp   0x00049c    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                  no_huns   0x0004a5    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                  no_tens   0x0004ab    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+            _110loop_disp   0x0004b0    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+             _110end_disp   0x0004b8    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                   export   0x0004b9    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                   nohuns   0x000523    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                   notens   0x00052d    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+               big_number   0x0005b4    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                  BCDadd3   0x0005bb    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                 add3huns   0x0005d8    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                 add3tens   0x0005db    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                 add3ones   0x0005de    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                carryones   0x0005e1    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                carrytens   0x0005e4    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                    HalfS   0x0005e7    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                  HalfS_0   0x0005ed    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+             _.org_1_05EE   0x0005ee    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
              _.org_1_05F0   0x0005f0    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                motor_del   0x0005f4    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-              motor_del_0   0x0005f8    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             _.org_1_05F9   0x0005f9    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                  InitLCD   0x0005fd    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-            Clear_Display   0x00061b    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             Switch_Lines   0x00061e    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                   WR_INS   0x000621    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                  WR_DATA   0x000630    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                InitUSART   0x000641    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                writetoPC   0x00064b    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-             _.org_1_064F   0x00064f    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                      isr   0x000651    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-                  end_isr   0x00065a    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
-         i2c_common_setup   0x000662    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_0010   0x000672    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-                write_rtc   0x000674    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_0016   0x000678    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_001E   0x000680    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_002E   0x000690    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_003E   0x0006a0    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-                   WR_ERR   0x0006a8    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-                   WR_END   0x0006a9    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_004B   0x0006ad    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-                 read_rtc   0x0006af    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_0051   0x0006b3    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_0059   0x0006bb    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_0069   0x0006cb    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_0074   0x0006d6    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_007C   0x0006de    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_0087   0x0006e9    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_0093   0x0006f5    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-                   RD_ERR   0x0006f7    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-                   RD_END   0x0006f8    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_009A   0x0006fc    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              rtc_convert   0x0006fe    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-                p2p_write   0x00070c    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_00AE   0x000710    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_00B6   0x000718    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_00C6   0x000728    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-                    W_END   0x000730    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_00D2   0x000734    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-                 p2p_read   0x000736    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_00D8   0x00073a    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_00E0   0x000742    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_00EB   0x00074d    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_00F7   0x000759    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-                    R_END   0x00075a    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
-              _.code_00FC   0x00075e    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+             _.org_1_05F3   0x0005f3    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                 delay5ms   0x0005f6    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                  Delay_0   0x0005fa    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+             _.org_1_05FB   0x0005fb    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                motor_del   0x0005ff    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+              motor_del_0   0x000603    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+             _.org_1_0604   0x000604    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                  InitLCD   0x000608    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+            Clear_Display   0x000626    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+             Switch_Lines   0x000629    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                   WR_INS   0x00062c    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                  WR_DATA   0x00063b    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                InitUSART   0x00064c    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                writetoPC   0x000656    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+             _.org_1_065A   0x00065a    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                      isr   0x00065c    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+                  end_isr   0x000665    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\main.asm
+         i2c_common_setup   0x00066d    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_0010   0x00067d    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+                write_rtc   0x00067f    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_0016   0x000683    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_001E   0x00068b    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_002E   0x00069b    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_003E   0x0006ab    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+                   WR_ERR   0x0006b3    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+                   WR_END   0x0006b4    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_004B   0x0006b8    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+                 read_rtc   0x0006ba    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_0051   0x0006be    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_0059   0x0006c6    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_0069   0x0006d6    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_0074   0x0006e1    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_007C   0x0006e9    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_0087   0x0006f4    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_0093   0x000700    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+                   RD_ERR   0x000702    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+                   RD_END   0x000703    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_009A   0x000707    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              rtc_convert   0x000709    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+                p2p_write   0x000717    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_00AE   0x00071b    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_00B6   0x000723    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_00C6   0x000733    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+                    W_END   0x00073b    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_00D2   0x00073f    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+                 p2p_read   0x000741    program     extern C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_00D8   0x000745    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_00E0   0x00074d    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_00EB   0x000758    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_00F7   0x000764    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+                    R_END   0x000765    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
+              _.code_00FC   0x000769    program     static C:\Users\David\Documents\GitHub\robot\go_go_gadget.X\i2c_common.asm
 
 
