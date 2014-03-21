@@ -1,0 +1,15 @@
+Warning[207] C:\USERS\DAVID\DOCUMENTS\GITHUB\ROBOT\RTC.X\RTCFORTHEWIN.ASM 9 : Found label after column 1. (COUNTH)
+Warning[207] C:\USERS\DAVID\DOCUMENTS\GITHUB\ROBOT\RTC.X\RTCFORTHEWIN.ASM 10 : Found label after column 1. (COUNTM)
+Warning[207] C:\USERS\DAVID\DOCUMENTS\GITHUB\ROBOT\RTC.X\RTCFORTHEWIN.ASM 11 : Found label after column 1. (COUNTL)
+Message[302] C:\USERS\DAVID\DOCUMENTS\GITHUB\ROBOT\RTC.X\RTCFORTHEWIN.ASM 26 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\DAVID\DOCUMENTS\GITHUB\ROBOT\RTC.X\RTCFORTHEWIN.ASM 27 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\DAVID\DOCUMENTS\GITHUB\ROBOT\RTC.X\RTCFORTHEWIN.ASM 28 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\DAVID\DOCUMENTS\GITHUB\ROBOT\RTC.X\RTCFORTHEWIN.ASM 29 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\DAVID\DOCUMENTS\GITHUB\ROBOT\RTC.X\RTCFORTHEWIN.ASM 32 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\DAVID\DOCUMENTS\GITHUB\ROBOT\RTC.X\RTCFORTHEWIN.ASM 33 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[305] C:\USERS\DAVID\DOCUMENTS\GITHUB\ROBOT\RTC.X\RTC_MACROS.INC 16 : Using default destination of 1 (file).
+Message[305] C:\USERS\DAVID\DOCUMENTS\GITHUB\ROBOT\RTC.X\RTC_MACROS.INC 19 : Using default destination of 1 (file).
+Message[305] C:\USERS\DAVID\DOCUMENTS\GITHUB\ROBOT\RTC.X\RTC_MACROS.INC 22 : Using default destination of 1 (file).
+Message[305] C:\USERS\DAVID\DOCUMENTS\GITHUB\ROBOT\RTC.X\RTC_MACROS.INC 25 : Using default destination of 1 (file).
+Message[305] C:\USERS\DAVID\DOCUMENTS\GITHUB\ROBOT\RTC.X\RTC_MACROS.INC 28 : Using default destination of 1 (file).
+Message[305] C:\USERS\DAVID\DOCUMENTS\GITHUB\ROBOT\RTC.X\RTC_MACROS.INC 31 : Using default destination of 1 (file).

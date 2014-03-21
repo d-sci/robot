@@ -14,7 +14,6 @@
     #define threshold2  D'69'
     #define IRDATA     PORTE, 0
     #define PHOTODATA  PORTE, 1
-   ; note: check analog v digital!
 
 
 ;***************************************
@@ -333,6 +332,11 @@ waiting
 ;       ACTUAL OPERATION (I'm just adding values manually now)
 
 start
+        ;clear numbers
+        clrf    num_FF
+        clrf    num_tot
+        clrf    num_LF
+
         ;Start the timer
         movlf       D'38', count38
         clrf        op_time
@@ -372,7 +376,7 @@ start
     movlf   0x1F, FSR       ;pointing at right before state1
 
 rotate
-	movlw   d'10'               ; stop operation after 10 rotations (n=10)
+   movlw   d'9'               ; stop operation after 10 rotations (n=10)
    subwf   candle_index,W      ; candle_index (n) is # you've already tested before rotating
    btfsc   STATUS,Z
 	goto    end_operation
@@ -417,6 +421,8 @@ aboveboth
  ;****************************************************
 
 end_operation
+        call    ROTATEMOTOR ; rotate once more  back to starting position
+
         ; Stop the timer
          bcf         INTCON, GIE  ;disable interrupts
 
@@ -1454,8 +1460,8 @@ isr
 
 end_isr
 
-    btfss   PHOTODATA       ;if PHOTODATA is 1, light is off
-    incf    photocount, F       ;if it is 0, light is on so photocount++
+    btfsc   PHOTODATA       ;if PHOTODATA is 1, light is on
+    incf    photocount, F       ;if it is 1, light is on so photocount++
 
 ;    movf    pclath_isr, W  ;if using pages
 ;    movwf    PCLATH
