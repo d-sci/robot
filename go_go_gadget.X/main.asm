@@ -10,8 +10,8 @@
 ;***************************************
     #define	RS 	PORTD,2
 	#define	E 	PORTD,3
-    #define threshold1  D'7'
-    #define threshold2  D'69'
+    #define threshold1  D'10'
+    #define threshold2  D'142'
     #define IRDATA     PORTE, 0
     #define PHOTODATA  PORTE, 1
 
@@ -61,13 +61,14 @@
         tens
         ones
         bignumcount
-        count38         ;for isr
+        count76         ;for isr
         morethansix     ;for defective
 ; For machine program: temps, counters, etc.
         candle_index
         photocount      ;for testing candle
         photoval
         motor_count     ;for rotate
+        startfrom3      ;for rotate troubleshooting
     endc
 
     cblock  0x79        ;stuff that needs to be in all registers
@@ -231,7 +232,7 @@ init
         movlf     b'00100000', INTCON   ;no interrupts yet, but Timer0 ready one GIE enabled
 
         banksel   TRISA                 ; bank 1
-        movlf     b'11000111', OPTION_REG ; 1:256 prescaler for timer
+        movlf     b'11000110', OPTION_REG ; 1:128 prescaler for timer
         clrf      TRISA                 ; PortA[3:0] used for motor
         movlf     b'11110010', TRISB    ; PortB[7:4] and [1] are keypad inputs
         movlf     b'00011000', TRISC    ; PortC[4:3] is RTC; [7:6] is RS-232
@@ -336,9 +337,10 @@ start
         clrf    num_FF
         clrf    num_tot
         clrf    num_LF
+        clrf    startfrom3
 
         ;Start the timer
-        movlf       D'38', count38
+        movlf       D'76', count76
         clrf        op_time
         clrf        TMR0
         bsf         INTCON, GIE     ;enable interrupts
@@ -380,6 +382,7 @@ rotate
    subwf   candle_index,W     ; candle_index (n) is # you've already tested before rotating
    btfsc   STATUS,Z
    goto    end_operation
+   movlf    D'5', motor_count
    call    ROTATEMOTOR
    incf    candle_index, F
    incf    FSR, F
@@ -387,8 +390,30 @@ rotate
 detect_candle
    btfsc   IRDATA
    goto    test_candle     ;yes candle, go test it
-   movlf   D'0', INDF      ;no candle, state = not present
-   goto    rotate                 ;and go try next
+
+   call     first_two
+   btfsc    IRDATA
+   goto     test_candle     ;yes candle, it just lagged 2 steps
+   call     last_two
+   btfsc    IRDATA
+   goto     test_candle     ;yes candle, it just lagged 4 steps
+   call     first_two
+   btfsc    IRDATA
+   goto     test_candle     ;yes candle, it just lagged 6 steps
+   call     last_two
+   btfsc    IRDATA
+   goto     test_candle     ;yes candle, it just lagged 8 steps
+
+   movlf   D'0',INDF       ;really no candle, keep rotating 12 more steps
+   movlw   d'9'               ; done inspecting once n=9
+   subwf   candle_index,W     ; candle_index (n) is # you've already tested before rotating
+   btfsc   STATUS,Z
+   goto    end_operation
+   movlf   D'3', motor_count
+   call    ROTATEMOTOR
+   incf    candle_index, F
+   incf    FSR, F
+   goto    detect_candle
 
 test_candle
    incf    num_tot, F			; keeping track of total number of candles
@@ -421,6 +446,7 @@ aboveboth
 
 end_operation
 
+        movlf   D'5', motor_count
         call    ROTATEMOTOR ; rotate once more  back to starting position
         bcf         INTCON, GIE  ;disable interrupts to stop timer
 
@@ -739,11 +765,14 @@ badkeyagain
 
 ;***************************************
 ; ROTATE MOTOR ROUTINE
-; Rotates motor 36deg. (20 steps)
+; Rotates motor by number of steps in motor_count times 4.
+; ( 5 gives 20 steps of 36 deg; 3 gives 12 steps)
+; starts from beginning if startfrom3 = 0; else starts halfway
 ;***************************************
 
 ROTATEMOTOR
-    movlf   d'5', motor_count
+    btfsc   startfrom3, 0
+    goto    halfway
 start_rot
     movlf   b'1001', PORTA
     call    motor_del
@@ -753,6 +782,7 @@ start_rot
     call    motor_del
     movlf   b'0010', PORTA
     call    motor_del
+halfway
     movlf   b'0110', PORTA
     call    motor_del
     movlf   b'0100', PORTA
@@ -763,9 +793,42 @@ start_rot
     call    motor_del
 
     decfsz  motor_count
+    goto    restart_motor
+    goto    finish_motor
+restart_motor
+    btfsc   startfrom3, 0
+    goto    halfway
     goto    start_rot
+finish_motor
     clrf    PORTA
     return
+
+first_two
+    movlf   b'1001', PORTA
+    call    motor_del
+    movlf   b'1000', PORTA
+    call    motor_del
+    movlf   b'1010', PORTA
+    call    motor_del
+    movlf   b'0010', PORTA
+    call    motor_del
+    clrf    PORTA
+    bsf     startfrom3, 0
+    return
+
+last_two
+    movlf   b'0110', PORTA
+    call    motor_del
+    movlf   b'0100', PORTA
+    call    motor_del
+    movlf   b'0101', PORTA
+    call    motor_del
+    movlf   b'0001', PORTA
+    call    motor_del
+    clrf    PORTA
+    bcf     startfrom3,0
+    return
+
 
 ;***************************************
 ; DATA DISPLAY ROUTINE
@@ -1303,7 +1366,7 @@ Delay_0
 ; Delays ~10ms for the motor.
 motor_del
       movlf 0xF3, delH
-      movlf 0x2F, delL
+      movlf 0x2F, delL          ;2F is approx 1 sec
 motor_del_0
       decfsz	delH, F
 	  goto      $+2
@@ -1446,10 +1509,10 @@ writetoPC
 ;***************************************
 ; ISR
 ; Currently only care about TMR0
-; TMR0 overflows at 256*256; each time, decrement count38
-; count38 thus hits 0 every 256*256*38 cycles = 1sec with 10MHz clock
+; TMR0 overflows at 256*128; each time, decrement count76
+; count76 thus hits 0 every 256*128*76 cycles = 1sec with 10MHz clock
 ; When this hapens, op_time increments
-; Also check photodata every time for 2 sec = total of 76 reads
+; Also check photodata every time for 2 sec = total of 152 reads
 ;***************************************
 isr
     movwf   w_isr           ;save W and status
@@ -1457,9 +1520,9 @@ isr
     clrf    STATUS
     movwf   status_isr
 
-    decfsz  count38, F     ;if count38 gets to 38 it's been one second
+    decfsz  count76, F     ;if count76 gets to 76 it's been one second
     goto    end_isr
-    movlf   D'38', count38  ;so reset count38
+    movlf   D'76', count76  ;so reset count76
     incf    op_time, F         ; and increment op_time
 
 end_isr

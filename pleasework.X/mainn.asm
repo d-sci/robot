@@ -746,6 +746,7 @@ badkeyagain
 ;***************************************
 
 ROTATEMOTOR
+
     movlf   d'5', motor_count
 start_rot
     movlf   b'1001', PORTA
@@ -764,9 +765,9 @@ start_rot
     call    motor_del
     movlf   b'0001', PORTA
     call    motor_del
-
     decfsz  motor_count
     goto    start_rot
+
     clrf    PORTA
     return
 
@@ -1310,13 +1311,13 @@ motor_del
       movlf 0xF3, delH
       movlf 0x2F, delL
 motor_del_0
-      ;btfsc     IRDATA
-      ;bsf       present, 0
       decfsz	delH, F
 	  goto      $+2
 	  decfsz	delL, F
 	  goto      motor_del_0
 	  return
+
+
 
 ;***************************************
 ; LCD SUBROUTINES (from sample code)
