@@ -1,47 +1,19 @@
-; GO-GO-GADGET CANDLELIGHT!
-; David Simons 996639124
-; AER201 Spring 2014
-; Written for PIC16F877 on DevBugger
-
-;***************************************
-;               CONTENTS
-;
-; Configuration                     30
-; Definions                         37
-; Variables                         48
-; Macros                            109
-; Vectors                           188
-; Tables                            198
-; Main program                      256
-;   Standby                         288
-;   Actual operation                361
-;   End of operation                451
-;   Data display interface          534
-;   Logs interface                  546
-; Motor routines                    765
-; Data display routines             837
-; General purpose subroutines       1254
-; Delay subroutines                 1328
-; LCD subroutines                   1377
-; PC interface subroutines          1480
-; ISR                               1509
-;***************************************
-
-   list p=16f877                   ; list directive to define processor
+    list p=16f877                 ; list directive to define processor
       #include <p16f877.inc>        ; processor specific variable definitions
       __CONFIG _CP_OFF & _WDT_OFF & _BODEN_ON & _PWRTE_ON & _HS_OSC & _WRT_ENABLE_ON & _CPD_OFF & _LVP_OFF
 
       #include <rtc_macros.inc>
 
+
 ;***************************************
 ; DEFINITIONS
 ;***************************************
-    #define	RS          PORTD,2
-	#define	E           PORTD,3
-    #define threshold1  D'2'
-    #define threshold2  D'151'
-    #define IRDATA      PORTE, 0
-    #define PHOTODATA   PORTE, 1
+    #define	RS 	PORTD,2
+	#define	E 	PORTD,3
+    #define threshold1  D'10'
+    #define threshold2  D'142'
+    #define IRDATA     PORTE, 0
+    #define PHOTODATA  PORTE, 1
 
 
 ;***************************************
@@ -50,7 +22,7 @@
 
 ; Also see i2c_commmon.asm -> has stuff at 0x71-0x78 on for RTC!
 
-    cblock	0x20        ;bank0 variables
+    cblock	0x20
     ; Important information (will be displayed)
         state1     ;where   0 = none      1 = pass
         state2     ;        2 = led fail  3 = flicker fail
@@ -81,16 +53,16 @@
 		Table_Counter   ; for LCD stuff
 		com
 		dat
-        delH            ;for delay 0.5s routine
+        delH          ;for delay 0.5s routine
         delM
         delL
-        op_time_save    ;for big_number routine
+        op_time_save    ;for operation time
         huns
         tens
         ones
         bignumcount
         count76         ;for isr
-        morethansix     ;for displaying defective
+        morethansix     ;for defective
 ; For machine program: temps, counters, etc.
         candle_index
         photocount      ;for testing candle
@@ -99,7 +71,7 @@
         startfrom3      ;for rotate troubleshooting
     endc
 
-    cblock  0x79        ;stuff that needs to be in all banks (for ISR)
+    cblock  0x79        ;stuff that needs to be in all registers
         w_isr
         status_isr
 	endc
@@ -140,7 +112,7 @@ movff   macro   source, dest
         endm
 
 ; Write to LCD (all in bank0 please)
-writeBCD    macro   reg             ;from a register containing BCD
+writeBCD    macro   reg         ; from a register containing BCD
             movf    reg, W
             addlw   B'00110000'
             call WR_DATA
@@ -156,12 +128,12 @@ writeASC        macro   reg         ;from a register containing ASCII
             call WR_DATA
             endm
 
-spacebar    macro                   ; move LCD over 1 space
+spacebar    macro
             movlw   B'00010100'
             call    WR_INS
             endm
 
-;Print to PC (hyperterminal). Any bank OK
+;Print to PC (hyperterminal)
 printchar   macro   char            ;direct ASCII code literal (or in "")
             movlw   char
             call    writetoPC
@@ -180,9 +152,9 @@ printBCD    macro   BCD            ;BCD inside a register
             call    writetoPC
             endm
 
-newline     macro                  ;new line on computer
+newline     macro
             printchar   0xA ;changes line
-            printchar   0xD ;goes back to left margin
+            printchar   0xD ;goes back to left
             endm
 ;***************************************
 ; VECTORS
@@ -257,7 +229,7 @@ Op_at
 ;***************************************
 
 init
-        movlf     b'00100000', INTCON   ;no interrupts yet, but Timer0 ready 
+        movlf     b'00100000', INTCON   ;no interrupts yet, but Timer0 ready one GIE enabled
 
         banksel   TRISA                 ; bank 1
         movlf     b'11000110', OPTION_REG ; 1:128 prescaler for timer
@@ -265,8 +237,8 @@ init
         movlf     b'11110010', TRISB    ; PortB[7:4] and [1] are keypad inputs
         movlf     b'00011000', TRISC    ; PortC[4:3] is RTC; [7:6] is RS-232
         clrf      TRISD                 ; PortD[2:7] is LCD output
-        movlf     b'011', TRISE         ; PortE is IR and PHOTODATA
-        movlf     0x07, ADCON1          ; digital input
+        movlf     b'011', TRISE         ; PortE is ir and photodata
+        movlf   0x07, ADCON1            ; digital input
 
         bcf       STATUS,RP0        ; select bank 0
         clrf      PORTA
@@ -275,7 +247,7 @@ init
         clrf      PORTD
         clrf      PORTE
 
-        call 	  i2c_common_setup  ;Set up I2C for communication. End in bank1
+        call 	  i2c_common_setup  ;Set up I2C for communication. End in bank 1
         call      InitLCD           ;Initialize the LCD. End in bank0
         call      InitUSART         ;Set up USART for RS232. End in bank1
 
@@ -290,11 +262,11 @@ init
 waiting
         ; Display date and time.
         ; Also save starting time for log (will stop updating once we start)
-        writechar "2"           ;First line shows 20**/**/**
+        writechar "2"       ;First line shows 20**/**/**
         writechar "0"
         rtc_read	0x06		;Read Address 0x06 from DS1307---year
 		movf	0x77,W
-        movwf    start_year10   ;Save starting year dig10
+        movwf    start_year10    ;Save starting year dig10
 		call	WR_DATA
 		movf	0x78,W
         movwf    start_year1    ;Save starting year dig1
@@ -302,15 +274,15 @@ waiting
 		writechar "/"
 		rtc_read	0x05		;Read Address 0x05 from DS1307---month
 		movf	0x77,W
-        movwf    start_month10  ;Save starting month dig10
+        movwf    start_month10    ;Save starting month dig10
 		call	WR_DATA
 		movf	0x78,W
-        movwf    start_month1   ;Save starting month dig1
+        movwf    start_month1    ;Save starting month dig1
 		call	WR_DATA
 		writechar	"/"
 		rtc_read	0x04		;Read Address 0x04 from DS1307---date
 		movf	0x77,W
-        movwf    start_date10   ;Save starting date dig10
+        movwf    start_date10    ;Save starting date dig10
 		call	WR_DATA
 		movf	0x78,W
         movwf    start_date1    ;Save starting date dig1
@@ -318,7 +290,7 @@ waiting
 		spacebar
 		rtc_read	0x02		;Read Address 0x02 from DS1307---hour
 		movf	0x77,W
-        movwf    start_hour10   ;Save starting hour dig10
+        movwf    start_hour10    ;Save starting hour dig10
 		call	WR_DATA
 		movf	0x78,W
         movwf    start_hour1    ;Save starting hour dig1
@@ -329,7 +301,7 @@ waiting
         movwf    start_min10    ;Save starting min dig10
 		call	WR_DATA
 		movf	0x78,W
-        movwf    start_min1     ;Save starting min dig1
+        movwf    start_min1    ;Save starting min dig1
 		call	WR_DATA
 
         ; Move cursor back to start of second line
@@ -348,7 +320,7 @@ waiting
          btfsc      STATUS,Z    ;and Z will be high, so skip if not high
          goto       start
 
-         movf       keytemp,W   ;Go to log interface
+         movf       keytemp,W     ;Go to log interface
          xorlw      0xE
          btfsc      STATUS,Z
          goto       logs
@@ -368,7 +340,7 @@ start
         clrf    startfrom3
 
         ;Start the timer
-        movlf       D'38', count76  ;start with half a second (to round)
+        movlf       D'76', count76
         clrf        op_time
         clrf        TMR0
         bsf         INTCON, GIE     ;enable interrupts
@@ -377,52 +349,76 @@ start
         call        Clear_Display
         Display     Start_Msg       ;"Inspecting. . ."
 
-        clrf    candle_index        ; n = 0
-        bcf     STATUS, IRP
-        movlf   0x1F, FSR           ;pointing at right before state1
+
+;****FAKE CODE for easy testing **************************
+;        ; Just delaying
+;        call        HalfS
+;        call        HalfS
+;
+;       ; Putting values in manually.
+;        movlf     B'01', state1     ;pass
+;        movlf     B'01', state2     ;pass
+;        movlf     B'10', state3     ;LED fail
+;        movlf     B'01', state4     ;pass
+;        movlf     B'01', state5     ;pass
+;        movlf     B'01', state6     ;pass
+;        movlf     B'01', state7     ;pass
+;        movlf     B'11', state8     ;flicker fail
+;        movlf     B'01', state9     ;pass
+;        movlf     D'1', num_LF
+;        movlf     D'1', num_FF
+;        movlf     D'9', num_tot
+;*******************************************************
+
+; choose fake or real!
+
+;******REAL CODE ******************************************
+    clrf    candle_index     ; n = 0
+    bcf	STATUS, IRP
+    movlf   0x1F, FSR        ;pointing at right before state1
 
 rotate
-        movlw   d'9'               ; done inspecting once canlex_index (n) = 9
-        subwf   candle_index,W     ; n is # already tested before rotating
-        btfsc   STATUS,Z
-        goto    end_operation
-        movlf    D'5', motor_count
-        call    ROTATEMOTOR         ; rotate 20 steps (full rotation)
-        incf    candle_index, F     ; n++
-        incf    FSR, F
+   movlw   d'9'               ; done inspecting once n=9
+   subwf   candle_index,W     ; candle_index (n) is # you've already tested before rotating
+   btfsc   STATUS,Z
+   goto    end_operation
+   movlf    D'5', motor_count
+   call    ROTATEMOTOR
+   incf    candle_index, F
+   incf    FSR, F
 
 detect_candle
    btfsc   IRDATA
-   goto    test_candle      ;yes candle, go test it
+   goto    test_candle     ;yes candle, go test it
 
-   call     first_two       ; two more steps
+   call     first_two
    btfsc    IRDATA
    goto     test_candle     ;yes candle, it just lagged 2 steps
-   call     last_two        ; two more steps
+   call     last_two
    btfsc    IRDATA
    goto     test_candle     ;yes candle, it just lagged 4 steps
-   call     first_two       ; two more steps
+   call     first_two
    btfsc    IRDATA
    goto     test_candle     ;yes candle, it just lagged 6 steps
-   call     last_two        ; two more steps
+   call     last_two
    btfsc    IRDATA
    goto     test_candle     ;yes candle, it just lagged 8 steps
 
-   movlf   D'0',INDF        ;really no candle, keep rotating 12 more steps
-   movlw   d'9'               ; done inspecting if n=9
-   subwf   candle_index,W     
+   movlf   D'0',INDF       ;really no candle, keep rotating 12 more steps
+   movlw   d'9'               ; done inspecting once n=9
+   subwf   candle_index,W     ; candle_index (n) is # you've already tested before rotating
    btfsc   STATUS,Z
    goto    end_operation
    movlf   D'3', motor_count
    call    ROTATEMOTOR
-   incf    candle_index, F    ; n++
+   incf    candle_index, F
    incf    FSR, F
-   goto    detect_candle      ; detect next candle
+   goto    detect_candle
 
 test_candle
    incf    num_tot, F			; keeping track of total number of candles
    clrf    photocount
-   call    HalfS                ; test for 2 seconds
+   call    HalfS                ; delay 2 sec or whatever
    call    HalfS
    call    HalfS
    call    HalfS
@@ -446,7 +442,7 @@ aboveboth
     movlf   D'3', INDF       ;else flicker fail
     incf    num_FF, F
     goto    rotate
-
+ ;****************************************************
 
 end_operation
 
@@ -459,14 +455,16 @@ end_operation
         Display    End_Msg          ; "Complete"
 
         ; Shift logs 1-8 -> 2-9
+        ; Then store current run as log 1
 shiftlogs
         banksel     EEADR               ; bank 2
         movlf       D'111', EEADR        ; start shifting from 111->125
+
 shiftlogs_0
         banksel     EECON1              ;bank 3
         bcf         EECON1, EEPGD
         bsf         EECON1, RD          ;read (EEADR) to EEDATA
-        btfsc       EECON1, WR          ; ensure a write is not in progress
+        btfsc       EECON1, WR          ; ensure a write is not in progress (??)
         goto        $-1
         banksel     EEADR               ;bank 2
         movlw       D'14'               ;add 14 to EEADR to shift 14 places
@@ -484,23 +482,24 @@ shiftlogs_0
         movlw       D'14'
         subwf       EEADR, W
         btfsc       STATUS, Z
-        goto        write_log1          ; if EEADR = 14 we're done 
+        goto        write_log1          ; if EEADR = 14 we're done (just shifted 0->14)
+
         banksel op_time             ; for some reason I need to delay here
         call   delay5ms             ; or else I get an infinite loop
         banksel EEADR
+
         movlw       D'15'               ;else EEADR -= 15 to shift next byte
         subwf       EEADR, F
         goto        shiftlogs_0
 
-        ; Then store current run as log 1
 write_log1
         banksel     EEADR
         bcf         STATUS, IRP
-        movlf       0x37, FSR           ;points to 1 after last important data
-        movlf       D'14', EEADR        ;points to 1 after last place to write
+        movlf       0x37, FSR           ;points to one after last important data
+        movlf       D'14', EEADR        ;points to one after last place to write to
 write_log1_0
         banksel     EECON1              ;bank3
-        btfsc       EECON1, WR          ;ensure a write is not in progress
+        btfsc       EECON1, WR          ;ensure a write is not in progress (??)
         goto        $-1
         banksel     EEADR               ;bank 2
         decf        EEADR, F            ;writing backwords
@@ -531,20 +530,23 @@ write_log1_0
         call       HalfS
         call       defective        ; "FF: a b c. LF: d e f"
 ;-----------------------------------------------------------------------
-; DATA DISPLAY INTERFACE
+; Data display interface
 
 poll     btfss		PORTB,1     ;Wait until data is available from the keypad
          goto		$-1
+
          swapf		PORTB,W     ;Read PortB<7:4> into W<3:0>
          andlw		0x0F
          call       information ;Do the right thing
+
          btfsc		PORTB,1     ;Wait until key is released
          goto		$-1
          goto       poll
 
+
 ;-------------------------------------------------------------------------
 ; LOGS INTERFACE
-; Shows runs of last 9 logs
+; Shows last runs of last 9 logs
 ; Access from STANDBY and return to STANDBY
 
 logs
@@ -556,6 +558,7 @@ logs
 polling
     btfss		PORTB,1     ;Wait until data is available from the keypad
     goto		$-1
+
     swapf		PORTB,W     ;Read PortB<7:4> into W<3:0>
     andlw		0x0F
     movwf       keytemp     ; Save which key was pressed
@@ -657,7 +660,6 @@ badkey
 
 
 display_log                 ;start in bank2
-
     ; move EEPROM data back to "current" data
     bcf	STATUS, IRP
     movlf   0x29, FSR
@@ -674,7 +676,7 @@ read_EEPROM
     btfss   STATUS, Z
     goto    read_EEPROM
 
-    ;display data
+    ;display that shit
     banksel Table_Counter   ; bank0
     call    Clear_Display
     ;if first data is 0xFF (no log) just display "none"
@@ -714,7 +716,6 @@ yes_log
     call    summary
     call    HalfS
     call    HalfS
-
     ;option to Export
     call    Clear_Display
     Display Logs_Msg3
@@ -724,11 +725,12 @@ yes_log
 wanna_export
     btfss		PORTB,1     ;Wait until data is available from the keypad
     goto		$-1
+
     swapf		PORTB,W     ;Read PortB<7:4> into W<3:0>
     andlw		0x0F
     movwf       keytemp     ; Save which key was pressed
 
-check_wanna                 ;export
+check_wanna
     movf    keytemp, W
     xorlw   0xF
     btfss   STATUS,Z
@@ -736,14 +738,14 @@ check_wanna                 ;export
     call    export
     goto    logs
 
-check_nothx                 ;return to logs
+check_nothx
     movf    keytemp, W
     xorlw   0xE
     btfss   STATUS,Z
     goto    check_immapeace
     goto    logs
 
-check_immapeace             ;return to standby
+check_immapeace
     movf    keytemp, W
     xorlw   0xD
     btfss   STATUS,Z
@@ -764,37 +766,32 @@ badkeyagain
 ;***************************************
 ; ROTATE MOTOR ROUTINE
 ; Rotates motor by number of steps in motor_count times 4.
-; (5 gives 20 steps = 36 deg = one slot)
-; pulses ABCD if startfrom3 = 0; else pulses CDAB
-; uses half-stepping
+; ( 5 gives 20 steps of 36 deg; 3 gives 12 steps)
+; starts from beginning if startfrom3 = 0; else starts halfway
 ;***************************************
 
 ROTATEMOTOR
     btfsc   startfrom3, 0
     goto    halfway
 start_rot
-    movlf   b'1001', PORTA          ; pulse A
+    movlf   b'1001', PORTA
     call    motor_del
     movlf   b'1000', PORTA
     call    motor_del
-    movlf   b'1010', PORTA          ; pulse B
+    movlf   b'1010', PORTA
     call    motor_del
     movlf   b'0010', PORTA
     call    motor_del
-    btfsc   startfrom3, 0
-    goto    decrement
 halfway
-    movlf   b'0110', PORTA          ; pulse C
+    movlf   b'0110', PORTA
     call    motor_del
     movlf   b'0100', PORTA
     call    motor_del
-    movlf   b'0101', PORTA          ; pulse D
+    movlf   b'0101', PORTA
     call    motor_del
     movlf   b'0001', PORTA
     call    motor_del
-    btfsc   startfrom3, 0
-    goto    start_rot
-decrement
+
     decfsz  motor_count
     goto    restart_motor
     goto    finish_motor
@@ -806,7 +803,7 @@ finish_motor
     clrf    PORTA
     return
 
-first_two                       ; pulses AB only
+first_two
     movlf   b'1001', PORTA
     call    motor_del
     movlf   b'1000', PORTA
@@ -819,7 +816,7 @@ first_two                       ; pulses AB only
     bsf     startfrom3, 0
     return
 
-last_two                        ; pulses CD only
+last_two
     movlf   b'0110', PORTA
     call    motor_del
     movlf   b'0100', PORTA
@@ -968,9 +965,16 @@ check_export
     movf    keytemp, W
     xorlw   0xF
     btfss   STATUS,Z
-    goto    check_standby       
+    goto    check_standby       ;or do you wanna allow to check logs?
     call    export
     return
+
+;check_logs
+;    movf    keytemp, W
+;    xorlw   0xE
+;    btfss   STATUS,Z
+;    goto    check_standby
+;    goto    logs
 
 check_standby
     movf    keytemp, W
@@ -989,7 +993,7 @@ check_start
     goto    default_key
     goto    start
 
-default_key         ; will never get here unless you hit "LOGS"
+default_key         ; will never get here (unless you hit "LOGS")
     return
 
 
@@ -1104,9 +1108,9 @@ check_next
 	movf	statetemp, W		;see if stateN = stateX
 	subwf	INDF, W
 	btfss	STATUS, Z
-	goto	check_next          ;if not, go to next
+	goto	check_next		;if not, go to next
 	writeBCD	candle_index	;if so, write down the number
-    btfsc   morethansix,0       ;don't write space if need more than 6
+    btfsc   morethansix,0       ;don't write a space if need more than six numbers
     goto    more_than_six
     spacebar
 more_than_six
@@ -1255,10 +1259,9 @@ notens
 ;***************************************
 
 ; DISPLAY BIG NUMBER SUBROUTINE
-; Converts 8-bit binary number op_time to 3 BCDs representing huns, tens, ones
-; Uses "shift and add 3" algorithm, modified from:
-; http://www.piclist.com/techref/microchip/math/radix/b2a-8b3d-ab.htm
-
+; Modified from http://www.piclist.com/techref/microchip/math/radix/b2a-8b3d-ab.htm
+; Converts 8-bit binary number op_time to three BCDs representing huns, tens, ones
+; Uses "shift and add 3" algorithm
 big_number
     movff   op_time, op_time_save         ;save the original op_time
     movlf   8, bignumcount                ;will shift 8 times
@@ -1328,9 +1331,8 @@ carrytens
 ; DELAY SUBROUTINES
 ;***************************************
 
-; DELAY 0.5S SUBROUTINE 
-; Delays exactly 0.5sec, from generator at:
-; http://www.piclist.com/techref/piclist/codegen/delay.htm
+; DELAY 0.5S SUBROUTINE (from generator at http://www.piclist.com/techref/piclist/codegen/delay.htm)
+; Delays exactly 0.5sec
 HalfS
       movlf 0x8A, delH
       movlf 0xBA, delM
@@ -1347,10 +1349,9 @@ HalfS_0
 	  nop
 	  return
 
-; DELAY 5ms SUBROUTINE
+; DELAY 5ms SUBROUTINE. (from generator at http://www.piclist.com/techref/piclist/codegen/delay.htm)
 ; Useful for LCD because PIC is way faster than it can handle
-; Delays exactly 5ms, from generator at:
-; http://www.piclist.com/techref/piclist/codegen/delay.htm
+; Delays exactly 5ms
 delay5ms
 	movlf	0xC3, delH
 	movlf	0x0A, delL
@@ -1362,10 +1363,10 @@ Delay_0
     return
 
 ; MOTOR DELAY SUBROUTINE.
-; Delays ~10ms for the motor. (~1sec per total rotation)
+; Delays ~10ms for the motor.
 motor_del
       movlf 0xF3, delH
-      movlf 0x2F, delL          
+      movlf 0x2F, delL          ;2F is approx 1 sec
 motor_del_0
       decfsz	delH, F
 	  goto      $+2
@@ -1380,7 +1381,7 @@ motor_del_0
 ; Initialize the LCD
 InitLCD
 	bcf STATUS,RP0          ;bank0
-	bsf E                   ;E default high
+	bsf E     ;E default high
 
 	;Wait for LCD POR to finish (~15ms)
 	call delay5ms
@@ -1443,13 +1444,13 @@ WR_INS
 	andlw	0xF0			;mask 4 bits MSB w = X0
 	movwf	PORTD			;Send 4 bits MSB
 	bsf		E				;
-	call	delay5ms        ;__    __
+	call	delay5ms	;__    __
 	bcf		E				;  |__|
 	swapf	com,w
 	andlw	0xF0			;1111 0010
 	movwf	PORTD			;send 4 bits LSB
 	bsf		E				;
-	call	delay5ms        ;__    __
+	call	delay5ms	;__    __
 	bcf		E				;  |__|
 	call	delay5ms
 	return
@@ -1464,20 +1465,20 @@ WR_DATA
 	addlw	4
 	movwf	PORTD
 	bsf		E				;
-	call	delay5ms        ;__    __
+	call	delay5ms	;__    __
 	bcf		E				;  |__|
 	swapf	dat,w
 	andlw	0xF0
 	addlw	4
 	movwf	PORTD
 	bsf		E				;
-	call	delay5ms        ;__    __
+	call	delay5ms	;__    __
 	bcf		E				;  |__|
 	return
 
 
 ;***************************************
-; PC INTERFACE SUBROUTINES (modified from sample code)
+; PC INTERFACE SUBROUTINES (from sample code)
 ;***************************************
 InitUSART
         bsf       STATUS,RP0     ; select bank 1
@@ -1538,3 +1539,11 @@ end_isr
 
 
     END
+
+
+
+
+
+
+
+

@@ -1,12 +1,12 @@
 MPLINK 5.01, LINKER
-Linker Map File - Created Mon Feb 24 22:07:03 2014
+Linker Map File - Created Tue Apr 01 16:53:09 2014
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
                 ---------  ---------  ---------  ---------  ---------
                    .org_0       code   0x000000    program   0x000002
                    .cinit    romdata   0x000001    program   0x000004
-                   .org_1       code   0x000004    program   0x000204
+                   .org_1       code   0x000004    program   0x0002b2
 .config_2007_BUILD/DEFAULT/PRODUCTION/FLICKER       code   0x002007    program   0x000002
 
 
@@ -15,50 +15,57 @@ Linker Map File - Created Mon Feb 24 22:07:03 2014
                                Start         End      
                            ---------   ---------      
                             0x000000    0x000002      
-                            0x000004    0x000105      
+                            0x000004    0x00015c      
                             0x002007    0x002007      
-            262 out of 8454 program addresses used, program memory utilization is 3%
+            349 out of 8454 program addresses used, program memory utilization is 4%
 
 
 
                               Symbols - Sorted by Name
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
-            Clear_Display   0x0000cf    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                  Delay_0   0x0000ac    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                  BCDadd3   0x0000dc    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+            Clear_Display   0x000126    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                  Delay_0   0x0000d0    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
                Flick_fail   0x000015    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                    HalfS   0x000099    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                  HalfS_0   0x00009f    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                  InitLCD   0x0000b1    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                    HalfS   0x0000bd    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                  HalfS_0   0x0000c3    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                  InitLCD   0x000108    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
                  LED_fail   0x00000b    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
                      Pass   0x000005    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-             Switch_Lines   0x0000d2    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+             Switch_Lines   0x000129    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
               Testing_Msg   0x000023    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                  WR_DATA   0x0000e4    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                   WR_INS   0x0000d5    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-             _.org_1_004F   0x00004f    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-             _.org_1_00A0   0x0000a0    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-             _.org_1_00A2   0x0000a2    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-             _.org_1_00A5   0x0000a5    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-             _.org_1_00AD   0x0000ad    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-              _10end_disp   0x00008c    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-             _10loop_disp   0x000084    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-              _11end_disp   0x000098    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-             _11loop_disp   0x000090    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-               _7end_disp   0x000066    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-              _7loop_disp   0x00005e    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-               _9end_disp   0x00007c    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-              _9loop_disp   0x000074    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                aboveboth   0x00008d    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-         check_threshold1   0x00006d    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-         check_threshold2   0x00007d    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                 delay5ms   0x0000a8    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                  end_isr   0x0000fe    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                  WR_DATA   0x00013b    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                   WR_INS   0x00012c    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+             _.org_1_0054   0x000054    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+             _.org_1_00C4   0x0000c4    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+             _.org_1_00C6   0x0000c6    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+             _.org_1_00C9   0x0000c9    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+             _.org_1_00D1   0x0000d1    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+              _11end_disp   0x000082    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+             _11loop_disp   0x00007a    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+              _15end_disp   0x00009c    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+             _15loop_disp   0x000094    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+              _19end_disp   0x0000b2    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+             _19loop_disp   0x0000aa    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+               _9end_disp   0x00006b    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+              _9loop_disp   0x000063    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                aboveboth   0x0000a7    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                 add3huns   0x0000f9    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                 add3ones   0x0000ff    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                 add3tens   0x0000fc    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+               big_number   0x0000d5    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                carryones   0x000102    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                carrytens   0x000105    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+         check_threshold1   0x000073    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+         check_threshold2   0x00008d    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                 delay5ms   0x0000cc    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                  end_isr   0x000155    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
                      init   0x000032    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                      isr   0x0000f5    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                    start   0x000051    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-              test_candle   0x00005b    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                  waiting   0x000047    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                      isr   0x00014c    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                    start   0x000056    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+              test_candle   0x000060    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                  waiting   0x00004c    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
 
 
 
@@ -70,35 +77,42 @@ Linker Map File - Created Mon Feb 24 22:07:03 2014
                Flick_fail   0x000015    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
               Testing_Msg   0x000023    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
                      init   0x000032    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                  waiting   0x000047    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-             _.org_1_004F   0x00004f    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                    start   0x000051    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-              test_candle   0x00005b    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-              _7loop_disp   0x00005e    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-               _7end_disp   0x000066    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-         check_threshold1   0x00006d    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-              _9loop_disp   0x000074    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-               _9end_disp   0x00007c    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-         check_threshold2   0x00007d    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-             _10loop_disp   0x000084    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-              _10end_disp   0x00008c    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                aboveboth   0x00008d    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-             _11loop_disp   0x000090    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-              _11end_disp   0x000098    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                    HalfS   0x000099    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                  HalfS_0   0x00009f    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-             _.org_1_00A0   0x0000a0    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-             _.org_1_00A2   0x0000a2    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-             _.org_1_00A5   0x0000a5    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                 delay5ms   0x0000a8    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                  Delay_0   0x0000ac    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-             _.org_1_00AD   0x0000ad    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                  InitLCD   0x0000b1    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-            Clear_Display   0x0000cf    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-             Switch_Lines   0x0000d2    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                   WR_INS   0x0000d5    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                  WR_DATA   0x0000e4    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                      isr   0x0000f5    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
-                  end_isr   0x0000fe    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                  waiting   0x00004c    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+             _.org_1_0054   0x000054    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                    start   0x000056    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+              test_candle   0x000060    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+              _9loop_disp   0x000063    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+               _9end_disp   0x00006b    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+         check_threshold1   0x000073    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+             _11loop_disp   0x00007a    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+              _11end_disp   0x000082    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+         check_threshold2   0x00008d    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+             _15loop_disp   0x000094    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+              _15end_disp   0x00009c    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                aboveboth   0x0000a7    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+             _19loop_disp   0x0000aa    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+              _19end_disp   0x0000b2    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                    HalfS   0x0000bd    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                  HalfS_0   0x0000c3    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+             _.org_1_00C4   0x0000c4    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+             _.org_1_00C6   0x0000c6    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+             _.org_1_00C9   0x0000c9    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                 delay5ms   0x0000cc    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                  Delay_0   0x0000d0    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+             _.org_1_00D1   0x0000d1    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+               big_number   0x0000d5    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                  BCDadd3   0x0000dc    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                 add3huns   0x0000f9    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                 add3tens   0x0000fc    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                 add3ones   0x0000ff    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                carryones   0x000102    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                carrytens   0x000105    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                  InitLCD   0x000108    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+            Clear_Display   0x000126    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+             Switch_Lines   0x000129    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                   WR_INS   0x00012c    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                  WR_DATA   0x00013b    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                      isr   0x00014c    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
+                  end_isr   0x000155    program     static C:\Users\David\Documents\GitHub\robot\Phototest.X\flicker_for_me.asm
 
 

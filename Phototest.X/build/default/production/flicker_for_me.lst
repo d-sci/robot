@@ -1,11 +1,11 @@
-MPASM 5.55                FLICKER_FOR_ME.ASM   2-24-2014  22:07:02         PAGE  1
+MPASM 5.55                FLICKER_FOR_ME.ASM   4-1-2014  16:53:08         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
                       00001  ; Test for photoresistor circuit.
-                      00002  ; Connect PHOTODATA to RA5: 1 = light is on   0 = light is off
+                      00002  ; Connect PHOTODATA to RE1: 1 = light is on   0 = light is off
                       00003 
                       00004 
                       00005     list p=16f877
@@ -25,460 +25,609 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00009 
                       00010     #define     RS      PORTD,2
                       00011         #define E       PORTD,3
-                      00012     #define PHOTODATA  PORTA,5
-                      00013     #define threshold1  D'15'
-                      00014     #define threshold2  D'65'
+                      00012     #define PHOTODATA  PORTE,1
+                      00013     #define threshold1  D'10'
+                      00014     #define threshold2  D'142'
                       00015 
                       00016 
-                      00017     cblock  0x70
-  00000070            00018         Table_Counter   ; for LCD stuff
-  00000071            00019                 com
-  00000072            00020                 dat
-  00000073            00021         del1            ; for delay 5ms delay routine
-  00000074            00022         del2
-  00000075            00023         hdelH          ;for delay 0.5s routine
-  00000076            00024         hdelM
-  00000077            00025         hdelL
-  00000078            00026         photocount
-  00000079            00027         photoval
-  0000007A            00028         count38
-  0000007B            00029         op_time
-  0000007C            00030         w_isr
-  0000007D            00031         status_isr
-                      00032     endc
-                      00033 
-                      00034 Display macro   Message
-                      00035                 local   loop_disp
-                      00036                 local   end_disp
-                      00037                 clrf    Table_Counter
-                      00038                 clrw
-                      00039 loop_disp
-                      00040         movf    Table_Counter,W
-                      00041                 call    Message
-                      00042                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
-                      00043                 btfsc   STATUS,Z
-MPASM 5.55                FLICKER_FOR_ME.ASM   2-24-2014  22:07:02         PAGE  2
+                      00017     cblock  0x20
+  00000020            00018         Table_Counter   ; for LCD stuff
+  00000021            00019                 com
+  00000022            00020                 dat
+  00000023            00021         delH          ;for delay 0.5s routine
+  00000024            00022         delM
+  00000025            00023         delL
+  00000026            00024         photocount
+  00000027            00025         photoval
+  00000028            00026         count76
+  00000029            00027         op_time
+  0000002A            00028         huns
+  0000002B            00029         tens
+  0000002C            00030         ones
+  0000002D            00031         bignumcount
+  0000002E            00032         save
+                      00033     endc
+                      00034 
+                      00035     cblock 0x70
+  00000070            00036         w_isr
+  00000071            00037         status_isr
+                      00038     endc
+                      00039 
+                      00040 Display macro   Message
+                      00041                 local   loop_disp
+                      00042                 local   end_disp
+                      00043                 clrf    Table_Counter
+MPASM 5.55                FLICKER_FOR_ME.ASM   4-1-2014  16:53:08         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00044                 goto    end_disp
-                      00045                 call    WR_DATA
-                      00046                 incf    Table_Counter,F
-                      00047                 goto    loop_disp
-                      00048 end_disp
-                      00049                 endm
-                      00050 
-                      00051 
-                      00052 movlf   macro   l, f
-                      00053         movlw   l
-                      00054         movwf   f
-                      00055         endm
+                      00044                 clrw
+                      00045 loop_disp
+                      00046         movf    Table_Counter,W
+                      00047                 call    Message
+                      00048                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
+                      00049                 btfsc   STATUS,Z
+                      00050                 goto    end_disp
+                      00051                 call    WR_DATA
+                      00052                 incf    Table_Counter,F
+                      00053                 goto    loop_disp
+                      00054 end_disp
+                      00055                 endm
                       00056 
-                      00057 movff   macro   source, dest
-                      00058         movf    source, W
-                      00059         movwf   dest
-                      00060         endm
-                      00061 
-                      00062     ORG       0x000
-0000   2???           00063     goto      init
-                      00064     ORG       0x004
-0004   2???           00065     goto       isr
-                      00066 
+                      00057 
+                      00058 movlf   macro   l, f
+                      00059         movlw   l
+                      00060         movwf   f
+                      00061         endm
+                      00062 
+                      00063 movff   macro   source, dest
+                      00064         movf    source, W
+                      00065         movwf   dest
+                      00066         endm
                       00067 
-0005                  00068 Pass
-0005   0782           00069                 addwf   PCL,F
-0006   3450 3461 3473 00070                 dt              "Pass",0
+                      00068 ; Write to LCD (all in bank0 please)
+                      00069 writeBCD    macro   reg         ; from a register containing BCD
+                      00070             movf    reg, W
+                      00071             addlw   B'00110000'
+                      00072             call WR_DATA
+                      00073             endm
+                      00074 
+                      00075 
+                      00076     ORG       0x000
+0000   2???           00077     goto      init
+                      00078     ORG       0x004
+0004   2???           00079     goto       isr
+                      00080 
+                      00081 
+0005                  00082 Pass
+0005   0782           00083                 addwf   PCL,F
+0006   3450 3461 3473 00084                 dt              "Pass",0
        3473 3400 
-000B                  00071 LED_fail
-000B   0782           00072                 addwf   PCL,F
-000C   344C 3445 3444 00073                 dt              "LED fail",0
+000B                  00085 LED_fail
+000B   0782           00086                 addwf   PCL,F
+000C   344C 3445 3444 00087                 dt              "LED fail",0
        3420 3466 3461 
        3469 346C 3400 
-0015                  00074 Flick_fail
-0015   0782           00075                 addwf   PCL,F
-0016   3446 346C 3469 00076                 dt              "Flicker fail",0
+0015                  00088 Flick_fail
+0015   0782           00089                 addwf   PCL,F
+0016   3446 346C 3469 00090                 dt              "Flicker fail",0
        3463 346B 3465 
        3472 3420 3466 
        3461 3469 346C 
+MPASM 5.55                FLICKER_FOR_ME.ASM   4-1-2014  16:53:08         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
        3400 
-0023                  00077 Testing_Msg
-0023   0782           00078         addwf   PCL,F
-0024   3443 3468 3465 00079         dt      "Checking. . .",0
+0023                  00091 Testing_Msg
+0023   0782           00092         addwf   PCL,F
+0024   3443 3468 3465 00093         dt      "Checking. . .",0
        3463 346B 3469 
        346E 3467 342E 
        3420 342E 3420 
        342E 3400 
-                      00080 
-                      00081 
-0032                  00082 init
-                      00083     movlf     b'10000000', INTCON   ;interrupts enabled
+                      00094 
+                      00095 
+0032                  00096 init
+                      00097     movlf     b'10000000', INTCON   ;interrupts enabled
 0032   3080               M         movlw   b'10000000'
 0033   008B               M         movwf   INTCON
-MPASM 5.55                FLICKER_FOR_ME.ASM   2-24-2014  22:07:02         PAGE  3
+                      00098 
+0034   1683 1303      00099     banksel   TRISA                 ; bank 1
+                      00100     movlf     b'11000110', OPTION_REG ; 1:128 prescaler for timer
+0036   30C6               M         movlw   b'11000110'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0037   0081               M         movwf   OPTION_REG
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0038   0185           00101     clrf      TRISA                 ; PortA[3:0] used for motor
+                      00102     movlf     b'11110010', TRISB    ; PortB[7:4] and [1] are keypad inputs
+0039   30F2               M         movlw   b'11110010'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+003A   0086               M         movwf   TRISB
+                      00103     movlf     b'00011000', TRISC    ; PortC[4:3] is RTC; [7:6] is RS-232
+003B   3018               M         movlw   b'00011000'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+003C   0087               M         movwf   TRISC
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+003D   0188           00104     clrf      TRISD                 ; PortD[2:7] is LCD output
+                      00105     movlf     b'011', TRISE         ; PortE is ir and photodata
+003E   3003               M         movlw   b'011'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+003F   0089               M         movwf   TRISE
+                      00106     movlf   0x07, ADCON1            ; digital input
+0040   3007               M         movlw   0x07
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0041   009F               M         movwf   ADCON1
+                      00107 
+0042   1283 1303      00108     banksel     PORTA               ;bank0
+0044   0185           00109     clrf        PORTA
+0045   0186           00110     clrf        PORTB
+0046   0187           00111     clrf        PORTC
+0047   0188           00112     clrf        PORTD
+0048   0189           00113     clrf        PORTE
+                      00114 
+0049   2???           00115     call        InitLCD
+004A   1283           00116     bcf       STATUS,RP0          ; back to bank0
+004B   2???           00117     call    Clear_Display
+                      00118 
+                      00119 
+MPASM 5.55                FLICKER_FOR_ME.ASM   4-1-2014  16:53:08         PAGE  4
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00084 
-0034   1683 1303      00085     banksel     TRISA               ;bank0
-                      00086     movlf     b'00100000', TRISA
-0036   3020               M         movlw   b'00100000'
+004C                  00120 waiting
+004C   1C86           00121          btfss          PORTB,1     ;Wait until data is available from the keypad
+004D   2???           00122          goto           waiting
+                      00123 
+004E   0E06           00124          swapf          PORTB,W     ;Read PortB<7:4> into W<3:0>
+004F   390F           00125          andlw          0x0F
+0050   3A0C           00126          xorlw      0xC         ;Will be all zeros if its "START"
+0051   1903           00127          btfsc      STATUS,Z    ;and Z will be high, so skip if not high
+0052   2???           00128          goto       start
+                      00129 
+0053   1886           00130          btfsc          PORTB,1     ;Wait until key is released
+0054   2???           00131          goto           $-1
+0055   2???           00132          goto       waiting
+                      00133 
+0056                  00134 start
+                      00135     ;Start the timer
+                      00136         movlf       D'76', count76
+0056   304C               M         movlw   D'76'
+0057   00A8               M         movwf   count76
+0058   01A9           00137         clrf        op_time
+0059   168B           00138         bsf         INTCON, T0IE ;enable Timer0 interrupt
+005A   0181           00139         clrf        TMR0
+005B   1683 1303      00140         banksel     OPTION_REG
+                      00141         movlf       B'11000110', OPTION_REG ; 1:128 prescaler
+005D   30C6               M         movlw   B'11000110'
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0037   0085               M         movwf   TRISA
-                      00087     movlf     b'11110010', TRISB
-0038   30F2               M         movlw   b'11110010'
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0039   0086               M         movwf   TRISB
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-003A   0188           00088     clrf        TRISD
-                      00089     movlf   0x07, ADCON1        ;digital input
-003B   3007               M         movlw   0x07
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-003C   009F               M         movwf   ADCON1
-                      00090 
-003D   1283 1303      00091     banksel     PORTA               ;bank1
-003F   0185           00092     clrf        PORTA
-0040   0186           00093     clrf        PORTB
-0041   0187           00094     clrf        PORTC
-0042   0188           00095     clrf        PORTD
-0043   0189           00096     clrf        PORTE
-                      00097 
-0044   2???           00098     call        InitLCD
-0045   1283           00099     bcf       STATUS,RP0          ; back to bank0
-0046   2???           00100     call    Clear_Display
-                      00101 
-                      00102 
-0047                  00103 waiting
-0047   1C86           00104          btfss          PORTB,1     ;Wait until data is available from the keypad
-0048   2???           00105          goto           waiting
-                      00106 
-0049   0E06           00107          swapf          PORTB,W     ;Read PortB<7:4> into W<3:0>
-004A   390F           00108          andlw          0x0F
-004B   3A0C           00109          xorlw      0xC         ;Will be all zeros if its "START"
-004C   1903           00110          btfsc      STATUS,Z    ;and Z will be high, so skip if not high
-004D   2???           00111          goto       start
-                      00112 
-004E   1886           00113          btfsc          PORTB,1     ;Wait until key is released
-004F   2???           00114          goto           $-1
-0050   2???           00115          goto       waiting
-                      00116 
-0051                  00117 start
-                      00118     ;Start the timer
-                      00119         movlf       D'38', count38
-0051   3026               M         movlw   D'38'
-0052   00FA               M         movwf   count38
-0053   01FB           00120         clrf        op_time
-0054   168B           00121         bsf         INTCON, T0IE ;enable Timer0 interrupt
-0055   0181           00122         clrf        TMR0
-0056   1683 1303      00123         banksel     OPTION_REG
-                      00124         movlf       B'11000111', OPTION_REG ; 1:256 prescaler
-MPASM 5.55                FLICKER_FOR_ME.ASM   2-24-2014  22:07:02         PAGE  4
-
-
-LOC  OBJECT CODE     LINE SOURCE TEXT
-  VALUE
-
-0058   30C7               M         movlw   B'11000111'
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0059   0081               M         movwf   OPTION_REG
-005A   1283           00125         bcf        STATUS,RP0     ; back to bank 0
-                      00126 
-005B                  00127 test_candle
-005B   2???           00128         call    Clear_Display
-                      00129     Display Testing_Msg
+005E   0081               M         movwf   OPTION_REG
+005F   1283           00142         bcf        STATUS,RP0     ; back to bank 0
+                      00143 
+0060                  00144 test_candle
+0060   2???           00145         call    Clear_Display
+                      00146     Display Testing_Msg
   0000                    M                 local   loop_disp
   0000                    M                 local   end_disp
-005C   01F0               M                 clrf    Table_Counter
-005D   0103               M                 clrw
-005E                      M loop_disp
-005E   0870               M         movf    Table_Counter,W
-005F   2???               M                 call    Testing_Msg
-0060   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
-0061   1903               M                 btfsc   STATUS,Z
-0062   2???               M                 goto    end_disp
-0063   2???               M                 call    WR_DATA
-0064   0AF0               M                 incf    Table_Counter,F
-0065   2???               M                 goto    loop_disp
-0066                      M end_disp
-0066   01F8           00130     clrf    photocount
-0067   2???           00131     call    HalfS       ; delay 2 sec or whatever
-0068   2???           00132     call    HalfS
-0069   2???           00133     call    HalfS
-006A   2???           00134     call    HalfS
-                      00135         movff   photocount, photoval        ;to ensure it wont change again
-006B   0878               M         movf    photocount, W
-006C   00F9               M         movwf   photoval
-006D                  00136 check_threshold1
-006D   300F           00137     movlw    threshold1
-006E   0279           00138     subwf   photoval, W
-006F   1803           00139     btfsc   STATUS, C       ;if  photoval < threshold 1, C = 0
-0070   2???           00140     goto check_threshold2
-0071   2???           00141     call    Clear_Display
-                      00142     Display LED_fail        ; < threshold 1 means led fail
-  0000                    M                 local   loop_disp
-  0000                    M                 local   end_disp
-0072   01F0               M                 clrf    Table_Counter
-0073   0103               M                 clrw
-0074                      M loop_disp
-0074   0870               M         movf    Table_Counter,W
-0075   2???               M                 call    LED_fail
-0076   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
-0077   1903               M                 btfsc   STATUS,Z
-0078   2???               M                 goto    end_disp
-0079   2???               M                 call    WR_DATA
-007A   0AF0               M                 incf    Table_Counter,F
-007B   2???               M                 goto    loop_disp
-007C                      M end_disp
-007C   2???           00143     goto    waiting
-007D                  00144 check_threshold2
-MPASM 5.55                FLICKER_FOR_ME.ASM   2-24-2014  22:07:02         PAGE  5
+0061   01A0               M                 clrf    Table_Counter
+0062   0103               M                 clrw
+0063                      M loop_disp
+0063   0820               M         movf    Table_Counter,W
+0064   2???               M                 call    Testing_Msg
+0065   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
+0066   1903               M                 btfsc   STATUS,Z
+0067   2???               M                 goto    end_disp
+0068   2???               M                 call    WR_DATA
+0069   0AA0               M                 incf    Table_Counter,F
+006A   2???               M                 goto    loop_disp
+006B                      M end_disp
+006B   01A6           00147     clrf    photocount
+006C   2???           00148     call    HalfS       ; delay 2 sec or whatever
+006D   2???           00149     call    HalfS
+006E   2???           00150     call    HalfS
+006F   2???           00151     call    HalfS
+                      00152         movff   photocount, photoval        ;to ensure it wont change again
+0070   0826               M         movf    photocount, W
+MPASM 5.55                FLICKER_FOR_ME.ASM   4-1-2014  16:53:08         PAGE  5
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-007D   3041           00145     movlw    threshold2
-007E   0279           00146     subwf   photoval, W
-007F   1803           00147     btfsc   STATUS, C       ;if  photoval < threshold 2, C = 0
-0080   2???           00148     goto aboveboth
-0081   2???           00149     call    Clear_Display
-                      00150     Display Pass      ; < threshold 2 means pass
+0071   00A7               M         movwf   photoval
+0072   2???           00153     call    big_number
+0073                  00154 check_threshold1
+0073   300A           00155     movlw    threshold1
+0074   0227           00156     subwf   photoval, W
+0075   1803           00157     btfsc   STATUS, C       ;if  photoval < threshold 1, C = 0
+0076   2???           00158     goto check_threshold2
+0077   2???           00159     call    Clear_Display
+                      00160     Display LED_fail        ; < threshold 1 means led fail
   0000                    M                 local   loop_disp
   0000                    M                 local   end_disp
-0082   01F0               M                 clrf    Table_Counter
-0083   0103               M                 clrw
-0084                      M loop_disp
-0084   0870               M         movf    Table_Counter,W
-0085   2???               M                 call    Pass
-0086   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
-0087   1903               M                 btfsc   STATUS,Z
-0088   2???               M                 goto    end_disp
-0089   2???               M                 call    WR_DATA
-008A   0AF0               M                 incf    Table_Counter,F
-008B   2???               M                 goto    loop_disp
-008C                      M end_disp
-008C   2???           00151     goto    waiting
-008D                  00152 aboveboth
-008D   2???           00153     call    Clear_Display
-                      00154     Display  Flick_fail      ; else flicker fail
+0078   01A0               M                 clrf    Table_Counter
+0079   0103               M                 clrw
+007A                      M loop_disp
+007A   0820               M         movf    Table_Counter,W
+007B   2???               M                 call    LED_fail
+007C   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
+007D   1903               M                 btfsc   STATUS,Z
+007E   2???               M                 goto    end_disp
+007F   2???               M                 call    WR_DATA
+0080   0AA0               M                 incf    Table_Counter,F
+0081   2???               M                 goto    loop_disp
+0082                      M end_disp
+0082   2???           00161     call    Switch_Lines
+                      00162     writeBCD    huns
+0083   082A               M             movf    huns, W
+0084   3E30               M             addlw   B'00110000'
+0085   2???               M             call WR_DATA
+                      00163     writeBCD    tens
+0086   082B               M             movf    tens, W
+0087   3E30               M             addlw   B'00110000'
+0088   2???               M             call WR_DATA
+                      00164     writeBCD    ones
+0089   082C               M             movf    ones, W
+008A   3E30               M             addlw   B'00110000'
+008B   2???               M             call WR_DATA
+008C   2???           00165     goto    waiting
+008D                  00166 check_threshold2
+008D   308E           00167     movlw    threshold2
+008E   0227           00168     subwf   photoval, W
+008F   1803           00169     btfsc   STATUS, C       ;if  photoval < threshold 2, C = 0
+0090   2???           00170     goto aboveboth
+0091   2???           00171     call    Clear_Display
+                      00172     Display Pass      ; < threshold 2 means pass
   0000                    M                 local   loop_disp
   0000                    M                 local   end_disp
-008E   01F0               M                 clrf    Table_Counter
-008F   0103               M                 clrw
-0090                      M loop_disp
-0090   0870               M         movf    Table_Counter,W
-0091   2???               M                 call    Flick_fail
-0092   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
-0093   1903               M                 btfsc   STATUS,Z
-0094   2???               M                 goto    end_disp
-0095   2???               M                 call    WR_DATA
-0096   0AF0               M                 incf    Table_Counter,F
-0097   2???               M                 goto    loop_disp
-0098                      M end_disp
-0098   2???           00155     goto     waiting
-                      00156 
-                      00157 
-                      00158 ; DELAY 0.5S SUBROUTINE (from generator at http://www.piclist.com/techref/piclist/codegen/delay.htm)
-                      00159 ; Delays exactly 0.5sec
-0099                  00160 HalfS
-                      00161       movlf 0x8A, hdelH
-0099   308A               M         movlw   0x8A
-009A   00F5               M         movwf   hdelH
-                      00162       movlf 0xBA, hdelM
-009B   30BA               M         movlw   0xBA
-009C   00F6               M         movwf   hdelM
-                      00163       movlf 0x03, hdelL
-009D   3003               M         movlw   0x03
-009E   00F7               M         movwf   hdelL
-MPASM 5.55                FLICKER_FOR_ME.ASM   2-24-2014  22:07:02         PAGE  6
+0092   01A0               M                 clrf    Table_Counter
+0093   0103               M                 clrw
+0094                      M loop_disp
+0094   0820               M         movf    Table_Counter,W
+0095   2???               M                 call    Pass
+0096   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
+0097   1903               M                 btfsc   STATUS,Z
+MPASM 5.55                FLICKER_FOR_ME.ASM   4-1-2014  16:53:08         PAGE  6
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-009F                  00164 HalfS_0
-009F   0BF5           00165       decfsz    hdelH, F
-00A0   2???           00166           goto  $+2
-00A1   0BF6           00167           decfsz        hdelM, F
-00A2   2???           00168           goto  $+2
-00A3   0BF7           00169           decfsz        hdelL, F
-00A4   2???           00170           goto  HalfS_0
-                      00171 
-00A5   2???           00172           goto  $+1
-00A6   0000           00173           nop
-00A7   0008           00174           return
-                      00175 
-                      00176 ; DELAY 5ms SUBROUTINE. (from generator at http://www.piclist.com/techref/piclist/codegen/delay.htm)
-                      00177 ; Useful for LCD because PIC is way faster than it can handle
-                      00178 ; Delays exactly 5ms
-00A8                  00179 delay5ms
-                      00180         movlf   0xC3, del1
-00A8   30C3               M         movlw   0xC3
-00A9   00F3               M         movwf   del1
-                      00181         movlf   0x0A, del2
-00AA   300A               M         movlw   0x0A
-00AB   00F4               M         movwf   del2
-00AC                  00182 Delay_0
-00AC   0BF3           00183         decfsz  del1, f
-00AD   2???           00184         goto    $+2
-00AE   0BF4           00185         decfsz  del2, f
-00AF   2???           00186         goto    Delay_0
-00B0   0008           00187     return
-                      00188 
-                      00189 
-                      00190 ; Initialize the LCD
-00B1                  00191 InitLCD
-00B1   1283           00192         bcf STATUS,RP0
-00B2   1588           00193         bsf E     ;E default high
-                      00194 
-                      00195         ;Wait for LCD POR to finish (~15ms)
-00B3   2???           00196         call delay5ms
-00B4   2???           00197         call delay5ms
-00B5   2???           00198         call delay5ms
-                      00199 
-                      00200         ;Ensure 8-bit mode first (no way to immediately guarantee 4-bit mode)
-                      00201         ; -> Send b'0011' 3 times
-00B6   3033           00202         movlw   b'00110011'
-00B7   2???           00203         call    WR_INS
-00B8   2???           00204         call delay5ms
-00B9   2???           00205         call delay5ms
-00BA   3032           00206         movlw   b'00110010'
-00BB   2???           00207         call    WR_INS
-00BC   2???           00208         call delay5ms
-00BD   2???           00209         call delay5ms
-                      00210 
-                      00211         ; 4 bits, 2 lines, 5x7 dots
-00BE   3028           00212         movlw   b'00101000'
-MPASM 5.55                FLICKER_FOR_ME.ASM   2-24-2014  22:07:02         PAGE  7
+0098   2???               M                 goto    end_disp
+0099   2???               M                 call    WR_DATA
+009A   0AA0               M                 incf    Table_Counter,F
+009B   2???               M                 goto    loop_disp
+009C                      M end_disp
+009C   2???           00173     call    Switch_Lines
+                      00174     writeBCD    huns
+009D   082A               M             movf    huns, W
+009E   3E30               M             addlw   B'00110000'
+009F   2???               M             call WR_DATA
+                      00175     writeBCD    tens
+00A0   082B               M             movf    tens, W
+00A1   3E30               M             addlw   B'00110000'
+00A2   2???               M             call WR_DATA
+                      00176     writeBCD    ones
+00A3   082C               M             movf    ones, W
+00A4   3E30               M             addlw   B'00110000'
+00A5   2???               M             call WR_DATA
+00A6   2???           00177     goto    waiting
+00A7                  00178 aboveboth
+00A7   2???           00179     call    Clear_Display
+                      00180     Display  Flick_fail      ; else flicker fail
+  0000                    M                 local   loop_disp
+  0000                    M                 local   end_disp
+00A8   01A0               M                 clrf    Table_Counter
+00A9   0103               M                 clrw
+00AA                      M loop_disp
+00AA   0820               M         movf    Table_Counter,W
+00AB   2???               M                 call    Flick_fail
+00AC   3A00               M                 xorlw   B'00000000' ;check WORK reg to see if 0 is returned
+00AD   1903               M                 btfsc   STATUS,Z
+00AE   2???               M                 goto    end_disp
+00AF   2???               M                 call    WR_DATA
+00B0   0AA0               M                 incf    Table_Counter,F
+00B1   2???               M                 goto    loop_disp
+00B2                      M end_disp
+00B2   2???           00181     call    Switch_Lines
+                      00182     writeBCD    huns
+00B3   082A               M             movf    huns, W
+00B4   3E30               M             addlw   B'00110000'
+00B5   2???               M             call WR_DATA
+                      00183     writeBCD    tens
+00B6   082B               M             movf    tens, W
+00B7   3E30               M             addlw   B'00110000'
+00B8   2???               M             call WR_DATA
+                      00184     writeBCD    ones
+00B9   082C               M             movf    ones, W
+00BA   3E30               M             addlw   B'00110000'
+00BB   2???               M             call WR_DATA
+00BC   2???           00185     goto     waiting
+                      00186 
+                      00187 
+                      00188 ; DELAY 0.5S SUBROUTINE (from generator at http://www.piclist.com/techref/piclist/codegen/delay.htm)
+MPASM 5.55                FLICKER_FOR_ME.ASM   4-1-2014  16:53:08         PAGE  7
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-00BF   2???           00213         call    WR_INS
-00C0   2???           00214         call delay5ms
-00C1   2???           00215         call delay5ms
-                      00216 
-                      00217         ; display on/off
-00C2   300C           00218         movlw   b'00001100'
-00C3   2???           00219         call    WR_INS
-00C4   2???           00220         call delay5ms
-00C5   2???           00221         call delay5ms
-                      00222 
-                      00223         ; Entry mode
-00C6   3006           00224         movlw   b'00000110'
-00C7   2???           00225         call    WR_INS
-00C8   2???           00226         call delay5ms
-00C9   2???           00227         call delay5ms
-                      00228 
-                      00229         ; Clear ram
-00CA   3001           00230         movlw   b'00000001'
-00CB   2???           00231         call    WR_INS
-00CC   2???           00232         call delay5ms
-00CD   2???           00233         call delay5ms
-00CE   0008           00234         return
+                      00189 ; Delays exactly 0.5sec
+00BD                  00190 HalfS
+                      00191       movlf 0x8A, delH
+00BD   308A               M         movlw   0x8A
+00BE   00A3               M         movwf   delH
+                      00192       movlf 0xBA, delM
+00BF   30BA               M         movlw   0xBA
+00C0   00A4               M         movwf   delM
+                      00193       movlf 0x03, delL
+00C1   3003               M         movlw   0x03
+00C2   00A5               M         movwf   delL
+00C3                  00194 HalfS_0
+00C3   0BA3           00195       decfsz    delH, F
+00C4   2???           00196           goto  $+2
+00C5   0BA4           00197           decfsz        delM, F
+00C6   2???           00198           goto  $+2
+00C7   0BA5           00199           decfsz        delL, F
+00C8   2???           00200           goto  HalfS_0
+                      00201 
+00C9   2???           00202           goto  $+1
+00CA   0000           00203           nop
+00CB   0008           00204           return
+                      00205 
+                      00206 ; DELAY 5ms SUBROUTINE. (from generator at http://www.piclist.com/techref/piclist/codegen/delay.htm)
+                      00207 ; Useful for LCD because PIC is way faster than it can handle
+                      00208 ; Delays exactly 5ms
+00CC                  00209 delay5ms
+                      00210         movlf   0xC3, delH
+00CC   30C3               M         movlw   0xC3
+00CD   00A3               M         movwf   delH
+                      00211         movlf   0x0A, delL
+00CE   300A               M         movlw   0x0A
+00CF   00A5               M         movwf   delL
+00D0                  00212 Delay_0
+00D0   0BA3           00213         decfsz  delH, f
+00D1   2???           00214         goto    $+2
+00D2   0BA5           00215         decfsz  delL, f
+00D3   2???           00216         goto    Delay_0
+00D4   0008           00217     return
+                      00218 
+                      00219 ; DISPLAY BIG NUMBER SUBROUTINE
+                      00220 ; Modified from http://www.piclist.com/techref/microchip/math/radix/b2a-8b3d-ab.htm
+                      00221 ; Converts 8-bit binary number photoval to three BCDs representing huns, tens, ones
+                      00222 ; Uses "shift and add 3" algorithm
+00D5                  00223 big_number
+                      00224     movlf   8, bignumcount                ;will shift 8 times
+00D5   3008               M         movlw   8
+00D6   00AD               M         movwf   bignumcount
+                      00225     movff   photoval, save
+00D7   0827               M         movf    photoval, W
+00D8   00AE               M         movwf   save
+00D9   01AA           00226     clrf    huns
+00DA   01AB           00227     clrf    tens
+MPASM 5.55                FLICKER_FOR_ME.ASM   4-1-2014  16:53:08         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00DB   01AC           00228     clrf    ones
+                      00229 
+00DC                  00230 BCDadd3                             ; if any digit > 5, add3
+00DC   3005           00231     movlw   0x5
+00DD   022A           00232     subwf   huns, W
+00DE   1803           00233     btfsc   STATUS, C
+00DF   2???           00234     call    add3huns
                       00235 
-                      00236 ; Clear the display
-00CF                  00237 Clear_Display
-00CF   3001           00238                 movlw   B'00000001'
-00D0   2???           00239                 call    WR_INS
-00D1   0008           00240                 return
-                      00241 
-                      00242 ;Switch lines
-00D2                  00243 Switch_Lines
-00D2   30C0           00244                 movlw   B'11000000'
-00D3   2???           00245                 call    WR_INS
-00D4   0008           00246                 return
-                      00247 
-                      00248 ; Write an instruction to the LCD (see page 7-104)
-                      00249 ; The instruction must be in W
-00D5                  00250 WR_INS
-00D5   1108           00251         bcf             RS                              ;clear RS
-00D6   00F1           00252         movwf   com                             ;W --> com
-00D7   39F0           00253         andlw   0xF0                    ;mask 4 bits MSB w = X0
-00D8   0088           00254         movwf   PORTD                   ;Send 4 bits MSB
-00D9   1588           00255         bsf             E                               ;
-00DA   2???           00256         call    delay5ms        ;__    __
-00DB   1188           00257         bcf             E                               ;  |__|
-00DC   0E71           00258         swapf   com,w
-00DD   39F0           00259         andlw   0xF0                    ;1111 0010
-00DE   0088           00260         movwf   PORTD                   ;send 4 bits LSB
-00DF   1588           00261         bsf             E                               ;
-00E0   2???           00262         call    delay5ms        ;__    __
-00E1   1188           00263         bcf             E                               ;  |__|
-00E2   2???           00264         call    delay5ms
-00E3   0008           00265         return
-MPASM 5.55                FLICKER_FOR_ME.ASM   2-24-2014  22:07:02         PAGE  8
+00E0   3005           00236     movlw   0x5
+00E1   022B           00237     subwf   tens, W
+00E2   1803           00238     btfsc   STATUS, C
+00E3   2???           00239     call    add3tens
+                      00240 
+00E4   3005           00241     movlw   0x5
+00E5   022C           00242     subwf   ones, W
+00E6   1803           00243     btfsc   STATUS, C
+00E7   2???           00244     call    add3ones
+                      00245 
+00E8   03AD           00246     decf    bignumcount, 1
+00E9   1003           00247     bcf     STATUS, C
+00EA   0DA7           00248     rlf     photoval, 1              ; shift
+00EB   0DAC           00249     rlf     ones, 1
+00EC   1A2C           00250     btfsc   ones,4 ;
+00ED   2???           00251     call    carryones               ; carry if too large
+00EE   0DAB           00252     rlf     tens, 1
+                      00253 
+00EF   1A2B           00254     btfsc   tens,4 ;
+00F0   2???           00255     call    carrytens
+00F1   0DAA           00256     rlf     huns,1
+00F2   1003           00257     bcf     STATUS, C
+                      00258 
+00F3   082D           00259     movf    bignumcount, W
+00F4   1D03           00260     btfss   STATUS, Z
+00F5   2???           00261     goto    BCDadd3                 ; repeat until you've shifted it 8 times
+                      00262 
+                      00263     movff   save, photoval
+00F6   082E               M         movf    save,   W
+00F7   00A7               M         movwf   photoval
+00F8   0008           00264     return
+                      00265 
+00F9                  00266 add3huns
+00F9   3003           00267     movlw 0x3
+00FA   07AA           00268     addwf huns,F
+00FB   0008           00269     return
+00FC                  00270 add3tens
+00FC   3003           00271     movlw 0x3
+00FD   07AB           00272     addwf tens,F
+00FE   0008           00273     return
+00FF                  00274 add3ones
+00FF   3003           00275     movlw 0x3
+0100   07AC           00276     addwf ones,F
+0101   0008           00277     return
+0102                  00278 carryones
+MPASM 5.55                FLICKER_FOR_ME.ASM   4-1-2014  16:53:08         PAGE  9
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00266 
-                      00267 ; Write data at current cursor location
-                      00268 ; Character code (see page 7-104) must be in W
-00E4                  00269 WR_DATA
-00E4   1508           00270         bsf             RS
-00E5   00F2           00271         movwf   dat
-00E6   0872           00272         movf    dat,w
-00E7   39F0           00273         andlw   0xF0
-00E8   3E04           00274         addlw   4
-00E9   0088           00275         movwf   PORTD
-00EA   1588           00276         bsf             E                               ;
-00EB   2???           00277         call    delay5ms        ;__    __
-00EC   1188           00278         bcf             E                               ;  |__|
-00ED   0E72           00279         swapf   dat,w
-00EE   39F0           00280         andlw   0xF0
-00EF   3E04           00281         addlw   4
-00F0   0088           00282         movwf   PORTD
-00F1   1588           00283         bsf             E                               ;
-00F2   2???           00284         call    delay5ms        ;__    __
-00F3   1188           00285         bcf             E                               ;  |__|
-00F4   0008           00286         return
-                      00287 
-                      00288 
-00F5                  00289 isr
-00F5   00FC           00290     movwf   w_isr           ;save W and status
-00F6   0E03           00291     swapf   STATUS, W
-00F7   0183           00292     clrf    STATUS
-00F8   00FD           00293     movwf   status_isr
-                      00294 ;    movf    PCLATH, W      ;if using pages
-                      00295 ;    movwf   pclath_isr
-                      00296 ;    clrf    PCLATH
-                      00297 
-00F9   0BFA           00298     decfsz  count38, F     ;if count38 gets to 38 it's been one second
-00FA   2???           00299     goto    end_isr
-                      00300     movlf   D'38', count38  ;so reset count38
-00FB   3026               M         movlw   D'38'
-00FC   00FA               M         movwf   count38
-00FD   0AFB           00301     incf    op_time, F         ; and increment op_time
-                      00302 
-00FE                  00303 end_isr
-                      00304 
-00FE   1A85           00305     btfsc   PHOTODATA       ;if PHOTODATA is 1, light is on
-00FF   0AF8           00306     incf    photocount, F       ;if it is 1, light is on so photocount++
+0102   122C           00279     bcf ones, 4
+0103   1403           00280     bsf STATUS, C
+0104   0008           00281     return
+0105                  00282 carrytens
+0105   122B           00283     bcf tens, 4
+0106   1403           00284     bsf STATUS, C
+0107   0008           00285     return
+                      00286 
+                      00287 ; Initialize the LCD
+0108                  00288 InitLCD
+0108   1283           00289         bcf STATUS,RP0
+0109   1588           00290         bsf E     ;E default high
+                      00291 
+                      00292         ;Wait for LCD POR to finish (~15ms)
+010A   2???           00293         call delay5ms
+010B   2???           00294         call delay5ms
+010C   2???           00295         call delay5ms
+                      00296 
+                      00297         ;Ensure 8-bit mode first (no way to immediately guarantee 4-bit mode)
+                      00298         ; -> Send b'0011' 3 times
+010D   3033           00299         movlw   b'00110011'
+010E   2???           00300         call    WR_INS
+010F   2???           00301         call delay5ms
+0110   2???           00302         call delay5ms
+0111   3032           00303         movlw   b'00110010'
+0112   2???           00304         call    WR_INS
+0113   2???           00305         call delay5ms
+0114   2???           00306         call delay5ms
                       00307 
-                      00308 ;    movf    pclath_isr, W  ;if using pages
-                      00309 ;    movwf    PCLATH
-0100   0E7D           00310     swapf   status_isr, W   ;restore W and status
-0101   0083           00311     movwf   STATUS
-0102   0EFC           00312     swapf   w_isr, F
-0103   0E7C           00313     swapf   w_isr, W
-0104   110B           00314     bcf     INTCON, T0IF    ;clear the interrupt flag
-0105   0009           00315     retfie
-                      00316 
-MPASM 5.55                FLICKER_FOR_ME.ASM   2-24-2014  22:07:02         PAGE  9
+                      00308         ; 4 bits, 2 lines, 5x7 dots
+0115   3028           00309         movlw   b'00101000'
+0116   2???           00310         call    WR_INS
+0117   2???           00311         call delay5ms
+0118   2???           00312         call delay5ms
+                      00313 
+                      00314         ; display on/off
+0119   300C           00315         movlw   b'00001100'
+011A   2???           00316         call    WR_INS
+011B   2???           00317         call delay5ms
+011C   2???           00318         call delay5ms
+                      00319 
+                      00320         ; Entry mode
+011D   3006           00321         movlw   b'00000110'
+011E   2???           00322         call    WR_INS
+011F   2???           00323         call delay5ms
+0120   2???           00324         call delay5ms
+                      00325 
+                      00326         ; Clear ram
+0121   3001           00327         movlw   b'00000001'
+0122   2???           00328         call    WR_INS
+0123   2???           00329         call delay5ms
+0124   2???           00330         call delay5ms
+0125   0008           00331         return
+MPASM 5.55                FLICKER_FOR_ME.ASM   4-1-2014  16:53:08         PAGE 10
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00317 
-3F72                  00318     END
-MPASM 5.55                FLICKER_FOR_ME.ASM   2-24-2014  22:07:02         PAGE 10
+                      00332 
+                      00333 ; Clear the display
+0126                  00334 Clear_Display
+0126   3001           00335                 movlw   B'00000001'
+0127   2???           00336                 call    WR_INS
+0128   0008           00337                 return
+                      00338 
+                      00339 ;Switch lines
+0129                  00340 Switch_Lines
+0129   30C0           00341                 movlw   B'11000000'
+012A   2???           00342                 call    WR_INS
+012B   0008           00343                 return
+                      00344 
+                      00345 ; Write an instruction to the LCD (see page 7-104)
+                      00346 ; The instruction must be in W
+012C                  00347 WR_INS
+012C   1108           00348         bcf             RS                              ;clear RS
+012D   00A1           00349         movwf   com                             ;W --> com
+012E   39F0           00350         andlw   0xF0                    ;mask 4 bits MSB w = X0
+012F   0088           00351         movwf   PORTD                   ;Send 4 bits MSB
+0130   1588           00352         bsf             E                               ;
+0131   2???           00353         call    delay5ms        ;__    __
+0132   1188           00354         bcf             E                               ;  |__|
+0133   0E21           00355         swapf   com,w
+0134   39F0           00356         andlw   0xF0                    ;1111 0010
+0135   0088           00357         movwf   PORTD                   ;send 4 bits LSB
+0136   1588           00358         bsf             E                               ;
+0137   2???           00359         call    delay5ms        ;__    __
+0138   1188           00360         bcf             E                               ;  |__|
+0139   2???           00361         call    delay5ms
+013A   0008           00362         return
+                      00363 
+                      00364 ; Write data at current cursor location
+                      00365 ; Character code (see page 7-104) must be in W
+013B                  00366 WR_DATA
+013B   1508           00367         bsf             RS
+013C   00A2           00368         movwf   dat
+013D   0822           00369         movf    dat,w
+013E   39F0           00370         andlw   0xF0
+013F   3E04           00371         addlw   4
+0140   0088           00372         movwf   PORTD
+0141   1588           00373         bsf             E                               ;
+0142   2???           00374         call    delay5ms        ;__    __
+0143   1188           00375         bcf             E                               ;  |__|
+0144   0E22           00376         swapf   dat,w
+0145   39F0           00377         andlw   0xF0
+0146   3E04           00378         addlw   4
+0147   0088           00379         movwf   PORTD
+0148   1588           00380         bsf             E                               ;
+0149   2???           00381         call    delay5ms        ;__    __
+014A   1188           00382         bcf             E                               ;  |__|
+014B   0008           00383         return
+                      00384 
+MPASM 5.55                FLICKER_FOR_ME.ASM   4-1-2014  16:53:08         PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00385 
+014C                  00386 isr
+014C   00F0           00387     movwf   w_isr           ;save W and status
+014D   0E03           00388     swapf   STATUS, W
+014E   0183           00389     clrf    STATUS
+014F   00F1           00390     movwf   status_isr
+                      00391 ;    movf    PCLATH, W      ;if using pages
+                      00392 ;    movwf   pclath_isr
+                      00393 ;    clrf    PCLATH
+                      00394 
+0150   0BA8           00395     decfsz  count76, F     ;if count76 gets to 0 it's been one second
+0151   2???           00396     goto    end_isr
+                      00397     movlf   D'76', count76  ;so reset count76
+0152   304C               M         movlw   D'76'
+0153   00A8               M         movwf   count76
+0154   0AA9           00398     incf    op_time, F         ; and increment op_time
+                      00399 
+0155                  00400 end_isr
+                      00401 
+0155   1889           00402     btfsc   PHOTODATA       ;if PHOTODATA is 1, light is on
+0156   0AA6           00403     incf    photocount, F       ;if it is 1, light is on so photocount++
+                      00404 
+                      00405 ;    movf    pclath_isr, W  ;if using pages
+                      00406 ;    movwf    PCLATH
+0157   0E71           00407     swapf   status_isr, W   ;restore W and status
+0158   0083           00408     movwf   STATUS
+0159   0EF0           00409     swapf   w_isr, F
+015A   0E70           00410     swapf   w_isr, W
+015B   110B           00411     bcf     INTCON, T0IF    ;clear the interrupt flag
+015C   0009           00412     retfie
+                      00413 
+                      00414 
+3F72                  00415     END
+MPASM 5.55                FLICKER_FOR_ME.ASM   4-1-2014  16:53:08         PAGE 12
 
 
 SYMBOL TABLE
@@ -498,6 +647,7 @@ ADIF                              00000006
 ADON                              00000000
 ADRESH                            0000001E
 ADRESL                            0000009E
+BCDadd3                           000000DC
 BCLIE                             00000003
 BCLIF                             00000003
 BF                                00000000
@@ -534,19 +684,19 @@ CKE                               00000006
 CKP                               00000004
 CREN                              00000004
 CSRC                              00000007
-Clear_Display                     000000CF
+Clear_Display                     00000126
 D                                 00000005
-DATA_ADDRESS                      00000005
-MPASM 5.55                FLICKER_FOR_ME.ASM   2-24-2014  22:07:02         PAGE 11
+MPASM 5.55                FLICKER_FOR_ME.ASM   4-1-2014  16:53:08         PAGE 13
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+DATA_ADDRESS                      00000005
 DC                                00000001
 D_A                               00000005
 D_NOT_A                           00000005
-Delay_0                           000000AC
+Delay_0                           000000D0
 Display                           
 E                                 PORTD,3
 EEADR                             0000010D
@@ -567,8 +717,8 @@ GIE                               00000007
 GO                                00000002
 GO_DONE                           00000002
 GO_NOT_DONE                       00000002
-HalfS                             00000099
-HalfS_0                           0000009F
+HalfS                             000000BD
+HalfS_0                           000000C3
 I2C_DATA                          00000005
 I2C_READ                          00000002
 I2C_START                         00000003
@@ -581,7 +731,7 @@ INTE                              00000004
 INTEDG                            00000006
 INTF                              00000001
 IRP                               00000007
-InitLCD                           000000B1
+InitLCD                           00000108
 LED_fail                          0000000B
 NOT_A                             00000005
 NOT_ADDRESS                       00000005
@@ -595,13 +745,13 @@ NOT_RC8                           00000006
 NOT_T1SYNC                        00000002
 NOT_TO                            00000004
 NOT_TX8                           00000006
-NOT_W                             00000002
-MPASM 5.55                FLICKER_FOR_ME.ASM   2-24-2014  22:07:02         PAGE 12
+MPASM 5.55                FLICKER_FOR_ME.ASM   4-1-2014  16:53:08         PAGE 14
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+NOT_W                             00000002
 NOT_WRITE                         00000002
 OBF                               00000006
 OERR                              00000001
@@ -616,7 +766,7 @@ PCLATH                            0000000A
 PCON                              0000008E
 PEIE                              00000006
 PEN                               00000002
-PHOTODATA                         PORTA,5
+PHOTODATA                         PORTE,1
 PIE1                              0000008C
 PIE2                              0000008D
 PIR1                              0000000C
@@ -654,13 +804,13 @@ RBIE                              00000003
 RBIF                              00000000
 RC0                               00000000
 RC1                               00000001
-RC2                               00000002
-MPASM 5.55                FLICKER_FOR_ME.ASM   2-24-2014  22:07:02         PAGE 13
+MPASM 5.55                FLICKER_FOR_ME.ASM   4-1-2014  16:53:08         PAGE 15
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RC2                               00000002
 RC3                               00000003
 RC4                               00000004
 RC5                               00000005
@@ -713,16 +863,16 @@ SSPM1                             00000001
 SSPM2                             00000002
 SSPM3                             00000003
 SSPOV                             00000006
-SSPSTAT                           00000094
-MPASM 5.55                FLICKER_FOR_ME.ASM   2-24-2014  22:07:02         PAGE 14
+MPASM 5.55                FLICKER_FOR_ME.ASM   4-1-2014  16:53:08         PAGE 16
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+SSPSTAT                           00000094
 STATUS                            00000003
 SYNC                              00000004
-Switch_Lines                      000000D2
+Switch_Lines                      00000129
 T0CS                              00000005
 T0IE                              00000005
 T0IF                              00000002
@@ -772,13 +922,13 @@ TRISB6                            00000006
 TRISB7                            00000007
 TRISC                             00000087
 TRISC0                            00000000
-TRISC1                            00000001
-MPASM 5.55                FLICKER_FOR_ME.ASM   2-24-2014  22:07:02         PAGE 15
+MPASM 5.55                FLICKER_FOR_ME.ASM   4-1-2014  16:53:08         PAGE 17
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+TRISC1                            00000001
 TRISC2                            00000002
 TRISC3                            00000003
 TRISC4                            00000004
@@ -808,7 +958,7 @@ TXIE                              00000004
 TXIF                              00000004
 TXREG                             00000019
 TXSTA                             00000098
-Table_Counter                     00000070
+Table_Counter                     00000020
 Testing_Msg                       00000023
 UA                                00000001
 W                                 00000000
@@ -816,14 +966,14 @@ WCOL                              00000007
 WR                                00000001
 WREN                              00000002
 WRERR                             00000003
-WR_DATA                           000000E4
-WR_INS                            000000D5
+WR_DATA                           0000013B
+WR_INS                            0000012C
 Z                                 00000002
-_.org_1_004F                      0000004F
-_.org_1_00A0                      000000A0
-_.org_1_00A2                      000000A2
-_.org_1_00A5                      000000A5
-_.org_1_00AD                      000000AD
+_.org_1_0054                      00000054
+_.org_1_00C4                      000000C4
+_.org_1_00C6                      000000C6
+_.org_1_00C9                      000000C9
+_.org_1_00D1                      000000D1
 _BODEN_OFF                        00003FBF
 _BODEN_ON                         00003FFF
 _BOREN_OFF                        00003FBF
@@ -831,13 +981,13 @@ _BOREN_ON                         00003FFF
 _CONFIG                           00002007
 _CPD_OFF                          00003FFF
 _CPD_ON                           00003EFF
-_CP_ALL                           00000FCF
-MPASM 5.55                FLICKER_FOR_ME.ASM   2-24-2014  22:07:02         PAGE 16
+MPASM 5.55                FLICKER_FOR_ME.ASM   4-1-2014  16:53:08         PAGE 18
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+_CP_ALL                           00000FCF
 _CP_HALF                          00001FDF
 _CP_OFF                           00003FFF
 _CP_UPPER_256                     00002FEF
@@ -869,42 +1019,52 @@ _WRT_OFF                          00003DFF
 _WRT_ON                           00003FFF
 _XT_OSC                           00003FFD
 __16F877                          00000001
-aboveboth                         0000008D
-check_threshold1                  0000006D
-check_threshold2                  0000007D
-com                               00000071
-count38                           0000007A
-dat                               00000072
-del1                              00000073
-del2                              00000074
-delay5ms                          000000A8
-end_isr                           000000FE
-hdelH                             00000075
-hdelL                             00000077
-hdelM                             00000076
+aboveboth                         000000A7
+add3huns                          000000F9
+add3ones                          000000FF
+add3tens                          000000FC
+big_number                        000000D5
+bignumcount                       0000002D
+carryones                         00000102
+carrytens                         00000105
+check_threshold1                  00000073
+check_threshold2                  0000008D
+com                               00000021
+count76                           00000028
+dat                               00000022
+delH                              00000023
+delL                              00000025
+delM                              00000024
+delay5ms                          000000CC
+end_isr                           00000155
+huns                              0000002A
 init                              00000032
-isr                               000000F5
-movff                             
-movlf                             
-op_time                           0000007B
-photocount                        00000078
-photoval                          00000079
-start                             00000051
-status_isr                        0000007D
-MPASM 5.55                FLICKER_FOR_ME.ASM   2-24-2014  22:07:02         PAGE 17
+isr                               0000014C
+MPASM 5.55                FLICKER_FOR_ME.ASM   4-1-2014  16:53:08         PAGE 19
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
-test_candle                       0000005B
-threshold1                        D'15'
-threshold2                        D'65'
-w_isr                             0000007C
-waiting                           00000047
+movff                             
+movlf                             
+ones                              0000002C
+op_time                           00000029
+photocount                        00000026
+photoval                          00000027
+save                              0000002E
+start                             00000056
+status_isr                        00000071
+tens                              0000002B
+test_candle                       00000060
+threshold1                        D'10'
+threshold2                        D'142'
+w_isr                             00000070
+waiting                           0000004C
+writeBCD                          
 
 Errors   :     0
 Warnings :     0 reported,     0 suppressed
-Messages :     5 reported,     0 suppressed
+Messages :     8 reported,     0 suppressed
 
 

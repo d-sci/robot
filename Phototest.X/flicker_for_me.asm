@@ -1,5 +1,5 @@
  ; Test for photoresistor circuit.
- ; Connect PHOTODATA to RA5: 1 = light is on   0 = light is off
+ ; Connect PHOTODATA to RE1: 1 = light is on   0 = light is off
 
 
     list p=16f877
@@ -9,24 +9,30 @@
 
     #define	RS 	PORTD,2
 	#define	E 	PORTD,3
-    #define PHOTODATA  PORTA,5
-    #define threshold1  D'15'
-    #define threshold2  D'65'
+    #define PHOTODATA  PORTE,1
+    #define threshold1  D'10'
+    #define threshold2  D'142'
 
 
-    cblock  0x70
+    cblock  0x20
         Table_Counter   ; for LCD stuff
 		com
 		dat
-        del1            ; for delay 5ms delay routine
-        del2
-        hdelH          ;for delay 0.5s routine
-        hdelM
-        hdelL
+        delH          ;for delay 0.5s routine
+        delM
+        delL
         photocount
         photoval
-        count38
+        count76
         op_time
+        huns
+        tens
+        ones
+        bignumcount
+        save
+    endc
+
+    cblock 0x70
         w_isr
         status_isr
     endc
@@ -59,6 +65,14 @@ movff   macro   source, dest
         movwf   dest
         endm
 
+; Write to LCD (all in bank0 please)
+writeBCD    macro   reg         ; from a register containing BCD
+            movf    reg, W
+            addlw   B'00110000'
+            call WR_DATA
+            endm
+
+
     ORG       0x000
     goto      init
     ORG       0x004
@@ -82,11 +96,14 @@ Testing_Msg
 init
     movlf     b'10000000', INTCON   ;interrupts enabled
 
-    banksel     TRISA               ;bank1
-    movlf     b'00100000', TRISA
-    movlf     b'11110010', TRISB
-    clrf        TRISD
-    movlf   0x07, ADCON1        ;digital input
+    banksel   TRISA                 ; bank 1
+    movlf     b'11000110', OPTION_REG ; 1:128 prescaler for timer
+    clrf      TRISA                 ; PortA[3:0] used for motor
+    movlf     b'11110010', TRISB    ; PortB[7:4] and [1] are keypad inputs
+    movlf     b'00011000', TRISC    ; PortC[4:3] is RTC; [7:6] is RS-232
+    clrf      TRISD                 ; PortD[2:7] is LCD output
+    movlf     b'011', TRISE         ; PortE is ir and photodata
+    movlf   0x07, ADCON1            ; digital input
 
     banksel     PORTA               ;bank0
     clrf        PORTA
@@ -116,12 +133,12 @@ waiting
 
 start
     ;Start the timer
-        movlf       D'38', count38
+        movlf       D'76', count76
         clrf        op_time
         bsf         INTCON, T0IE ;enable Timer0 interrupt
         clrf        TMR0
         banksel     OPTION_REG
-        movlf       B'11000111', OPTION_REG ; 1:256 prescaler
+        movlf       B'11000110', OPTION_REG ; 1:128 prescaler
         bcf        STATUS,RP0     ; back to bank 0
 
 test_candle
@@ -133,6 +150,7 @@ test_candle
     call    HalfS
     call    HalfS
 	movff   photocount, photoval        ;to ensure it wont change again
+    call    big_number
 check_threshold1
     movlw    threshold1
     subwf   photoval, W
@@ -140,6 +158,10 @@ check_threshold1
     goto check_threshold2
     call    Clear_Display
     Display LED_fail        ; < threshold 1 means led fail
+    call    Switch_Lines
+    writeBCD    huns
+    writeBCD    tens
+    writeBCD    ones
     goto    waiting
 check_threshold2
     movlw    threshold2
@@ -148,25 +170,33 @@ check_threshold2
     goto aboveboth
     call    Clear_Display
     Display Pass      ; < threshold 2 means pass
+    call    Switch_Lines
+    writeBCD    huns
+    writeBCD    tens
+    writeBCD    ones
     goto    waiting
 aboveboth
     call    Clear_Display
     Display  Flick_fail      ; else flicker fail
+    call    Switch_Lines
+    writeBCD    huns
+    writeBCD    tens
+    writeBCD    ones
     goto     waiting
 
 
 ; DELAY 0.5S SUBROUTINE (from generator at http://www.piclist.com/techref/piclist/codegen/delay.htm)
 ; Delays exactly 0.5sec
 HalfS
-      movlf 0x8A, hdelH
-      movlf 0xBA, hdelM
-      movlf 0x03, hdelL
+      movlf 0x8A, delH
+      movlf 0xBA, delM
+      movlf 0x03, delL
 HalfS_0
-      decfsz	hdelH, F
+      decfsz	delH, F
 	  goto	$+2
-	  decfsz	hdelM, F
+	  decfsz	delM, F
 	  goto	$+2
-	  decfsz	hdelL, F
+	  decfsz	delL, F
 	  goto	HalfS_0
 
 	  goto	$+1
@@ -177,15 +207,82 @@ HalfS_0
 ; Useful for LCD because PIC is way faster than it can handle
 ; Delays exactly 5ms
 delay5ms
-	movlf	0xC3, del1
-	movlf	0x0A, del2
+	movlf	0xC3, delH
+	movlf	0x0A, delL
 Delay_0
-	decfsz	del1, f
+	decfsz	delH, f
 	goto	$+2
-	decfsz	del2, f
+	decfsz	delL, f
 	goto	Delay_0
     return
 
+; DISPLAY BIG NUMBER SUBROUTINE
+; Modified from http://www.piclist.com/techref/microchip/math/radix/b2a-8b3d-ab.htm
+; Converts 8-bit binary number photoval to three BCDs representing huns, tens, ones
+; Uses "shift and add 3" algorithm
+big_number
+    movlf   8, bignumcount                ;will shift 8 times
+    movff   photoval, save
+    clrf    huns
+    clrf    tens
+    clrf    ones
+
+BCDadd3                             ; if any digit > 5, add3
+    movlw   0x5
+    subwf   huns, W
+    btfsc   STATUS, C
+    call    add3huns
+
+    movlw   0x5
+    subwf   tens, W
+    btfsc   STATUS, C
+    call    add3tens
+
+    movlw   0x5
+    subwf   ones, W
+    btfsc   STATUS, C
+    call    add3ones
+
+    decf    bignumcount, 1
+    bcf     STATUS, C
+    rlf     photoval, 1              ; shift
+    rlf     ones, 1
+    btfsc   ones,4 ;
+    call    carryones               ; carry if too large
+    rlf     tens, 1
+
+    btfsc   tens,4 ;
+    call    carrytens
+    rlf     huns,1
+    bcf     STATUS, C
+
+    movf    bignumcount, W
+    btfss   STATUS, Z
+    goto    BCDadd3                 ; repeat until you've shifted it 8 times
+
+    movff   save, photoval
+    return
+
+add3huns
+    movlw 0x3
+    addwf huns,F
+    return
+add3tens
+    movlw 0x3
+    addwf tens,F
+    return
+add3ones
+    movlw 0x3
+    addwf ones,F
+    return
+carryones
+    bcf ones, 4
+    bsf STATUS, C
+    return
+carrytens
+    bcf tens, 4
+    bsf STATUS, C
+    return
 
 ; Initialize the LCD
 InitLCD
@@ -295,9 +392,9 @@ isr
 ;    movwf   pclath_isr
 ;    clrf    PCLATH
 
-    decfsz  count38, F     ;if count38 gets to 38 it's been one second
+    decfsz  count76, F     ;if count76 gets to 0 it's been one second
     goto    end_isr
-    movlf   D'38', count38  ;so reset count38
+    movlf   D'76', count76  ;so reset count76
     incf    op_time, F         ; and increment op_time
 
 end_isr
