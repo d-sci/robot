@@ -7,25 +7,24 @@
 ;               CONTENTS
 ;
 ; Configuration                     30
-; Definitions                       37
+; Definions                         37
 ; Variables                         48
 ; Macros                            109
 ; Vectors                           188
 ; Tables                            198
 ; Main program                      256
 ;   Standby                         288
-;   Actual operation                366
-;   End of operation                456
-;   Data display interface          539
-;   Logs interface                  551
-; Calibration module                770
-; Motor routines                    817
-; Data display routines             889
-; General purpose subroutines       1306
-; Delay subroutines                 1380
-; LCD subroutines                   1429
-; PC interface subroutines          1532
-; ISR                               1561
+;   Actual operation                361
+;   End of operation                451
+;   Data display interface          534
+;   Logs interface                  546
+; Motor routines                    765
+; Data display routines             837
+; General purpose subroutines       1254
+; Delay subroutines                 1328
+; LCD subroutines                   1377
+; PC interface subroutines          1480
+; ISR                               1509
 ;***************************************
 
    list p=16f877                   ; list directive to define processor
@@ -354,11 +353,6 @@ waiting
          btfsc      STATUS,Z
          goto       logs
 
-         movf       keytemp,W   ;Do calibrate module
-         xorlw      0xA
-         btfsc      STATUS,Z
-         call       calibrate
-
          btfsc		PORTB,1     ;Wait until key is released
          goto		$-1
          goto       waiting
@@ -457,8 +451,8 @@ aboveboth
 end_operation
 
         movlf   D'5', motor_count
-        call    ROTATEMOTOR         ; rotate once more  back to starting position
-        bcf     INTCON, GIE         ; disable interrupts to stop timer
+        call    ROTATEMOTOR ; rotate once more  back to starting position
+        bcf         INTCON, GIE  ;disable interrupts to stop timer
 
         ;Display "complete"
         call       Clear_Display
@@ -467,7 +461,7 @@ end_operation
         ; Shift logs 1-8 -> 2-9
 shiftlogs
         banksel     EEADR               ; bank 2
-        movlf       D'111', EEADR       ; start shifting from 111->125
+        movlf       D'111', EEADR        ; start shifting from 111->125
 shiftlogs_0
         banksel     EECON1              ;bank 3
         bcf         EECON1, EEPGD
@@ -768,57 +762,10 @@ badkeyagain
 ;------------------------------------------------------------
 
 ;***************************************
-; CALIBRATION MODULE
-; For adjusting sensitivity of photoresistor.
-; Tests a candle and displays # of times PR reads high (0-152)
-; As well as what state this means (LF, PASS, FF)
-;***************************************
-calibrate
-    call    Clear_Display
-    clrf    photocount
-    clrf    TMR0
-    bsf     INTCON, GIE     ;enable interrupts
-    call    HalfS
-    call    HalfS
-    call    HalfS
-    call    HalfS
-    movff   photocount, op_time
-    bcf     INTCON,GIE
-    call    big_number
-cal1
-    movlw    threshold1
-    subwf   op_time, W
-    btfsc   STATUS, C       ;if  < threshold 1, C = 0
-    goto cal2
-    Display LED_fail        ; < threshold 1 means led fail
-    goto   end_calibrate
-cal2
-    movlw    threshold2
-    subwf   op_time, W
-    btfsc   STATUS, C       ;if  < threshold 2, C = 0
-    goto cal3
-    Display Pass      ; < threshold 2 means pass
-    goto   end_calibrate
-cal3
-    Display  Flick_fail      ; else flicker fail
-
-end_calibrate
-    call    Switch_Lines
-    writeBCD    huns
-    writeBCD    tens
-    writeBCD    ones
-    call    HalfS
-    call    HalfS
-    call    Clear_Display
-    Display Standby_Msg
-    call    Switch_Lines
-    return
-
-;***************************************
 ; ROTATE MOTOR ROUTINE
 ; Rotates motor by number of steps in motor_count times 4.
 ; (5 gives 20 steps = 36 deg = one slot)
-; pulses ABCD assuming startfrom3 = 0; else pulses CDAB
+; pulses ABCD if startfrom3 = 0; else pulses CDAB
 ; uses half-stepping
 ;***************************************
 
