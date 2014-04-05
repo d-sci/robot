@@ -819,25 +819,13 @@ ROTATEMOTOR
     btfsc   startfrom3, 0
     goto    halfway
 start_rot
-    movlf   b'1001', PORTA          ; pulse A
-    call    motor_del
-    movlf   b'1000', PORTA
-    call    motor_del
-    movlf   b'1010', PORTA          ; pulse B
-    call    motor_del
-    movlf   b'0010', PORTA
-    call    motor_del
+    call	pulseA
+    call	pulseB
     btfsc   startfrom3, 0
     goto    decrement
 halfway
-    movlf   b'0110', PORTA          ; pulse C
-    call    motor_del
-    movlf   b'0100', PORTA
-    call    motor_del
-    movlf   b'0101', PORTA          ; pulse D
-    call    motor_del
-    movlf   b'0001', PORTA
-    call    motor_del
+    call	pulseC
+    call	pulseD
     btfsc   startfrom3, 0
     goto    start_rot
 decrement
@@ -853,32 +841,47 @@ finish_motor
     return
 
 first_two                       ; pulses AB only
-    movlf   b'1001', PORTA
-    call    motor_del
-    movlf   b'1000', PORTA
-    call    motor_del
-    movlf   b'1010', PORTA
-    call    motor_del
-    movlf   b'0010', PORTA
-    call    motor_del
+    call	pulseA
+    call	pulseB
     clrf    PORTA
     bsf     startfrom3, 0
     return
 
 last_two                        ; pulses CD only
-    movlf   b'0110', PORTA
-    call    motor_del
-    movlf   b'0100', PORTA
-    call    motor_del
-    movlf   b'0101', PORTA
-    call    motor_del
-    movlf   b'0001', PORTA
-    call    motor_del
+    call	pulseC
+    call	pulseD
     clrf    PORTA
     bcf     startfrom3,0
     return
 
 
+pulseA
+	movlf   b'1001', PORTA
+    call    motor_del
+    movlf   b'1000', PORTA
+    call    motor_del
+    return
+    
+pulseB
+	movlf   b'1010', PORTA
+    call    motor_del
+    movlf   b'0010', PORTA
+    call    motor_del
+    return
+
+pulseC    
+    movlf   b'0110', PORTA
+    call    motor_del
+    movlf   b'0100', PORTA
+    call    motor_del
+    return
+
+pulseD    
+    movlf   b'0101', PORTA
+    call    motor_del
+    movlf   b'0001', PORTA
+    call    motor_del
+    return
 ;***************************************
 ; DATA DISPLAY ROUTINE
 ; Which key was pressed is stored in W (0000 for "1" to 1111 for "D")
