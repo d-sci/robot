@@ -388,15 +388,15 @@ start
         movlf   0x1F, FSR           ;pointing at right before state1
 
 rotate
-        movlw   d'9'               ; done inspecting once canlex_index (n) = 9
-        subwf   candle_index,W     ; n is # already tested before rotating
-        btfsc   STATUS,Z
-        goto    end_operation
-        movlf    D'5', motor_count
+        movlf   D'5', motor_count
         call    ROTATEMOTOR         ; rotate 20 steps (full rotation)
         incf    candle_index, F     ; n++
         incf    FSR, F
-
+		movlw   D'10'               ; done inspecting once canlex_index (n) = 10
+        subwf   candle_index,W      ; n is also # rotations performed
+        btfsc   STATUS,Z
+        goto    end_operation
+        
 detect_candle
    btfsc   IRDATA
    goto    test_candle      ;yes candle, go test it
@@ -415,14 +415,14 @@ detect_candle
    goto     test_candle     ;yes candle, it just lagged 8 steps
 
    movlf   D'0',INDF        ;really no candle, keep rotating 12 more steps
-   movlw   d'9'               ; done inspecting if n=9
-   subwf   candle_index,W     
-   btfsc   STATUS,Z
-   goto    end_operation
    movlf   D'3', motor_count
    call    ROTATEMOTOR
    incf    candle_index, F    ; n++
    incf    FSR, F
+   movlw   D'10'               ; done if n=10
+   subwf   candle_index,W     
+   btfsc   STATUS,Z
+   goto    end_operation
    goto    detect_candle      ; detect next candle
 
 test_candle
@@ -455,9 +455,6 @@ aboveboth
 
 
 end_operation
-
-        movlf   D'5', motor_count
-        call    ROTATEMOTOR         ; rotate once more  back to starting position
         bcf     INTCON, GIE         ; disable interrupts to stop timer
 
         ;Display "complete"
