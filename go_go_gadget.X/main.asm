@@ -386,10 +386,10 @@ start
         clrf    candle_index        ; n = 0
         bcf     STATUS, IRP
         movlf   0x1F, FSR           ;pointing at right before state1
+        movlf	D'5', motor_count   ;first rotation is 20 steps
 
 rotate
-        movlf   D'5', motor_count
-        call    ROTATEMOTOR         ; rotate 20 steps (full rotation)
+        call    ROTATEMOTOR         ; rotate 12 or 20 steps (based on motor_count)
         incf    candle_index, F     ; n++
         incf    FSR, F
 		movlw   D'10'               ; done inspecting once canlex_index (n) = 10
@@ -414,16 +414,9 @@ detect_candle
    btfsc    IRDATA
    goto     test_candle     ;yes candle, it just lagged 8 steps
 
-   movlf   D'0',INDF        ;really no candle, keep rotating 12 more steps
-   movlf   D'3', motor_count
-   call    ROTATEMOTOR
-   incf    candle_index, F    ; n++
-   incf    FSR, F
-   movlw   D'10'               ; done if n=10
-   subwf   candle_index,W     
-   btfsc   STATUS,Z
-   goto    end_operation
-   goto    detect_candle      ; detect next candle
+   movlf   D'0',INDF        ;really no candle
+   movlf   D'3', motor_count ;keep rotating, but only 12 more steps
+   goto	   rotate
 
 test_candle
    incf    num_tot, F			; keeping track of total number of candles
@@ -440,6 +433,7 @@ check_threshold1
     goto check_threshold2
     movlf   D'2', INDF      ; < threshold 1 means led fail
 	incf    num_LF, F
+	movlf	D'5', motor_count
     goto    rotate
 check_threshold2
     movlw    threshold2
@@ -447,10 +441,12 @@ check_threshold2
     btfsc   STATUS, C       ;if  photoval < threshold 2, C = 0
     goto aboveboth
     movlf   D'1', INDF      ; < threshold 2 means pass
+    movlf	D'5', motor_count
     goto    rotate
 aboveboth
     movlf   D'3', INDF       ;else flicker fail
     incf    num_FF, F
+    movlf	D'5', motor_count
     goto    rotate
 
 
