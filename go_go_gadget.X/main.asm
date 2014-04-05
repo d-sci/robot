@@ -401,16 +401,16 @@ detect_candle
    btfsc   IRDATA
    goto    test_candle      ;yes candle, go test it
 
-   call     first_two       ; two more steps
+   call     two_steps       ; two more steps
    btfsc    IRDATA
    goto     test_candle     ;yes candle, it just lagged 2 steps
-   call     last_two        ; two more steps
+   call     two_steps        ; two more steps
    btfsc    IRDATA
    goto     test_candle     ;yes candle, it just lagged 4 steps
-   call     first_two       ; two more steps
+   call     two_steps       ; two more steps
    btfsc    IRDATA
    goto     test_candle     ;yes candle, it just lagged 6 steps
-   call     last_two        ; two more steps
+   call     two_steps        ; two more steps
    btfsc    IRDATA
    goto     test_candle     ;yes candle, it just lagged 8 steps
 
@@ -840,20 +840,21 @@ finish_motor
     clrf    PORTA
     return
 
-first_two                       ; pulses AB only
+two_steps                      ; pulses only two steps
+    btfsc   startfrom3, 0
+    goto    CD
+AB
     call	pulseA
     call	pulseB
     clrf    PORTA
     bsf     startfrom3, 0
     return
-
-last_two                        ; pulses CD only
-    call	pulseC
-    call	pulseD
-    clrf    PORTA
-    bcf     startfrom3,0
-    return
-
+CD
+	call	pulseC
+	call	pulseD
+	clrf	PORTA
+	bcf		startfrom3, 0
+	return
 
 pulseA
 	movlf   b'1001', PORTA
