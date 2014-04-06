@@ -389,10 +389,14 @@ start
         movlf	D'5', motor_count   ;first rotation is 20 steps
 
 rotate
+        ;movf	candle_index, F
+        ;btfss	STATUS,Z
+        ;call	interim_display
+        
         call    ROTATEMOTOR         ; rotate 12 or 20 steps (based on motor_count)
         incf    candle_index, F     ; n++
         incf    FSR, F
-		movlw   D'10'               ; done inspecting once canlex_index (n) = 10
+		movlw   D'10'               ; done inspecting once candlex_index (n) = 10
         subwf   candle_index,W      ; n is also # rotations performed
         btfsc   STATUS,Z
         goto    end_operation
@@ -883,11 +887,22 @@ pulseD
     movlf   b'0001', PORTA
     call    motor_del
     return
+    
+    
 ;***************************************
 ; DATA DISPLAY ROUTINE
 ; Which key was pressed is stored in W (0000 for "1" to 1111 for "D")
 ; Determines which key it was and displays appropriate info / branch
 ;***************************************
+
+; extra!
+;interim_display
+;	call		Clear_Display
+;	writeBCD	candle_index
+;	movf		INDF, W
+;	call		display_state
+;	return
+
 
 information
     movwf   keytemp             ; Save which key was pressed
