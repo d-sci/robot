@@ -6,26 +6,26 @@
 ;***************************************
 ;               CONTENTS
 ;
-; Configuration                     30
-; Definitions                       37
-; Variables                         48
-; Macros                            109
-; Vectors                           188
-; Tables                            198
-; Main program                      256
-;   Standby                         288
-;   Actual operation                366
-;   End of operation                456
-;   Data display interface          539
-;   Logs interface                  551
-; Calibration module                770
-; Motor routines                    817
-; Data display routines             889
-; General purpose subroutines       1306
-; Delay subroutines                 1380
-; LCD subroutines                   1429
-; PC interface subroutines          1532
-; ISR                               1561
+; Configuration                     31
+; Definitions                       38
+; Variables                         49
+; Macros                            110
+; Vectors                           189
+; Tables                            199
+; Main program                      257
+;   Standby                         289
+;   Actual operation                367
+;   End of operation                458
+;   Data display interface          538
+;   Logs interface                  550
+; Calibration module                769
+; Motor routines                    816
+; Data display routines             894
+; General purpose subroutines       1318
+; Delay subroutines                 1390
+; LCD subroutines                   1441
+; PC interface subroutines          1544
+; ISR                               1573
 ;***************************************
 
    list p=16f877                   ; list directive to define processor
@@ -43,7 +43,7 @@
     #define threshold2  D'151'
     #define IRDATA      PORTE, 0
     #define PHOTODATA   PORTE, 1
-
+    #define continuous  PORTC, 0
 
 ;***************************************
 ; VARIABLES
@@ -264,7 +264,7 @@ init
         movlf     b'11000110', OPTION_REG ; 1:128 prescaler for timer
         clrf      TRISA                 ; PortA[3:0] used for motor
         movlf     b'11110010', TRISB    ; PortB[7:4] and [1] are keypad inputs
-        movlf     b'00011000', TRISC    ; PortC[4:3] is RTC; [7:6] is RS-232
+        movlf     b'00011001', TRISC    ; PortC[4:3] is RTC; [7:6] is RS-232; [0] for continuous
         clrf      TRISD                 ; PortD[2:7] is LCD output
         movlf     b'011', TRISE         ; PortE is IR and PHOTODATA
         movlf     0x07, ADCON1          ; digital input
@@ -371,7 +371,6 @@ start
         clrf    num_FF
         clrf    num_tot
         clrf    num_LF
-        clrf    startfrom3
 
         ;Start the timer
         movlf       D'38', count76  ;start with half a second (to round)
@@ -389,10 +388,10 @@ start
         movlf	D'5', motor_count   ;first rotation is 20 steps
 
 rotate
-        ;movf	candle_index, F
-        ;btfss	STATUS,Z
-        ;call	interim_display
-        
+        movf	candle_index, F
+        btfss	STATUS,Z
+        call	interim_display     ; display recent state (but not first)
+ 
         call    ROTATEMOTOR         ; rotate 12 or 20 steps (based on motor_count)
         incf    candle_index, F     ; n++
         incf    FSR, F
@@ -400,7 +399,7 @@ rotate
         subwf   candle_index,W      ; n is also # rotations performed
         btfsc   STATUS,Z
         goto    end_operation
-        
+
 detect_candle
    btfsc   IRDATA
    goto    test_candle      ;yes candle, go test it
@@ -417,9 +416,15 @@ detect_candle
    call     two_steps        ; two more steps
    btfsc    IRDATA
    goto     test_candle     ;yes candle, it just lagged 8 steps
+   call     two_steps        ; two more steps
+   btfsc    IRDATA
+   goto     test_candle     ;yes candle, it just lagged 10 steps
+   call     two_steps        ; two more steps
+   btfsc    IRDATA
+   goto     test_candle     ;yes candle, it just lagged 12 steps
 
    movlf   D'0',INDF        ;really no candle
-   movlf   D'3', motor_count ;keep rotating, but only 12 more steps
+   movlf   D'2', motor_count ;keep rotating, but only 8 more steps
    goto	   rotate
 
 test_candle
@@ -458,9 +463,12 @@ end_operation
         bcf     INTCON, GIE         ; disable interrupts to stop timer
 
         ;Display "complete"
+        btfsc      continuous
+        goto       skip_msg
         call       Clear_Display
         Display    End_Msg          ; "Complete"
 
+skip_msg
         ; Shift logs 1-8 -> 2-9
 shiftlogs
         banksel     EEADR               ; bank 2
@@ -488,9 +496,9 @@ shiftlogs_0
         subwf       EEADR, W
         btfsc       STATUS, Z
         goto        write_log1          ; if EEADR = 14 we're done 
-        banksel op_time             ; for some reason I need to delay here
-        call   delay5ms             ; or else I get an infinite loop
-        banksel EEADR
+        banksel     op_time             ; for some reason I need to delay here
+        call        delay5ms             ; or else I get an infinite loop
+        banksel     EEADR
         movlw       D'15'               ;else EEADR -= 15 to shift next byte
         subwf       EEADR, F
         goto        shiftlogs_0
@@ -525,14 +533,19 @@ write_log1_0
         bcf         STATUS, RP0         ;so go back to bank 0 and continue
         bcf         STATUS, RP1
 
+        ;just restart if in continuous mode
+        btfsc   continuous
+        goto    start
+
         ; Display info screens
-        call       time             ; "Operation time: X sec"
-        call       HalfS
-        call       HalfS
-        call       summary          ; "Total candles: X. Defective: Y"
-        call       HalfS
-        call       HalfS
+;        call       time             ; "Operation time: X sec"
+;        call       HalfS
+;        call       HalfS
+;        call       summary          ; "Total candles: X. Defective: Y"
+;        call       HalfS
+;        call       HalfS
         call       defective        ; "FF: a b c. LF: d e f"
+
 ;-----------------------------------------------------------------------
 ; DATA DISPLAY INTERFACE
 
@@ -866,7 +879,7 @@ pulseA
     movlf   b'1000', PORTA
     call    motor_del
     return
-    
+
 pulseB
 	movlf   b'1010', PORTA
     call    motor_del
@@ -881,7 +894,7 @@ pulseC
     call    motor_del
     return
 
-pulseD    
+pulseD
     movlf   b'0101', PORTA
     call    motor_del
     movlf   b'0001', PORTA
@@ -890,19 +903,10 @@ pulseD
     
     
 ;***************************************
-; DATA DISPLAY ROUTINE
+; DATA DISPLAY ROUTINES
 ; Which key was pressed is stored in W (0000 for "1" to 1111 for "D")
 ; Determines which key it was and displays appropriate info / branch
 ;***************************************
-
-; extra!
-;interim_display
-;	call		Clear_Display
-;	writeBCD	candle_index
-;	movf		INDF, W
-;	call		display_state
-;	return
-
 
 information
     movwf   keytemp             ; Save which key was pressed
@@ -1056,7 +1060,6 @@ check_start
 
 default_key         ; will never get here unless you hit "LOGS"
     return
-
 
 ;Display state subroutine
 ;stateN is in W
@@ -1314,6 +1317,13 @@ notens
     bcf STATUS,RP1     ; back to bank 0
     return
 
+; extra! displays state of candle as it's being tested
+interim_display
+	call		Clear_Display
+	writeBCD	candle_index
+	movf		INDF, W
+	call		display_state
+	return
 
 ;***************************************
 ; GENERAL PURPOSE SUBROUTINES
@@ -1427,10 +1437,10 @@ Delay_0
     return
 
 ; MOTOR DELAY SUBROUTINE.
-; Delays ~10ms for the motor. (~1sec per total rotation)
+; Delays ~25ms for the motor. (~1sec per total rotation)
 motor_del
       movlf 0xF3, delH
-      movlf 0x2F, delL          
+      movlf 0x37, delL
 motor_del_0
       decfsz	delH, F
 	  goto      $+2
