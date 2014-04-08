@@ -745,34 +745,53 @@ wanna_export
     movwf       keytemp     ; Save which key was pressed
 
 check_wanna                 ;export
-    movf    keytemp, W
     xorlw   0xF
     btfss   STATUS,Z
     goto    check_nothx
     call    export
     goto    logs
 
-check_nothx                 ;return to logs
-    movf    keytemp, W
+check_nothx
+    movf    keytemp,W
+    andlw   B'0011'
+    xorlw   B'0011'
+    btfsc   STATUS,Z
+    goto    wanna_export    ;summary,defective, or time -> do nothing
+
+    movf    keytemp,W
+    xorlw   0xC
+    btfsc   STATUS,Z
+    goto    wanna_export    ;start -> do nothing
+
+    movf    keytemp,W
     xorlw   0xE
-    btfss   STATUS,Z
-    goto    check_immapeace
-    goto    logs
+    btfsc   STATUS,Z
+    goto    logs            ;logs -> backto logs menu
 
-check_immapeace             ;return to standby
-    movf    keytemp, W
-    xorlw   0xD
-    btfss   STATUS,Z
-    goto    badkeyagain
-    call    Clear_Display
-    Display Standby_Msg
-    call    Switch_Lines
-    goto    waiting
+    goto    check_log1      ;otherwise it was 1-9 or standby
 
-badkeyagain
-    btfsc		PORTB,1     ;Wait until key is released
-    goto		$-1
-    goto        wanna_export
+
+;check_nothx                 ;return to logs
+;    movf    keytemp, W
+;    xorlw   0xE
+;    btfss   STATUS,Z
+;    goto    check_immapeace
+;    goto    logs
+;
+;check_immapeace             ;return to standby
+;    movf    keytemp, W
+;    xorlw   0xD
+;    btfss   STATUS,Z
+;    goto    badkeyagain
+;    call    Clear_Display
+;    Display Standby_Msg
+;    call    Switch_Lines
+;    goto    waiting
+;
+;badkeyagain
+;    btfsc		PORTB,1     ;Wait until key is released
+;    goto		$-1
+;    goto        wanna_export
 
 ; END OF MAIN PROGRAM
 ;------------------------------------------------------------
