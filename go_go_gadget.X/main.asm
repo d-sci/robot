@@ -10,22 +10,21 @@
 ; Definitions                       38
 ; Variables                         49
 ; Macros                            110
-; Vectors                           189
-; Tables                            199
-; Main program                      259
-;   Standby                         288
-;   Operation                       371
-;   End of operation                466
-;   Data display interface          562
-;   Logs interface                  715
-;   Calibration module              923
-; Motor subroutines                 975
-; Data display subroutines          1053
-; General purpose subroutines       1209
-; Delay subroutines                 1283
-; LCD subroutines                   1332
-; PC interface subroutines          1435
-; ISR                               1576
+; Vectors                           190
+; Tables                            200
+; Main program                      263
+;   Standby                         292
+;   Operation                       373
+;   Data display interface          555
+;   Logs interface                  708
+;   Calibration module              915
+; Motor subroutines                 967
+; Data display subroutines          1045
+; General purpose subroutines       1192
+; Delay subroutines                 1266
+; LCD subroutines                   1315
+; PC interface subroutines          1412
+; ISR                               1554
 ;***************************************
 
    list p=16f877                   ; list directive to define processor
@@ -96,7 +95,7 @@
         candle_index
         photocount      ;for testing candle
         photoval
-        motor_count     ;for rotate
+        motor_count     ;for rotating motor
         startfrom3      ;for rotate troubleshooting
     endc
 
@@ -128,7 +127,6 @@ loop_disp
 end_disp
 		endm
 
-
 ;Shortcuts for moving literals / registers
 movlf   macro   l, f
         movlw   l
@@ -144,7 +142,7 @@ movff   macro   source, dest
 writeBCD    macro   reg             ;from a register containing BCD
             movf    reg, W
             addlw   B'00110000'
-            call WR_DATA
+            call    WR_DATA
             endm
 
 writechar   macro   asc             ;ASCII code literal (or in "")
@@ -152,9 +150,9 @@ writechar   macro   asc             ;ASCII code literal (or in "")
             call    WR_DATA
             endm
 
-writeASC        macro   reg         ;from a register containing ASCII
+writeASC    macro   reg             ;from a register containing ASCII
             movf    reg, W
-            call WR_DATA
+            call    WR_DATA
             endm
 
 spacebar    macro                   ; move LCD over 1 space
@@ -182,9 +180,11 @@ printBCD    macro   BCD            ;BCD inside a register
             endm
 
 newline     macro                  ;new line on computer
-            printchar   0xA ;changes line
-            printchar   0xD ;goes back to left margin
+            printchar   0xA         ;changes line
+            printchar   0xD         ;goes back to left margin
             endm
+
+
 ;***************************************
 ; VECTORS
 ;***************************************
@@ -198,6 +198,7 @@ newline     macro                  ;new line on computer
 ;***************************************
 ; TABLES (MESSAGES)
 ;***************************************
+
 Standby_Msg
 		addwf	PCL,F
 		dt		"STANDBY", 0
@@ -255,12 +256,14 @@ Op_at
 Cal_Msg
         addwf   PCL,F
         dt      "Calibration test",0
+
+
 ;***************************************
 ; MAIN PROGRAM
 ;***************************************
 
 init
-        movlf     b'00100000', INTCON   ;no interrupts yet, but Timer0 ready 
+        movlf     b'00100000', INTCON   ; no interrupts yet, but Timer0 ready
 
         banksel   TRISA                 ; bank 1
         movlf     b'11000110', OPTION_REG ; 1:128 prescaler for timer
@@ -271,116 +274,114 @@ init
         movlf     b'011', TRISE         ; PortE is IR and PHOTODATA
         movlf     0x07, ADCON1          ; digital input
 
-        bcf       STATUS,RP0        ; select bank 0
+        bcf       STATUS,RP0        ; bank 0
         clrf      PORTA
         clrf      PORTB
         clrf      PORTC
         clrf      PORTD
         clrf      PORTE
 
-        call 	  i2c_common_setup  ;Set up I2C for communication. End in bank1
-        call      InitLCD           ;Initialize the LCD. End in bank0
-        call      InitUSART         ;Set up USART for RS232. End in bank1
+        call 	  i2c_common_setup      ; Set up I2C for communication. End in bank1.
+        call      InitLCD               ; Initialize the LCD. End in bank0.
+        call      InitUSART             ; Set up USART for RS232. End in bank1.
 
-        bcf       STATUS,RP0        ;Back to bank0
+        bcf       STATUS,RP0            ; back to bank0
 
  ;--------------------------------------------------
  ;      STANDBY MODE
 
 standby
-        call    Clear_Display
-        Display Standby_Msg
-        call    Switch_Lines
+        call        Clear_Display
+        Display     Standby_Msg
+        call        Switch_Lines
 
 waiting
         ; Display date and time.
         ; Also save starting time for log (will stop updating once we start)
-        writechar "2"           ;First line shows 20**/**/**
-        writechar "0"
-        rtc_read	0x06		;Read Address 0x06 from DS1307---year
-		movf	0x77,W
-        movwf    start_year10   ;Save starting year dig10
-		call	WR_DATA
-		movf	0x78,W
-        movwf    start_year1    ;Save starting year dig1
-		call	WR_DATA
-		writechar "/"
-		rtc_read	0x05		;Read Address 0x05 from DS1307---month
-		movf	0x77,W
-        movwf    start_month10  ;Save starting month dig10
-		call	WR_DATA
-		movf	0x78,W
-        movwf    start_month1   ;Save starting month dig1
-		call	WR_DATA
+        writechar   "2"             ;first line shows 20**/**/**
+        writechar   "0"
+        rtc_read	0x06            ;read Address 0x06 from DS1307---year
+		movf        0x77,W
+        movwf       start_year10    ;save starting year dig10
+		call        WR_DATA
+		movf        0x78,W
+        movwf       start_year1     ;save starting year dig1
+		call        WR_DATA
+		writechar   "/"
+		rtc_read	0x05            ;read Address 0x05 from DS1307---month
+		movf        0x77,W
+        movwf       start_month10   ;save starting month dig10
+		call        WR_DATA
+		movf        0x78,W
+        movwf       start_month1    ;save starting month dig1
+		call        WR_DATA
 		writechar	"/"
-		rtc_read	0x04		;Read Address 0x04 from DS1307---date
-		movf	0x77,W
-        movwf    start_date10   ;Save starting date dig10
-		call	WR_DATA
-		movf	0x78,W
-        movwf    start_date1    ;Save starting date dig1
-		call	WR_DATA
+		rtc_read	0x04            ;read Address 0x04 from DS1307---date
+		movf        0x77,W
+        movwf       start_date10    ;save starting date dig10
+		call        WR_DATA
+		movf        0x78,W
+        movwf       start_date1     ;save starting date dig1
+		call        WR_DATA
 		spacebar
-		rtc_read	0x02		;Read Address 0x02 from DS1307---hour
-		movf	0x77,W
-        movwf    start_hour10   ;Save starting hour dig10
-		call	WR_DATA
-		movf	0x78,W
-        movwf    start_hour1    ;Save starting hour dig1
-		call	WR_DATA
-		writechar ":"
-		rtc_read	0x01		;Read Address 0x01 from DS1307---min
-		movf	0x77,W
-        movwf    start_min10    ;Save starting min dig10
-		call	WR_DATA
-		movf	0x78,W
-        movwf    start_min1     ;Save starting min dig1
-		call	WR_DATA
+		rtc_read	0x02            ;read Address 0x02 from DS1307---hour
+		movf        0x77,W
+        movwf       start_hour10    ;save starting hour dig10
+		call        WR_DATA
+		movf        0x78,W
+        movwf       start_hour1     ;save starting hour dig1
+		call        WR_DATA
+		writechar   ":"
+		rtc_read	0x01            ;read Address 0x01 from DS1307---min
+		movf        0x77,W
+        movwf       start_min10     ;save starting min dig10
+		call        WR_DATA
+		movf        0x78,W
+        movwf       start_min1      ;save starting min dig1
+		call        WR_DATA
 
         ; Move cursor back to start of second line
         ; We will update displayed time but not the word "STANDBY"
-        movlw   B'11000000'
-        call    WR_INS
+        movlw       B'11000000'
+        call        WR_INS
 
         ;Poll to start (will have to hold key for ~0.5sec)
-         btfss		PORTB,1     ;Wait until data is available from the keypad
-         goto		waiting
+         btfss		PORTB,1     ;wait until data is available from the keypad
+         goto		waiting     ;meanwhile just update time
 
-         swapf		PORTB,W     ;Read PortB<7:4> into W<3:0>
+         swapf		PORTB,W     ;read PortB<7:4> into W<3:0>
          andlw		0x0F
          movwf      keytemp
-         xorlw      0xC         ;Will be all zeros if its "START"
+         xorlw      0xC         ;will be all zeros if its "START"
          btfsc      STATUS,Z    ;and Z will be high, so skip if not high
-         goto       start
+         goto       start       ;go to start
 
-         movf       keytemp,W   ;Go to log interface
+         movf       keytemp,W   ;go to log interface if its "LOGS"
          xorlw      0xE
          btfsc      STATUS,Z
          goto       logs
 
-         movf       keytemp,W   ;Do calibrate module
+         movf       keytemp,W   ;do calibrate module if its 9
          xorlw      0xA
          btfsc      STATUS,Z
          goto       calibrate
 
-         btfsc		PORTB,1     ;Wait until key is released
-         goto		$-1
-         goto       waiting
+         goto       waiting     ;otherwise just go back
 
 ;-----------------------------------------------------------
 ;       ACTUAL OPERATION
 
 start
-        ;clear numbers
-        clrf    num_FF
-        clrf    num_tot
-        clrf    num_LF
-
         ;Start the timer
         movlf       D'38', count76  ;start with half a second (to round)
         clrf        op_time
         clrf        TMR0
         bsf         INTCON, GIE     ;enable interrupts
+
+        ;Clear accumulators
+        clrf    num_FF
+        clrf    num_tot
+        clrf    num_LF
 
         ;Display starting message
         call        Clear_Display
@@ -396,7 +397,7 @@ rotate
         btfss	STATUS,Z
         call	interim_display     ; display recent state (but not first)
  
-        call    ROTATEMOTOR         ; rotate 12 or 20 steps (based on motor_count)
+        call    ROTATEMOTOR         ; rotate (4 x motor_count) steps
         incf    candle_index, F     ; n++
         incf    FSR, F
 		movlw   D'10'               ; done inspecting once candlex_index (n) = 10
@@ -407,64 +408,61 @@ rotate
 detect_candle
    btfsc   IRDATA
    goto    test_candle      ;yes candle, go test it
-
    call     two_steps       ; two more steps
    btfsc    IRDATA
    goto     test_candle     ;yes candle, it just lagged 2 steps
-   call     two_steps        ; two more steps
+   call     two_steps       ; two more steps
    btfsc    IRDATA
    goto     test_candle     ;yes candle, it just lagged 4 steps
    call     two_steps       ; two more steps
    btfsc    IRDATA
    goto     test_candle     ;yes candle, it just lagged 6 steps
-   call     two_steps        ; two more steps
+   call     two_steps       ; two more steps
    btfsc    IRDATA
    goto     test_candle     ;yes candle, it just lagged 8 steps
-   call     two_steps        ; two more steps
+   call     two_steps       ; two more steps
    btfsc    IRDATA
    goto     test_candle     ;yes candle, it just lagged 10 steps
-   call     two_steps        ; two more steps
+   call     two_steps       ; two more steps
    btfsc    IRDATA
    goto     test_candle     ;yes candle, it just lagged 12 steps
-
-   movlf   D'0',INDF        ;really no candle
-   movlf   D'2', motor_count ;keep rotating, but only 8 more steps
-   goto	   rotate
+   movlf    D'0',INDF       ;really no candle
+   movlf    D'2', motor_count ;keep rotating, but only 8 more steps
+   goto     rotate
 
 test_candle
-   incf    num_tot, F			; keeping track of total number of candles
-   clrf    photocount
-   call    HalfS                ; test for 2 seconds
-   call    HalfS
-   call    HalfS
-   call    HalfS
-   movff   photocount, photoval        ;to ensure it wont change again
+   incf     num_tot, F          ; keeping track of total number of candles
+   clrf     photocount
+   call     HalfS               ; test for 2 seconds
+   call     HalfS
+   call     HalfS
+   call     HalfS
+   movff    photocount, photoval   ;to ensure it wont change again
 check_threshold1
-    movlw    threshold1
+    movlw   threshold1
     subwf   photoval, W
-    btfsc   STATUS, C       ;if  photoval < threshold 1, C = 0
-    goto check_threshold2
-    movlf   D'2', INDF      ; < threshold 1 means led fail
+    btfsc   STATUS, C           ;if  photoval < threshold 1, C = 0
+    goto    check_threshold2
+    movlf   D'2', INDF          ; < threshold 1 means led fail
 	incf    num_LF, F
 	movlf	D'5', motor_count
     goto    rotate
 check_threshold2
     movlw    threshold2
     subwf   photoval, W
-    btfsc   STATUS, C       ;if  photoval < threshold 2, C = 0
+    btfsc   STATUS, C           ;if  photoval < threshold 2, C = 0
     goto aboveboth
-    movlf   D'1', INDF      ; < threshold 2 means pass
+    movlf   D'1', INDF          ; < threshold 2 means pass
     movlf	D'5', motor_count
     goto    rotate
 aboveboth
-    movlf   D'3', INDF       ;else flicker fail
+    movlf   D'3', INDF          ;else flicker fail
     incf    num_FF, F
     movlf	D'5', motor_count
     goto    rotate
 
-
 end_operation
-        ;if it skipped, rotate until back in a serviceable position
+        ;If it skipped, rotate until back in a serviceable position
         btfss   IRDATA
         goto    worked_fine
         movlf   D'5', motor_count
@@ -476,7 +474,7 @@ worked_fine
 
         ;Display "complete"
         btfsc      continuous
-        goto       skip_msg
+        goto       skip_msg         ; don't display completion msg in continuous mode
         call       Clear_Display
         Display    End_Msg          ; "Complete"
 
@@ -549,13 +547,7 @@ write_log1_0
         btfsc   continuous
         goto    start
 
-        ; Display info screens
-;        call       time             ; "Operation time: X sec"
-;        call       HalfS
-;        call       HalfS
-;        call       summary          ; "Total candles: X. Defective: Y"
-;        call       HalfS
-;        call       HalfS
+        ; Display defective screen
         call       defective        ; "FF: a b c. LF: d e f"
 
 ;-----------------------------------------------------------------------
@@ -565,131 +557,131 @@ poll     btfss		PORTB,1     ;Wait until data is available from the keypad
          goto		$-1
          swapf		PORTB,W     ;Read PortB<7:4> into W<3:0>
          andlw		0x0F
-         movwf      keytemp             ; Save which key was pressed
+         movwf      keytemp     ; Save which key was pressed
 
 check_1
-    xorlw   0x0         ;will be all zeros if its 1
-    btfss   STATUS,Z    ;and Z will be high, so skip
-    goto    check_2
-    call    Clear_Display
-    writechar "1"
-    movf    state1, W
-    call    display_state
-    goto    poll
+    xorlw       0x0             ;will be all zeros if its 1
+    btfss       STATUS,Z        ;and Z will be high, so skip
+    goto        check_2         ;otherwise go check if its 2
+    call        Clear_Display
+    writechar   "1"             ;for 1-9, will display its state
+    movf        state1, W
+    call        display_state
+    goto        poll
 
 check_2
-    movf    keytemp, W
-    xorlw   0x1
-    btfss   STATUS,Z
-    goto    check_3
-    call    Clear_Display
-    writechar "2"
-    movf    state2, W
-    call    display_state
-    goto    poll
+    movf        keytemp, W
+    xorlw       0x1
+    btfss       STATUS,Z
+    goto        check_3
+    call        Clear_Display
+    writechar   "2"
+    movf        state2, W
+    call        display_state
+    goto        poll
 
 check_3
-    movf    keytemp, W
-    xorlw   0x2
-    btfss   STATUS,Z
-    goto    check_4
-    call    Clear_Display
-    writechar "3"
-    movf    state3, W
-    call    display_state
-    goto    poll
+    movf        keytemp, W
+    xorlw       0x2
+    btfss       STATUS,Z
+    goto        check_4
+    call        Clear_Display
+    writechar   "3"
+    movf        state3, W
+    call        display_state
+    goto        poll
 
 check_4
-    movf    keytemp, W
-    xorlw   0x4
-    btfss   STATUS,Z
-    goto    check_5
-    call    Clear_Display
-    writechar "4"
-    movf    state4, W
-    call    display_state
-    goto    poll
+    movf        keytemp, W
+    xorlw       0x4
+    btfss       STATUS,Z
+    goto        check_5
+    call        Clear_Display
+    writechar   "4"
+    movf        state4, W
+    call        display_state
+    goto        poll
 
 check_5
-    movf    keytemp, W
-    xorlw   0x5
-    btfss   STATUS,Z
-    goto    check_6
-    call    Clear_Display
-    writechar "5"
-    movf    state5, W
-    call    display_state
-    goto    poll
+    movf        keytemp, W
+    xorlw       0x5
+    btfss       STATUS,Z
+    goto        check_6
+    call        Clear_Display
+    writechar   "5"
+    movf        state5, W
+    call        display_state
+    goto        poll
 
 check_6
-    movf    keytemp, W
-    xorlw   0x6
-    btfss   STATUS,Z
-    goto    check_7
-    call    Clear_Display
-    writechar "6"
-    movf    state6, W
-    call    display_state
-    goto    poll
+    movf        keytemp, W
+    xorlw       0x6
+    btfss       STATUS,Z
+    goto        check_7
+    call        Clear_Display
+    writechar   "6"
+    movf        state6, W
+    call        display_state
+    goto        poll
 
 check_7
-    movf    keytemp, W
-    xorlw   0x8
-    btfss   STATUS,Z
-    goto    check_8
-    call    Clear_Display
-    writechar "7"
-    movf    state7, W
-    call    display_state
-    goto    poll
+    movf        keytemp, W
+    xorlw       0x8
+    btfss       STATUS,Z
+    goto        check_8
+    call        Clear_Display
+    writechar   "7"
+    movf        state7, W
+    call        display_state
+    goto        poll
 
 check_8
-    movf    keytemp, W
-    xorlw   0x9
-    btfss   STATUS,Z
-    goto    check_9
-    call    Clear_Display
-    writechar "8"
-    movf    state8, W
-    call    display_state
-    goto    poll
+    movf        keytemp, W
+    xorlw       0x9
+    btfss       STATUS,Z
+    goto        check_9
+    call        Clear_Display
+    writechar   "8"
+    movf        state8, W
+    call        display_state
+    goto        poll
 
 check_9
-    movf    keytemp, W
-    xorlw   0xA
-    btfss   STATUS,Z
-    goto    check_summary
-    call    Clear_Display
-    writechar "9"
-    movf    state9, W
-    call    display_state
-    goto    poll
+    movf        keytemp, W
+    xorlw       0xA
+    btfss       STATUS,Z
+    goto        check_summary
+    call        Clear_Display
+    writechar   "9"
+    movf        state9, W
+    call        display_state
+    goto        poll
 
-check_summary
-    movf    keytemp, W
-    xorlw   0x3
-    btfss   STATUS,Z
-    goto    check_defective
-    call    summary
-    goto    poll
+check_summary                       ;display summary screen
+    movf        keytemp, W
+    xorlw       0x3
+    btfss       STATUS,Z
+    goto        check_defective
+    call        summary
+    goto        poll
 
-check_defective
-    movf    keytemp, W
-    xorlw   0x7
-    btfss   STATUS,Z
-    goto    check_time
-    call    defective
-    goto    poll
+check_defective                     ;display defective screen
+    movf        keytemp, W
+    xorlw       0x7
+    btfss       STATUS,Z
+    goto        check_time
+    call        defective
+    goto        poll
 
-check_time
-    movf    keytemp, W
-    xorlw   0xB
-    btfss   STATUS,Z
-    goto    check_export
-    call    time
-    goto    poll
+check_time                          ;display operation time
+    movf        keytemp, W
+    xorlw       0xB
+    btfss       STATUS,Z
+    goto        check_export
+    call        time
+    goto        poll
 
-check_export
+check_export                        ;export data
     movf    keytemp, W
     xorlw   0xF
     btfss   STATUS,Z
@@ -697,18 +689,18 @@ check_export
     call    export
     goto    poll
 
-check_standby
+check_standby                       ;return to standby
     movf    keytemp, W
     xorlw   0xD
     btfss   STATUS,Z
     goto    check_start
     goto    standby
 
-check_start
+check_start                         ;start next operation
     movf    keytemp, W
     xorlw   0xC
     btfss   STATUS,Z
-    goto    poll        ;if you hit "LOGS"
+    goto    poll                    ;if you hit "LOGS", do nothing
     goto    start
 
 ;-------------------------------------------------------------------------
@@ -717,23 +709,23 @@ check_start
 ; Access from STANDBY and return to STANDBY
 
 logs
-    call    Clear_Display
-    Display Logs_Msg1
-    call    Switch_Lines
-    Display Logs_Msg2
+    call        Clear_Display
+    Display     Logs_Msg1
+    call        Switch_Lines
+    Display     Logs_Msg2
 
 polling
     btfss		PORTB,1     ;Wait until data is available from the keypad
     goto		$-1
     swapf		PORTB,W     ;Read PortB<7:4> into W<3:0>
     andlw		0x0F
-    movwf       keytemp     ; Save which key was pressed
+    movwf       keytemp     ;Save which key was pressed
 
 check_log1
-    xorlw   0x0         ;will be all zeros if its 1
-    btfss   STATUS,Z    ;and Z will be high, so skip
+    xorlw   0x0             ;will be all zeros if its 1
+    btfss   STATUS,Z        ;and Z will be high, so skip
     goto    check_log2
-    banksel EEADR
+    banksel EEADR           ;for 1-9, retrieve and display data from EEPROM
     movlf   d'0', EEADR
     goto    display_log
 
@@ -809,26 +801,26 @@ check_log9
     movlf   d'112', EEADR
     goto    display_log
 
-check_done
+check_done                  ;return to standby
     movf    keytemp, W
     xorlw   0xD
     btfsc   STATUS,Z
     goto    standby
 
-    btfsc		PORTB,1     ;Wait until key is released
-    goto		$-1
-    goto        polling
+    btfsc	PORTB,1     ;Otherwise wait until key is released
+    goto	$-1
+    goto    polling     ;and continue polling
 
 
-display_log                 ;start in bank2
+display_log                 ;starts in bank2
 
     ; move EEPROM data back to "current" data
-    bcf	STATUS, IRP
+    bcf     STATUS, IRP
     movlf   0x29, FSR
 read_EEPROM
     banksel EECON1          ;bank3
-    bcf EECON1, EEPGD
-    bsf EECON1, RD          ; read EEPROM
+    bcf     EECON1, EEPGD
+    bsf     EECON1, RD      ; read EEPROM
     banksel EEDATA          ;bank 2
     movff   EEDATA, INDF    ; move EEDATA to "current" data
     incf    FSR, F
@@ -852,38 +844,38 @@ no_log
     goto    logs
     ;else display the log
 yes_log
-    Display Op_at
-    call    Switch_Lines
-    writechar    "2"
-    writechar    "0"
-    writeASC   start_year10
-    writeASC   start_year1
+    Display     Op_at
+    call        Switch_Lines
+    writechar   "2"
+    writechar   "0"
+    writeASC    start_year10
+    writeASC    start_year1
     writechar   "/"
-    writeASC   start_month10
-    writeASC   start_month1
+    writeASC    start_month10
+    writeASC    start_month1
     writechar   "/"
-    writeASC   start_date10
-    writeASC   start_date1
+    writeASC    start_date10
+    writeASC    start_date1
     writechar   " "
-    writeASC   start_hour10
-    writeASC   start_hour1
+    writeASC    start_hour10
+    writeASC    start_hour1
     writechar   ":"
-    writeASC  start_min10
-    writeASC   start_min1
-    call    HalfS
-    call    HalfS
-    call    time
-    call    HalfS
-    call    HalfS
-    call    summary
-    call    HalfS
-    call    HalfS
+    writeASC    start_min10
+    writeASC    start_min1
+    call        HalfS
+    call        HalfS
+    call        time
+    call        HalfS
+    call        HalfS
+    call        summary
+    call        HalfS
+    call        HalfS
 
     ;option to Export
-    call    Clear_Display
-    Display Logs_Msg3
-    call    Switch_Lines
-    Display Logs_Msg4
+    call        Clear_Display
+    Display     Logs_Msg3
+    call        Switch_Lines
+    Display     Logs_Msg4
 
 wanna_export
     btfss		PORTB,1     ;Wait until data is available from the keypad
@@ -914,65 +906,64 @@ check_nothx
     movf    keytemp,W
     xorlw   0xE
     btfsc   STATUS,Z
-    goto    logs            ;logs -> backto logs menu
+    goto    logs            ;logs -> back to logs menu
 
     goto    check_log1      ;otherwise it was 1-9 or standby
 
-
-;***************************************
+;-------------------------------------------------------------------------
 ; CALIBRATION MODULE
 ; For adjusting sensitivity of photoresistor.
 ; Tests a candle and displays # of times PR reads high (0-152)
 ; As well as what state this means (LF, PASS, FF)
-;***************************************
+
 calibrate
-    call    Clear_Display
-    Display Cal_Msg
-    call    Switch_Lines
-    clrf    photocount
-    clrf    TMR0
-    bsf     INTCON, GIE     ;enable interrupts
-    call    HalfS
-    call    HalfS
-    call    HalfS
-    call    HalfS
-    movff   photocount, op_time
-    bcf     INTCON,GIE
-    call    big_number
+    call        Clear_Display
+    Display     Cal_Msg
+    call        Switch_Lines
+    clrf        photocount
+    clrf        TMR0
+    bsf         INTCON, GIE     ;enable interrupts
+    call        HalfS
+    call        HalfS
+    call        HalfS
+    call        HalfS
+    movff       photocount, op_time ;temporary use op_time
+    bcf         INTCON,GIE
+    call        big_number          ;so can display as decimanl
     writeBCD    huns
     writeBCD    tens
     writeBCD    ones
 cal1
-    movlw    threshold1
-    subwf   op_time, W
-    btfsc   STATUS, C       ;if  < threshold 1, C = 0
-    goto    cal2
-    Display LED_fail        ; < threshold 1 means led fail
-    goto    end_calibrate
+    movlw       threshold1
+    subwf       op_time, W
+    btfsc       STATUS, C       ;if  < threshold 1, C = 0
+    goto        cal2
+    Display     LED_fail        ; < threshold 1 means led fail
+    goto        end_calibrate
 cal2
-    movlw    threshold2
-    subwf   op_time, W
-    btfsc   STATUS, C       ;if  < threshold 2, C = 0
-    goto    cal3
-    Display Pass      ; < threshold 2 means pass
-    goto   end_calibrate
+    movlw       threshold2
+    subwf       op_time, W
+    btfsc       STATUS, C       ;if  < threshold 2, C = 0
+    goto        cal3
+    Display     Pass            ; < threshold 2 means pass
+    goto        end_calibrate
 cal3
-    writechar ":"
-    writechar " "
-    writechar "F"
-    writechar "F"      ; else flicker fail
+    writechar   ":"             ; else flicker fail
+    writechar   " "                  ; but write "FF" so itll fit
+    writechar   "F"
+    writechar   "F"
 
 end_calibrate
-    call    HalfS
-    call    HalfS
-    goto    standby
-
+    call        HalfS
+    call        HalfS
+    goto        standby
 
 ; END OF MAIN PROGRAM
 ;------------------------------------------------------------
 
+
 ;***************************************
-; ROTATE MOTOR ROUTINES
+; MOTOR SUBROUTINES
 ; ROTATEMOTOR will rotate motor by number of steps in motor_count times 4.
 ; (5 gives 20 steps = 36 deg = one slot)
 ; pulses ABCD assuming startfrom3 = 0; else pulses CDAB
@@ -1050,21 +1041,19 @@ pulseD
     
     
 ;***************************************
-; DATA DISPLAY ROUTINES
+; DATA DISPLAY SUBROUTINES
 ;***************************************
 
 ;Display state subroutine
 ;stateN is in W
 display_state
-    movwf  statetemp    ; save stateN
-
+    movwf  statetemp            ; save stateN
 check_none
     xorlw   0x0
     btfss   STATUS,Z
     goto    check_pass
     Display Not_present
     return
-
 check_pass
     movf    statetemp, W
     xorlw   0x1
@@ -1072,7 +1061,6 @@ check_pass
     goto    check_LED
     Display Pass
     return
-
 check_LED
     movf    statetemp, W
     xorlw   0x2
@@ -1080,7 +1068,6 @@ check_LED
     goto    check_flick
     Display LED_fail
     return
-
 check_flick
     movf    statetemp, W
     xorlw   0x3
@@ -1088,11 +1075,10 @@ check_flick
     goto    default_state
     Display Flick_fail
     return
-
-default_state   ; should never get here
+default_state                   ; should never get here
     return
 
-; Summary Subroutine
+; Summary subroutine
 ; Displays total number of candles and number of defective candles
 ; Reads data from num_tot, num_LF, num_FF
 summary
@@ -1108,33 +1094,29 @@ summary
     writeBCD        num_FF
     return
 
-; Defective candles Subroutine
+; Defective candles subroutine
 ; Displays index of each defective candle (LF or FF)
 ; Reads data from state1 - state9
 defective
     call            Clear_Display
-
-    clrf    morethansix
-    movlw   d'7'
-    subwf   num_LF, W
-    btfsc   STATUS, C       ;if  num_LF < 7, C = 0
-    bsf     morethansix,0
-    movlw   d'7'
-    subwf   num_FF, W
-    btfsc   STATUS, C       ;if  num_FF < 7, C = 0
-    bsf     morethansix,0
-
+    clrf            morethansix
+    movlw           d'7'
+    subwf           num_LF, W
+    btfsc           STATUS, C       ;if  num_LF < 7, C = 0
+    bsf             morethansix,0
+    movlw           d'7'
+    subwf           num_FF, W
+    btfsc           STATUS, C       ;if  num_FF < 7, C = 0
+    bsf             morethansix,0
     Display         LF              ; first look at LF
     movf            num_LF, F
-    btfss           STATUS,Z         ;if none LF, just say "none"
+    btfss           STATUS,Z        ;if none LF, just say "none"
     goto            check_LF
     Display         None
     goto            now_FF
-
 check_LF                            ; list all LF candles
     movlw           B'00000010'
     call            check_for_fail
-
 now_FF                              ; now look at FF
     call            Switch_Lines
     Display         FF
@@ -1143,34 +1125,33 @@ now_FF                              ; now look at FF
     goto            check_FF
     Display         None
     return
-
 check_FF                            ; list all FF candles
     movlw           B'00000011'
     call            check_for_fail
     return
 
-check_for_fail  ;lists all candles that have status currently in W "stateX"
-    movwf   statetemp
-	movlf	D'0', candle_index
-	bcf	STATUS, IRP
-	movlf	0x1F, FSR           ;index of right before state1
+check_for_fail                      ; lists all candles that have status currently in W
+    movwf       statetemp
+	movlf       D'0', candle_index
+	bcf         STATUS, IRP
+	movlf       0x1F, FSR           ;index of right before state1
 check_next
-	movlw	D'9'                ;exit loop if at 9
-	subwf	candle_index, W
-	btfsc	STATUS,W
-	goto	end_check_fail
-	incf	FSR,F               ; increment
-	incf	candle_index,F
-	movf	statetemp, W		;see if stateN = stateX
-	subwf	INDF, W
-	btfss	STATUS, Z
-	goto	check_next          ;if not, go to next
-	writeBCD	candle_index	;if so, write down the number
-    btfsc   morethansix,0       ;don't write space if need more than 6
-    goto    more_than_six
+	movlw       D'9'                ;exit loop if at 9
+	subwf       candle_index, W
+	btfsc       STATUS,W
+	goto        end_check_fail
+	incf        FSR,F               ; increment
+	incf        candle_index,F
+	movf        statetemp, W		;see if stateN = stateX
+	subwf       INDF, W
+	btfss       STATUS, Z
+	goto        check_next          ;if not, go to next
+	writeBCD	candle_index        ;if so, write down the number
+    btfsc       morethansix,0       ;don't write spaces if need more than 6
+    goto        more_than_six
     spacebar
 more_than_six
-	goto check_next
+	goto        check_next
 end_check_fail
 	return
 
@@ -1181,8 +1162,7 @@ time
     call    Clear_Display
     Display Time_Msg
     call    Switch_Lines
-;    movf    op_time, W
-    call    big_number
+    call    big_number      ;convert to BCDs
     movf    huns, F
     btfsc   STATUS,Z        ;if huns is zero don't display it
     goto    no_huns
@@ -1197,6 +1177,7 @@ no_tens
     Display Seconds
     return
 
+; Interim display subroutine
 ; Displays state of candle as it's being tested
 interim_display
 	call		Clear_Display
@@ -1204,6 +1185,7 @@ interim_display
 	movf		INDF, W
 	call		display_state
 	return
+
 
 ;***************************************
 ; GENERAL PURPOSE SUBROUTINES
@@ -1215,8 +1197,8 @@ interim_display
 ; http://www.piclist.com/techref/microchip/math/radix/b2a-8b3d-ab.htm
 
 big_number
-    movff   op_time, op_time_save         ;save the original op_time
-    movlf   8, bignumcount                ;will shift 8 times
+    movff   op_time, op_time_save   ;save the original op_time
+    movlf   8, bignumcount          ;will shift 8 times
     clrf    huns
     clrf    tens
     clrf    ones
@@ -1252,9 +1234,9 @@ BCDadd3                             ; if any digit > 5, add3
 
     movf    bignumcount, W
     btfss   STATUS, Z
-    goto    BCDadd3                 ; repeat until you've shifted it 8 times
+    goto    BCDadd3                   ;repeat until you've shifted it 8 times
 
-    movff    op_time_save, op_time     ;restore the original op_time
+    movff   op_time_save, op_time     ;restore the original op_time
     return
 
 add3huns
@@ -1287,18 +1269,17 @@ carrytens
 ; Delays exactly 0.5sec, from generator at:
 ; http://www.piclist.com/techref/piclist/codegen/delay.htm
 HalfS
-      movlf 0x8A, delH
-      movlf 0xBA, delM
-      movlf 0x03, delL
+      movlf     0x8A, delH
+      movlf     0xBA, delM
+      movlf     0x03, delL
 HalfS_0
       decfsz	delH, F
-	  goto	$+2
+	  goto      $+2
 	  decfsz	delM, F
-	  goto	$+2
+	  goto      $+2
 	  decfsz	delL, F
-	  goto	HalfS_0
-
-	  goto	$+1
+	  goto      HalfS_0
+	  goto      $+1
 	  nop
 	  return
 
@@ -1307,26 +1288,27 @@ HalfS_0
 ; Delays exactly 5ms, from generator at:
 ; http://www.piclist.com/techref/piclist/codegen/delay.htm
 delay5ms
-	movlf	0xC3, delH
-	movlf	0x0A, delL
+	movlf       0xC3, delH
+	movlf       0x0A, delL
 Delay_0
-	decfsz	delH, f
-	goto	$+2
-	decfsz	delL, f
-	goto	Delay_0
+	decfsz      delH, f
+	goto        $+2
+	decfsz      delL, f
+	goto        Delay_0
     return
 
 ; MOTOR DELAY SUBROUTINE.
 ; Delays ~25ms for the motor. (~1sec per total rotation)
 motor_del
-      movlf 0xF3, delH
-      movlf 0x37, delL
+      movlf     0xF3, delH
+      movlf     0x37, delL
 motor_del_0
       decfsz	delH, F
 	  goto      $+2
 	  decfsz	delL, F
 	  goto      motor_del_0
 	  return
+
 
 ;***************************************
 ; LCD SUBROUTINES (from sample code)
@@ -1336,12 +1318,10 @@ motor_del_0
 InitLCD
 	bcf STATUS,RP0          ;bank0
 	bsf E                   ;E default high
-
 	;Wait for LCD POR to finish (~15ms)
 	call delay5ms
 	call delay5ms
 	call delay5ms
-
 	;Ensure 8-bit mode first (no way to immediately guarantee 4-bit mode)
 	; -> Send b'0011' 3 times
 	movlw	b'00110011'
@@ -1352,25 +1332,21 @@ InitLCD
 	call	WR_INS
 	call delay5ms
 	call delay5ms
-
 	; 4 bits, 2 lines, 5x7 dots
 	movlw	b'00101000'
 	call	WR_INS
 	call delay5ms
 	call delay5ms
-
 	; display on/off
 	movlw	b'00001100'
 	call	WR_INS
 	call delay5ms
 	call delay5ms
-
 	; Entry mode
 	movlw	b'00000110'
 	call	WR_INS
 	call delay5ms
 	call delay5ms
-
 	; Clear ram
 	movlw	b'00000001'
 	call	WR_INS
@@ -1476,20 +1452,20 @@ export
     printchar   " "
     printchar   "2"
     printchar   "0"
-    printASC   start_year10
-    printASC   start_year1
+    printASC    start_year10
+    printASC    start_year1
     printchar   "/"
-    printASC   start_month10
-    printASC   start_month1
+    printASC    start_month10
+    printASC    start_month1
     printchar   "/"
-    printASC   start_date10
-    printASC   start_date1
+    printASC    start_date10
+    printASC    start_date1
     printchar   " "
-    printASC   start_hour10
-    printASC   start_hour1
+    printASC    start_hour10
+    printASC    start_hour1
     printchar   ":"
-    printASC   start_min10
-    printASC   start_min1
+    printASC    start_min10
+    printASC    start_min1
     newline
     printchar   "T"
     printchar   "i"
@@ -1500,20 +1476,20 @@ export
     printchar   " "
     printchar   " "
     printchar   " "
-    banksel op_time
-    call    big_number
-    movf    huns, F
-    btfsc   STATUS,Z        ;if huns is zero don't display it
-    goto    nohuns
-    printBCD   huns
+    banksel     op_time
+    call        big_number
+    movf        huns, F
+    btfsc       STATUS,Z        ;if huns is zero don't display it
+    goto        nohuns
+    printBCD    huns
 nohuns
-    banksel tens
-    movf    tens, F
-    btfsc   STATUS,Z        ;if tens is zero don't display it
-    goto    notens
-    printBCD   tens
+    banksel     tens
+    movf        tens, F
+    btfsc       STATUS,Z        ;if tens is zero don't display it
+    goto        notens
+    printBCD    tens
 notens
-    printBCD   ones
+    printBCD    ones
     printchar   " "
     printchar   "s"
     printchar   "e"
@@ -1568,9 +1544,10 @@ notens
     printBCD    num_FF
     newline
     newline
-    bcf STATUS,RP0
-    bcf STATUS,RP1     ; back to bank 0
+    bcf         STATUS,RP0
+    bcf         STATUS,RP1     ; back to bank 0
     return
+
 
 ;***************************************
 ; ISR
@@ -1580,6 +1557,7 @@ notens
 ; When this hapens, op_time increments
 ; Also check photodata every time for 2 sec = total of 152 reads
 ;***************************************
+
 isr
     movwf   w_isr           ;save W and status
     swapf   STATUS, W
